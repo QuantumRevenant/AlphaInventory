@@ -1,0 +1,54 @@
+
+Farmacia "Miriam", se nos solicita un sistema de inventariado que nos permita ingresar nuevos productos y retirarlos.
+Los productos se identificarán por un Código único (ya definidos) y los procesos se realizarán por medio de este.
+Los productos tendrán datos adicionales: Nombre del Producto, Una lista que contenga una [estructura] de compuesto & cantidad (g),
+precio unitario, cantidad en inventario.
+Si al agregar un codigo de producto, no lo hemos creado antes, definirlo por primera vez todos sus datos.
+Se podrá consultar el stock de cualquier producto por su código. Los precios de los productos ya traen incluidos el IGV (18%).
+Implementar la solución en un TUI. Guardar los datos (Información del producto, Carritos de compra, Solicitudes de compra, y datos de perfiles) de manera externa a gusto.
+
+
+Tendremos 4 niveles de usuario: Invitado (sin inicio de sesión) - Cliente - Vendedor - Administrador.
+
+Invitado:
+Puede generar 'SOLICITUD DE COMPRA'.
+Consultar Stock de producto.
+
+Cliente:
+Mismas funciones que invitado.
+Puede editar su perfil (datos personales).
+Puede ver su registro de compras.
+
+Vendedor:
+Mismas funciones que invitado.
+Puede aprobar una 'SOLICITUD DE COMPRA' (la convierte en 'VENTA').
+Puede generar una 'VENTA'.
+Puede editar su perfil (necesita contraseña administrador).
+Puede ver su registro de ventas.
+
+Administrador:
+Mismas funciones que vendedor.
+Puede registrar nuevo inventario.
+
+Conceptos:
+
+SOLICITUD DE COMPRA:
+	Registrado con un 'CÓDIGO DE VENTA', se genera un carrito de compra, con un precio determinado por las unidades requeridas.
+	Almacena los datos del carrito de compra (cantidades y codigos), precio establecido, estado de venta ([bool] vendido), cambios de precio realizados,
+	comentario del cambio de precio, código del comprador, código del vendedor, comentario del sistema.
+	Generará un 'VOUCHER DE SOLICITUD' con los datos principales (productos, cantidad, precio unitario, precio por producto, precio Establecido,
+		'CÓDIGO DE VENTA', nombre del comprador).	[Informar que se mandó a imprimir (funcion añadida posteriormente)]
+
+VENTA:
+	Modificar la 'SOLICITUD DE COMPRA' (identificado con el 'CÓDIGO DE VENTA'), añadiendo (anteriormente con valores neutros):
+		>El código del vendedor.
+		>El estado de venta.
+		>Cambios de precio realizados.
+		>Comentario del cambio de precio.
+		>Comentario del sistema.
+		>Añadir el 'CÓDIGO DE VENTA' al listado del vendedor y del comprador (si no es invitado).
+	En caso no tengamos un Código de venta creado. Generamos una solicitud de compra, si no tenemos el código del cliente, con código invitado. y posteriormente la aprobamos. 
+	Generará un 'VOUCHER DE COMPRA' con los datos principales (productos, cantidad, precio unitario, precio por producto, descuento (si hay), precio Final, operaciones gravadas,
+		IGV, 'CÓDIGO DE VENTA', nombre del comprador, nombre del vendedor).	[Informar que se mandó a imprimir (funcion añadida posteriormente)]
+
+

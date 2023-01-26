@@ -1,0 +1,11 @@
+Datos de Perfil
+
+Nombre
+Apellidos
+Tipo Documento (DNI / CE / PASAPORTE / RUC)
+N° Documento
+Contraseña (Para el registro necesario Repetir)
+Tipo de Usuario (CLIENTE / VENDEDOR / ADMINISTRADOR) [VENDEDOR y ADMINISTRADOR requieren contraseña especial]
+Registro de compras
+
+
