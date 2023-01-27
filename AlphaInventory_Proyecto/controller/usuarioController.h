@@ -1,27 +1,32 @@
 #include <iostream>
+#include <string>
 #include <vector>
-#include "../model/usuario.h"
+#include "../model/Usuario.cpp"
 
 class usuarioController
 {
 private:
     vector<Usuario> vectorUsuario;
-
 public:
     usuarioController();
     void    add(Usuario);
     Usuario get(int);
-    void    modify(int);
+    void    modify(Usuario, int);
 };
 
-usuarioController::usuarioController() {
+usuarioController::usuarioController()
+{
+
 }
-void    usuarioController::add(Usuario obj) {
+void    usuarioController::add(Usuario obj)
+{
     vectorUsuario.push_back(obj);
 }
-Usuario usuarioController::get(int pos) {
+Usuario usuarioController::get(int pos)
+{
     return vectorUsuario[pos];
 }
-void    usuarioController::modify(int pos) {
-    
+void    usuarioController::modify(Usuario obj, int pos)
+{
+    vectorUsuario[pos]=obj;
 }

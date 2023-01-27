@@ -1,6 +1,8 @@
-#if !defined(_CLASES_H_)
-#define _CLASES_H_
+#ifndef CLASES_H
+#define CLASES_H
+
 #include <iostream>
+#include <string>
 #include <vector>
 using namespace std;
 
@@ -17,6 +19,9 @@ private:
 
 public:
     Usuario();
+    ~Usuario();
+    Usuario(string, string);//username y contraseña (capaz agregar string e int para hacer el codigo a futuro)
+    Usuario(string,string,string,string,string,int,string);
     void    setUsername(string);
     void    setNombre(string);
     void    setApellidos(string);
@@ -31,7 +36,9 @@ public:
     int     getNumDocumento();
     string  getContrasena();
     string  getTipoUsuario();
-    
+    string  encriptar(string);
+    string  desencriptar(string);
+    string  getCodigo(bool);
 };
 
-#endif // _CLASES_H_
+#endif // CLASES_H
