@@ -112,7 +112,7 @@ string Usuario::desencriptar(string dato)
 }
 string Usuario::getCodigo(bool type)
 {
-    codigo=documento+to_string(numDocumento);
+    string codigo=documento+to_string(numDocumento);
     if(type)
         return codigo;
 }

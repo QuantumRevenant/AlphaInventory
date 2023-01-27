@@ -68,11 +68,13 @@ void iniciarSesion(bool opt)
 }
 void registrarse()
 {
-    Usuario objUser;
+    // Usuario objUser;
     string username;
     string nombre;
     string apellidos;
     int numDocumento;
+    string tipoUsuario;
+    string tipoDocumento;
     string contrasena;
     string contrasenaConfi;
     int opt;
@@ -84,32 +86,37 @@ void registrarse()
         cout << "--CLIENTE----------------[1]" << endl;
         cout << "--VENDEDOR---------------[2]" << endl;
         cout << "--ADMINISTRADOR----------[3]" << endl;
+        cout << "--CANCELAR---------------[4]" << endl;
         getValue("Ingrese opcion[1-3]: ", &opt);
         if (opt == 2 || opt == 3)
         {
             cout << "Para crear un usuario de vendedor o administrador, debe iniciar sesion como administrador" << endl;
-
             iniciarSesion(false);
             break;
         }
         switch (opt)
         {
         case 1:
-            objUser.setTipoUsuario("Cliente");
+            tipoUsuario="Cliente";
             break;
         case 2:
-            objUser.setTipoUsuario("Vendedor");
+            tipoUsuario="Vendedor";
             break;
         case 3:
-            objUser.setTipoUsuario("Administrador");
+            tipoUsuario="Administrador";
+            break;
+        case 4:
+            cout<<"Cancelando...";
             break;
         default:
-            cout << "Ingrese una opción valida[1-3]" << endl;
+            cout << "Ingrese una opción valida[1-4]" << endl;
             system("pause");
         }
     } while (opt != 1 && opt != 2 && opt != 3);
     getValue("Nombre de usuario: ", &username);
     getValue("Nombre: ", &nombre);
+    
+    getline(cin, apellidos);
     cin.ignore();
     cout << "Apellidos: ";
     getline(cin, apellidos);
@@ -125,16 +132,16 @@ void registrarse()
         switch (opt)
         {
         case 1:
-            objUser.setDocumento("DNI");
+            tipoDocumento="DNI";
             break;
         case 2:
-            objUser.setDocumento("CE");
+            tipoDocumento="CE";
             break;
         case 3:
-            objUser.setDocumento("Pasaporte");
+            tipoDocumento="Pasaporte";
             break;
         case 4:
-            objUser.setDocumento("RUC");
+            tipoDocumento="RUC";
             break;
         default:
             cout << "Ingrese una opción valida[1-4]" << endl;
@@ -162,11 +169,7 @@ void registrarse()
         }
     } while (contrasena != contrasenaConfi || contrasena.length() < 8);
 
-    objUser.setUsername(username);
-    objUser.setNombre(nombre);
-    objUser.setApellidos(apellidos);
-    objUser.setNumDocumento(numDocumento);
-    objUser.setContrasena(contrasena);
+    Usuario objUser(username,contrasena,nombre,apellidos,tipoDocumento,numDocumento,tipoUsuario);
 
     userController.add(objUser);
     iniciarSesion(true);
