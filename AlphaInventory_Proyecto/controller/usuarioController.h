@@ -1,3 +1,6 @@
+#ifndef USUARIOCONTROLLER_H
+#define USUARIOCONTROLLER_H
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -30,3 +33,4 @@ void    usuarioController::modify(Usuario obj, int pos)
 {
     vectorUsuario[pos]=obj;
 }
+#endif

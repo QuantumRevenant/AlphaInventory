@@ -3,14 +3,16 @@
 #include <ctime>
 #include "../model/Usuario.cpp"
 #include "../controller/usuarioController.h"
+#include "../controller/programController.h"
 using namespace std;
 
 usuarioController userController;
+programController progController;
 
 void getValue(string, string *);
 void getValue(string, int *);
 void menuLogin();
-void iniciarSesion(bool);
+bool iniciarSesion(bool);
 void registrarse();
 
 int main(int argc, char *argv[])
@@ -60,10 +62,9 @@ void menuLogin()
         }
     } while (opt != 3);
 }
-void iniciarSesion(bool opt)
+bool iniciarSesion(bool opt)
 {
-    if (opt)
-        cout << "iniciar sesion";
+    return opt;
     // el bool tenia pensado que podriamos usarlo para detener la funcion a la mitad, false: solo inicia sesion, true: inicia sesion y despliega un menu de opciones(depende del tipo de usuario)
 }
 void registrarse()
