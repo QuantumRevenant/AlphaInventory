@@ -94,6 +94,7 @@ void registrarse()
     string contrasena;
     string contrasenaConfi;
     int opt;
+    int docSize;
 
     do
     {
@@ -140,23 +141,27 @@ void registrarse()
         system("cls");
         cout << "--TIPO DE DOCUMENTO---------" << endl;
         cout << "--DNI--------------------[1]" << endl;
-        cout << "--CE---------------------[2]" << endl;
-        cout << "--Pasaporte--------------[3]" << endl;
+        cout << "--CARNET EXT-------------[2]" << endl;
+        cout << "--PASAPORTE--------------[3]" << endl;
         cout << "--RUC--------------------[4]" << endl;
         getValue("Ingrese opcion[1-4]: ", &opt);
         switch (opt)
         {
         case 1:
             tipoDocumento = "DNI";
+            docSize = 8;
             break;
         case 2:
-            tipoDocumento = "CE";
+            tipoDocumento = "CARNET EXT";
+            docSize = 12;
             break;
         case 3:
-            tipoDocumento = "Pasaporte";
+            tipoDocumento = "PASAPORTE";
+            docSize = 12;
             break;
         case 4:
             tipoDocumento = "RUC";
+            docSize = 11;
             break;
         default:
             cout << "Ingrese una opción valida[1-4]" << endl;
@@ -167,10 +172,20 @@ void registrarse()
     strInput = "0";
     do
     {
+        system("cls");
+        cout << tipoDocumento << endl;
         if (!esNumero(strInput))
+        {
             cout<<"===[INTRODUCE UN VALOR NUMERICO]==="<<endl;
-            getValue("Numero de documento: ", &strInput);
-    } while (!esNumero(strInput));
+        }
+        getValue("Numero de documento: ", &strInput);
+        if (strInput.size() != docSize)
+        {
+            cout << "Los documentos tipo " << tipoDocumento << " deben contener " << docSize << " digitos" << endl;
+            cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
+            system("pause");
+        }
+    } while (!esNumero(strInput) || strInput.size() != docSize);
     numDocumento=stoi(strInput);
     do
     {
