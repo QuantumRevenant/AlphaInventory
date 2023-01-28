@@ -66,17 +66,27 @@ void menuLogin()
 bool iniciarSesion(bool opt)
 {
     string username,
-            contrasena;
-    int contador=0;
-    bool resultado=false;
+        contrasena;
+    int contador = 0;
+    bool resultado = false;
 
-    
-    cout << "--INICIO DE SESIÓN----------" << endl;
-    cout << "USERNAME: ";
-    cin>>username;
-    cout<<"CONTRASEÑA: ";
-    cin>>contrasena;
-
+    do
+    {
+        cout << "--INTRODUCE 'SALIR' PARA CERRAR---" << endl;
+        cout << "--INICIO DE SESIÓN----------------" << endl;
+        cout << "USERNAME: ";
+        cin >> username;
+        cout << "CONTRASEÑA: ";
+        cin >> contrasena;
+        resultado = userController.validarSesion(username, contrasena);
+        if (resultado)
+            cout << "Iniciando Sesión..." << endl; // Agregar el inicio de sesión
+        else
+        {
+            cout << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
+            contador++;
+        }
+    }while(!resultado || contador>=3 || aMinuscula(username)=="salir"||aMinuscula(contrasena)=="salir");
 
     return opt;
     // el bool tenia pensado que podriamos usarlo para detener la funcion a la mitad, false: solo inicia sesion, true: inicia sesion y despliega un menu de opciones(depende del tipo de usuario)
@@ -176,7 +186,7 @@ void registrarse()
         cout << tipoDocumento << endl;
         if (!esNumero(strInput))
         {
-            cout<<"===[INTRODUCE UN VALOR NUMERICO]==="<<endl;
+            cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
         }
         getValue("Numero de documento: ", &strInput);
         if (strInput.size() != docSize)
@@ -186,7 +196,7 @@ void registrarse()
             system("pause");
         }
     } while (!esNumero(strInput) || strInput.size() != docSize);
-    numDocumento=stoi(strInput);
+    numDocumento = stoi(strInput);
     do
     {
         system("cls");

@@ -110,10 +110,9 @@ string Usuario::desencriptar(string dato)
         salida[i] = salida[i] - valor;
     return salida;
 }
-string Usuario::getCodigo(bool type)
+string Usuario::getCodigo()
 {
-    string codigo=documento+to_string(numDocumento);
-    if(type)
-        return codigo;
+    string codigo = documento + to_string(numDocumento);
+    return codigo;
 }
 #endif

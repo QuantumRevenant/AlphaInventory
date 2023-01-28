@@ -43,25 +43,53 @@ bool usuarioController::validarSesion(string username, string contrasena)
     {
         if (vectorUsuario[i].getUsername() == username)
             found = true;
+        i++;
     }
     if (found)
     {
-        if (contrasena == vectorUsuario[index].desencriptar(vectorUsuario[index].getContrasena()))
+        if (contrasena == vectorUsuario[i-1].desencriptar(vectorUsuario[i-1].getContrasena()))
             return true;
         else
-        {
-            cout << endl
-                 << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
-            system("pause");
-            return false;
-        }
+            return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
+    }
+    else
+        return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
+}
+Usuario usuarioController::getUsuario(string key)
+{
+    int i = 0;
+    bool found = false;
+
+    while (i < vectorUsuario.size() && !found)
+    {
+        if (vectorUsuario[i].getCodigo() == key)
+            found = true;
+        i++;
+    }
+    Usuario objSalida = vectorUsuario[i-1];
+    objSalida.setContrasena("********");
+    return objSalida;
+}
+Usuario usuarioController::getUsuario(string username, string contrasena)
+{
+    int i = 0;
+    bool found = false;
+    if (!validarSesion(username, contrasena))
+    {
+        Usuario objInvalido;
+        return objInvalido;
     }
     else
     {
-        cout << endl
-             << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
-        system("pause");
-        return false;
+        while (i < vectorUsuario.size() && !found)
+        {
+            if (vectorUsuario[i].getUsername() == username)
+                found = true;
+            i++;
+        }
+        Usuario objSalida = vectorUsuario[i-1];
+        objSalida.setContrasena("********");
+        return objSalida;
     }
 }
 #endif

@@ -38,7 +38,7 @@ public:
     string  getTipoUsuario();
     string  encriptar(string);
     string  desencriptar(string);
-    string  getCodigo(bool);
+    string  getCodigo();
 };
 
 #endif // CLASES_H
