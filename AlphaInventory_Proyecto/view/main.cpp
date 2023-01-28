@@ -116,8 +116,7 @@ void registrarse()
     } while (opt != 1 && opt != 2 && opt != 3);
     getValue("Nombre de usuario: ", &username);
     getValue("Nombre: ", &nombre);
-    
-    getline(cin, apellidos);
+
     cin.ignore();
     cout << "Apellidos: ";
     getline(cin, apellidos);
