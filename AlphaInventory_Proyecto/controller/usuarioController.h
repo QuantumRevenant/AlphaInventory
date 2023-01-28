@@ -15,6 +15,10 @@ public:
     void    add(Usuario);
     Usuario get(int);
     void    modify(Usuario, int);
+    bool    validarSesión(string,string);   //nos valida si existe una sesión.
+    Usuario getUsuario(string);             //nos devuelve el usuario por medio de su key. (censurar la contraseña).
+    Usuario getUsuario(string, string);     //nos devuelve el usuario por medio de su usuario y contraseña.
+
 };
 
 usuarioController::usuarioController()

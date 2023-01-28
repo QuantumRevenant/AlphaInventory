@@ -4,6 +4,7 @@
 #include "../model/Usuario.cpp"
 #include "../controller/usuarioController.h"
 #include "../controller/programController.h"
+#include "../model/FuncionesGenerales.h"
 using namespace std;
 
 usuarioController userController;
@@ -64,6 +65,19 @@ void menuLogin()
 }
 bool iniciarSesion(bool opt)
 {
+    string username,
+            contrasena;
+    int contador=0;
+    bool resultado=false;
+
+    
+    cout << "--INICIO DE SESIÓN----------" << endl;
+    cout << "USERNAME: ";
+    cin>>username;
+    cout<<"CONTRASEÑA: ";
+    cin>>contrasena;
+
+
     return opt;
     // el bool tenia pensado que podriamos usarlo para detener la funcion a la mitad, false: solo inicia sesion, true: inicia sesion y despliega un menu de opciones(depende del tipo de usuario)
 }
@@ -73,6 +87,7 @@ void registrarse()
     string username;
     string nombre;
     string apellidos;
+    string strInput;
     int numDocumento;
     string tipoUsuario;
     string tipoDocumento;
@@ -98,16 +113,16 @@ void registrarse()
         switch (opt)
         {
         case 1:
-            tipoUsuario="Cliente";
+            tipoUsuario = "Cliente";
             break;
         case 2:
-            tipoUsuario="Vendedor";
+            tipoUsuario = "Vendedor";
             break;
         case 3:
-            tipoUsuario="Administrador";
+            tipoUsuario = "Administrador";
             break;
         case 4:
-            cout<<"Cancelando...";
+            cout << "Cancelando...";
             break;
         default:
             cout << "Ingrese una opción valida[1-4]" << endl;
@@ -132,23 +147,31 @@ void registrarse()
         switch (opt)
         {
         case 1:
-            tipoDocumento="DNI";
+            tipoDocumento = "DNI";
             break;
         case 2:
-            tipoDocumento="CE";
+            tipoDocumento = "CE";
             break;
         case 3:
-            tipoDocumento="Pasaporte";
+            tipoDocumento = "Pasaporte";
             break;
         case 4:
-            tipoDocumento="RUC";
+            tipoDocumento = "RUC";
             break;
         default:
             cout << "Ingrese una opción valida[1-4]" << endl;
             system("pause");
         }
     } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
-    getValue("Numero de documento: ", &numDocumento);
+
+    strInput = "0";
+    do
+    {
+        if (!esNumero(strInput))
+            cout<<"===[INTRODUCE UN VALOR NUMERICO]==="<<endl;
+            getValue("Numero de documento: ", &strInput);
+    } while (!esNumero(strInput));
+    numDocumento=stoi(strInput);
     do
     {
         system("cls");
@@ -169,7 +192,7 @@ void registrarse()
         }
     } while (contrasena != contrasenaConfi || contrasena.length() < 8);
 
-    Usuario objUser(username,contrasena,nombre,apellidos,tipoDocumento,numDocumento,tipoUsuario);
+    Usuario objUser(username, contrasena, nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
 
     userController.add(objUser);
     iniciarSesion(true);
