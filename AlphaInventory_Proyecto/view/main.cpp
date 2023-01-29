@@ -13,7 +13,7 @@ programController progController;
 void getValue(string, string *);
 void getValue(string, int *);
 void menuLogin();
-bool iniciarSesion(bool);
+bool iniciarSesion(bool, string &);
 void registrarse();
 
 int main(int argc, char *argv[])
@@ -35,6 +35,7 @@ void getValue(string mensaje, int *dato)
 }
 void menuLogin()
 {
+    string type;
     int opt;
     do
     {
@@ -48,7 +49,7 @@ void menuLogin()
         {
         case 1:
             system("cls");
-            iniciarSesion(true);
+            iniciarSesion(true, type);
             break;
         case 2:
             system("cls");
@@ -63,7 +64,7 @@ void menuLogin()
         }
     } while (opt != 3);
 }
-bool iniciarSesion(bool opt)
+bool iniciarSesion(bool opt, string &type)
 {
     string username,
         contrasena;
@@ -86,14 +87,43 @@ bool iniciarSesion(bool opt)
             cout << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
             contador++;
         }
-    }while(!resultado || contador>=3 || aMinuscula(username)=="salir"||aMinuscula(contrasena)=="salir");
+    } while (!resultado || contador >= 3 || aMinuscula(username) == "salir" || aMinuscula(contrasena) == "salir");
 
-    return opt;
+    if (resultado && contador < 3 && aMinuscula(username) != "salir" && aMinuscula(contrasena) != "salir")
+    {
+        bool isAdm = false, isSell = false;
+        Usuario tempUser;
+        tempUser = userController.getUsuario(username, contrasena);
+        if (tempUser.getTipoUsuario() == "Administrador")
+            isAdm = isSell = true;
+        else if (tempUser.getTipoUsuario() == "Administrador")
+        {
+            isAdm = false;
+            isSell = true;
+        }
+        else
+            isAdm = isSell = false;
+
+        if (opt)
+        {
+            progController.openSesion(userController.getUsuario(username, contrasena).getCodigo(), isSell, isAdm);
+            cout<<"sesion iniciada"<<endl;
+            system("pause");
+            return true;
+        }
+        else
+        {
+            type = tempUser.getTipoUsuario();
+            return true;
+        }
+    }
+    return NULL;
     // el bool tenia pensado que podriamos usarlo para detener la funcion a la mitad, false: solo inicia sesion, true: inicia sesion y despliega un menu de opciones(depende del tipo de usuario)
 }
 void registrarse()
 {
     // Usuario objUser;
+    string type;
     string username;
     string nombre;
     string apellidos;
@@ -103,22 +133,22 @@ void registrarse()
     string tipoDocumento;
     string contrasena;
     string contrasenaConfi;
-    int opt;
+    int opt = 1;
     int docSize;
 
     do
     {
-        system("cls");
-        cout << "--TIPO DE USUARIO-----------" << endl;
-        cout << "--CLIENTE----------------[1]" << endl;
-        cout << "--VENDEDOR---------------[2]" << endl;
-        cout << "--ADMINISTRADOR----------[3]" << endl;
-        cout << "--CANCELAR---------------[4]" << endl;
+        // system("cls");
+        cout << "--TIPO DE USUARIO-----------" << endl
+             << "--CLIENTE----------------[1]" << endl
+             << "--VENDEDOR---------------[2]" << endl
+             << "--ADMINISTRADOR----------[3]" << endl
+             << "--CANCELAR---------------[4]" << endl;
         getValue("Ingrese opcion[1-3]: ", &opt);
         if (opt == 2 || opt == 3)
         {
             cout << "Para crear un usuario de vendedor o administrador, debe iniciar sesion como administrador" << endl;
-            iniciarSesion(false);
+            iniciarSesion(false, type);
             break;
         }
         switch (opt)
@@ -139,7 +169,7 @@ void registrarse()
             cout << "Ingrese una opción valida[1-4]" << endl;
             system("pause");
         }
-    } while (opt != 1 && opt != 2 && opt != 3);
+    } while (opt <= 0 && opt >= 5);
     getValue("Nombre de usuario: ", &username);
     getValue("Nombre: ", &nombre);
 
@@ -162,7 +192,7 @@ void registrarse()
             docSize = 8;
             break;
         case 2:
-            tipoDocumento = "CARNET EXT";
+            tipoDocumento = "CE";
             docSize = 12;
             break;
         case 3:
@@ -217,8 +247,11 @@ void registrarse()
         }
     } while (contrasena != contrasenaConfi || contrasena.length() < 8);
 
-    Usuario objUser(username, contrasena, nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
+    Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
 
     userController.add(objUser);
-    iniciarSesion(true);
+    system("cls");
+    cout<<username<<endl<<contrasena<<endl<<contrasenaConfi<<endl<<nombre<<endl<<apellidos<<endl<<tipoDocumento<<endl<<numDocumento<<endl<<tipoUsuario<<endl;
+    system("pause");
+    iniciarSesion(true, type);
 }
