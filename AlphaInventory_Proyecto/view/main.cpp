@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <unistd.h>
 #include "../model/Usuario.cpp"
 #include "../controller/usuarioController.h"
 #include "../controller/programController.h"
@@ -15,6 +16,7 @@ void getValue(string, int *);
 void menuLogin();
 bool iniciarSesion(bool, string &);
 void registrarse();
+void menuUsuario(string);
 
 int main(int argc, char *argv[])
 {
@@ -40,11 +42,12 @@ void menuLogin()
     do
     {
         system("cls");
-        cout << "--FARMACIA MIRIAM-----------" << endl;
-        cout << "--Iniciar Sesion---------[1]" << endl;
-        cout << "--Registrarse------------[2]" << endl;
-        cout << "--Salir------------------[3]" << endl;
-        getValue("Ingrese opcion[1-3]: ", &opt);
+        cout << "--FARMACIA MIRIAM------------" << endl;
+        cout << "--Iniciar Sesion----------[1]" << endl;
+        cout << "--Registrarse-------------[2]" << endl;
+        cout << "--Continuar como Invitado-[3]" << endl;
+        cout << "--Salir-------------------[4]" << endl;
+        getValue("Ingrese opcion[1-4]: ", &opt);
         switch (opt)
         {
         case 1:
@@ -56,13 +59,16 @@ void menuLogin()
             registrarse();
             break;
         case 3:
+            menuUsuario("Invitado");
+            break;
+        case 4:
             cout << "#####Gracias por usar nuestro servicio#####";
             break;
         default:
-            cout << "Ingrese una opción valida[1-3]" << endl;
+            cout << "Ingrese una opción valida[1-4]" << endl;
             system("pause");
         }
-    } while (opt != 3);
+    } while (opt != 4);
 }
 bool iniciarSesion(bool opt, string &type)
 {
@@ -77,19 +83,33 @@ bool iniciarSesion(bool opt, string &type)
         cout << "--INICIO DE SESIÓN----------------" << endl;
         cout << "USERNAME: ";
         cin >> username;
+        if (aMinuscula(username) == "salir")
+            break;
         cout << "CONTRASEÑA: ";
         cin >> contrasena;
+        if (aMinuscula(contrasena) == "salir")
+            break;
         resultado = userController.validarSesion(username, contrasena);
         if (resultado)
-            cout << "Iniciando Sesión..." << endl; // Agregar el inicio de sesión
+        {
+            system("cls");
+            cout << "Iniciando Sesión"; // Agregar el inicio de sesión
+            for (int i = 0; i < 3; i++)
+            {
+                cout << ".";
+                cout.flush();
+                sleep(1);
+            }
+            cout << endl;
+        }
         else
         {
             cout << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
             contador++;
         }
-    } while (!resultado || contador >= 3 || aMinuscula(username) == "salir" || aMinuscula(contrasena) == "salir");
+    } while (!resultado || contador >= 3);
 
-    if (resultado && contador < 3 && aMinuscula(username) != "salir" && aMinuscula(contrasena) != "salir")
+    if (resultado && contador < 3)
     {
         bool isAdm = false, isSell = false;
         Usuario tempUser;
@@ -107,8 +127,11 @@ bool iniciarSesion(bool opt, string &type)
         if (opt)
         {
             progController.openSesion(userController.getUsuario(username, contrasena).getCodigo(), isSell, isAdm);
-            cout<<"sesion iniciada"<<endl;
-            system("pause");
+            cout << "Sesion iniciada" << endl;
+            sleep(1);
+            cout << "Bienvenido " << username;
+            sleep(1);
+            menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario());
             return true;
         }
         else
@@ -118,11 +141,9 @@ bool iniciarSesion(bool opt, string &type)
         }
     }
     return NULL;
-    // el bool tenia pensado que podriamos usarlo para detener la funcion a la mitad, false: solo inicia sesion, true: inicia sesion y despliega un menu de opciones(depende del tipo de usuario)
 }
 void registrarse()
 {
-    // Usuario objUser;
     string type;
     string username;
     string nombre;
@@ -138,7 +159,6 @@ void registrarse()
 
     do
     {
-        // system("cls");
         cout << "--TIPO DE USUARIO-----------" << endl
              << "--CLIENTE----------------[1]" << endl
              << "--VENDEDOR---------------[2]" << endl
@@ -163,95 +183,266 @@ void registrarse()
             tipoUsuario = "Administrador";
             break;
         case 4:
-            cout << "Cancelando...";
+            tipoUsuario = "Cancelar";
             break;
         default:
             cout << "Ingrese una opción valida[1-4]" << endl;
             system("pause");
-        }
-    } while (opt <= 0 && opt >= 5);
-    getValue("Nombre de usuario: ", &username);
-    getValue("Nombre: ", &nombre);
-
-    cin.ignore();
-    cout << "Apellidos: ";
-    getline(cin, apellidos);
-    do
-    {
-        system("cls");
-        cout << "--TIPO DE DOCUMENTO---------" << endl;
-        cout << "--DNI--------------------[1]" << endl;
-        cout << "--CARNET EXT-------------[2]" << endl;
-        cout << "--PASAPORTE--------------[3]" << endl;
-        cout << "--RUC--------------------[4]" << endl;
-        getValue("Ingrese opcion[1-4]: ", &opt);
-        switch (opt)
-        {
-        case 1:
-            tipoDocumento = "DNI";
-            docSize = 8;
-            break;
-        case 2:
-            tipoDocumento = "CE";
-            docSize = 12;
-            break;
-        case 3:
-            tipoDocumento = "PASAPORTE";
-            docSize = 12;
-            break;
-        case 4:
-            tipoDocumento = "RUC";
-            docSize = 11;
-            break;
-        default:
-            cout << "Ingrese una opción valida[1-4]" << endl;
-            system("pause");
+            system("cls");
         }
     } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
-
-    strInput = "0";
-    do
+    if (tipoUsuario != "Cancelar")
     {
         system("cls");
-        cout << tipoDocumento << endl;
-        if (!esNumero(strInput))
+        getValue("Nombre de usuario: ", &username);
+        getValue("Nombre: ", &nombre);
+
+        cin.ignore();
+        cout << "Apellidos: ";
+        getline(cin, apellidos);
+        do
         {
-            cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
-        }
-        getValue("Numero de documento: ", &strInput);
-        if (strInput.size() != docSize)
+            system("cls");
+            cout << "--TIPO DE DOCUMENTO---------" << endl;
+            cout << "--DNI--------------------[1]" << endl;
+            cout << "--CARNET EXT-------------[2]" << endl;
+            cout << "--PASAPORTE--------------[3]" << endl;
+            cout << "--RUC--------------------[4]" << endl;
+            getValue("Ingrese opcion[1-4]: ", &opt);
+            switch (opt)
+            {
+            case 1:
+                tipoDocumento = "DNI";
+                docSize = 8;
+                break;
+            case 2:
+                tipoDocumento = "CE";
+                docSize = 12;
+                break;
+            case 3:
+                tipoDocumento = "PASAPORTE";
+                docSize = 12;
+                break;
+            case 4:
+                tipoDocumento = "RUC";
+                docSize = 11;
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-4]" << endl;
+                system("pause");
+            }
+        } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
+
+        strInput = "0";
+        do
         {
-            cout << "Los documentos tipo " << tipoDocumento << " deben contener " << docSize << " digitos" << endl;
-            cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
-            system("pause");
-        }
-    } while (!esNumero(strInput) || strInput.size() != docSize);
-    numDocumento = stoi(strInput);
-    do
+            system("cls");
+            cout << tipoDocumento << endl;
+            if (!esNumero(strInput))
+            {
+                cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
+            }
+            getValue("Numero de documento: ", &strInput);
+            if (strInput.size() != docSize)
+            {
+                cout << "Los documentos tipo " << tipoDocumento << " deben contener " << docSize << " digitos" << endl;
+                cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
+                system("pause");
+            }
+        } while (!esNumero(strInput) || strInput.size() != docSize);
+        numDocumento = stoi(strInput);
+        do
+        {
+            system("cls");
+            getValue("Contrasena(minimo 8 caracteres): ", &contrasena);
+            system("cls");
+            getValue("Confirmar contrasena: ", &contrasenaConfi);
+            if (contrasena.size() < 8)
+            {
+                cout << "La contrasena debe tener minimo 8 caracteres" << endl;
+                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
+                system("pause");
+            }
+            else if (contrasena != contrasenaConfi)
+            {
+                cout << "Las contrasenas no son iguales" << endl;
+                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
+                system("pause");
+            }
+        } while (contrasena != contrasenaConfi || contrasena.length() < 8);
+
+        Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
+
+        userController.add(objUser);
+        system("cls");
+        cout << "Usuario: " << username << endl;
+        cout << "Contraseña: " << contrasena << endl;
+        cout << "Nombre: " << nombre << endl;
+        cout << "Apellidos: " << apellidos << endl;
+        cout << "Tipo de usuario: " << tipoUsuario << endl;
+        cout << "Tipo de documento: " << tipoDocumento << endl;
+        cout << "Numero de documento: " << numDocumento << endl;
+        system("pause");
+        system("cls");
+        iniciarSesion(true, type);
+    }
+}
+void menuUsuario(string userType)
+{
+    int opt;
+    if (userType == "Invitado")
     {
-        system("cls");
-        getValue("Contrasena(minimo 8 caracteres): ", &contrasena);
-        system("cls");
-        getValue("Confirmar contrasena: ", &contrasenaConfi);
-        if (contrasena.size() < 8)
+        do
         {
-            cout << "La contrasena debe tener minimo 8 caracteres" << endl;
-            cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-            system("pause");
-        }
-        else if (contrasena != contrasenaConfi)
+            system("cls");
+            cout << "--FARMACIA MIRIAM------------" << endl;
+            cout << "--Comprar-----------------[1]" << endl;
+            cout << "--Consultar Stock---------[2]" << endl;
+            cout << "--Registrarse-------------[3]" << endl;
+            cout << "--Salir-------------------[4]" << endl;
+            getValue("Ingrese opcion[1-4]: ", &opt);
+            switch (opt)
+            {
+            case 1:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 2:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 3:
+                system("cls");
+                registrarse();
+                break;
+            case 4:
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-4]" << endl;
+                system("pause");
+            }
+        } while (opt != 4);
+    }
+    else if (userType == "Cliente")
+    {
+        do
         {
-            cout << "Las contrasenas no son iguales" << endl;
-            cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-            system("pause");
-        }
-    } while (contrasena != contrasenaConfi || contrasena.length() < 8);
-
-    Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
-
-    userController.add(objUser);
-    system("cls");
-    cout<<username<<endl<<contrasena<<endl<<contrasenaConfi<<endl<<nombre<<endl<<apellidos<<endl<<tipoDocumento<<endl<<numDocumento<<endl<<tipoUsuario<<endl;
-    system("pause");
-    iniciarSesion(true, type);
+            system("cls");
+            cout << "--FARMACIA MIRIAM------------" << endl;
+            cout << "--Comprar-----------------[1]" << endl;
+            cout << "--Consultar Stock---------[2]" << endl;
+            cout << "--Editar Perfil-----------[3]" << endl;
+            cout << "--Historial de compras----[4]" << endl;
+            cout << "--Salir-------------------[5]" << endl;
+            getValue("Ingrese opcion[1-5]: ", &opt);
+            switch (opt)
+            {
+            case 1:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 2:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 3:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 4:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 5:
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-5]" << endl;
+                system("pause");
+            }
+        } while (opt != 5);
+    }
+    else if (userType == "Vendedor")
+    {
+        do
+        {
+            system("cls");
+            cout << "--FARMACIA MIRIAM------------" << endl;
+            cout << "--Solicitudes de compra---[1]" << endl;
+            cout << "--Editar Perfil-----------[2]" << endl;
+            cout << "--Historial de ventas-----[3]" << endl;
+            cout << "--Salir-------------------[4]" << endl;
+            getValue("Ingrese opcion[1-4]: ", &opt);
+            switch (opt)
+            {
+            case 1:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 2:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 3:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 4:
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-4]" << endl;
+                system("pause");
+            }
+        } while (opt != 4);
+    }
+    else
+    {
+        do
+        {
+            system("cls");
+            cout << "--FARMACIA MIRIAM---------------" << endl;
+            cout << "--Solicitudes de compra------[1]" << endl;
+            cout << "--Editar Perfil--------------[2]" << endl;
+            cout << "--Historial de ventas--------[3]" << endl;
+            cout << "--Registrar nuevo Inventario-[4]" << endl;
+            cout << "--Salir----------------------[5]" << endl;
+            getValue("Ingrese opcion[1-5]: ", &opt);
+            switch (opt)
+            {
+            case 1:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 2:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 3:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 4:
+                system("cls");
+                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
+                system("pause");
+                break;
+            case 5:
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-5]" << endl;
+                system("pause");
+            }
+        } while (opt != 5);
+    }
 }

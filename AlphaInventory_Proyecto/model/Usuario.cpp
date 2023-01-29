@@ -99,7 +99,6 @@ string Usuario::encriptar(string dato)
 }
 string Usuario::desencriptar(string dato)
 {
-    cout<<dato<<endl;
     char a = dato[0];
     if (a < 96 || a > 122)
         cout << "ERROR: DESENCRIPTACIÓN, RANGOS NO VÁLIDOS: " <<a<< endl;
