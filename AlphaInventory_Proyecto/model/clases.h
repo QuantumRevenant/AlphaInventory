@@ -36,6 +36,12 @@ public:
     int     getNumDocumento();
     string  getContrasena();
     string  getTipoUsuario();
+    void    modifyUsername();
+    void    modifyNombre();
+    void    modifyApellidos();
+    void    modifyDocumento();
+    void    modifyContrasena();
+    void    listarDatos();
     string  encriptar(string);
     string  desencriptar(string);
     string  getCodigo();

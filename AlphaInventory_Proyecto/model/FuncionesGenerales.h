@@ -87,6 +87,16 @@ float PromediarMayor0(float datos[], int cantidadDatos)
 
     return promedio;
 }
+void getValue(string mensaje, string *dato)
+{
+    cout << mensaje;
+    cin >> *dato;
+}
+void getValue(string mensaje, int *dato)
+{
+    cout << mensaje;
+    cin >> *dato;
+}
 
 
 #endif

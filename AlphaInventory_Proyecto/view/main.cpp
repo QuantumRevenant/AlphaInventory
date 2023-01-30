@@ -11,12 +11,11 @@ using namespace std;
 usuarioController userController;
 programController progController;
 
-void getValue(string, string *);
-void getValue(string, int *);
 void menuLogin();
 bool iniciarSesion(bool, string &);
 void registrarse();
-void menuUsuario(string);
+void menuUsuario(string, string);
+void modifyPerfil(string);
 
 int main(int argc, char *argv[])
 {
@@ -25,16 +24,6 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void getValue(string mensaje, string *dato)
-{
-    cout << mensaje;
-    cin >> *dato;
-}
-void getValue(string mensaje, int *dato)
-{
-    cout << mensaje;
-    cin >> *dato;
-}
 void menuLogin()
 {
     string type;
@@ -59,7 +48,7 @@ void menuLogin()
             registrarse();
             break;
         case 3:
-            menuUsuario("Invitado");
+            menuUsuario("Invitado", NULL);
             break;
         case 4:
             cout << "#####Gracias por usar nuestro servicio#####";
@@ -131,7 +120,7 @@ bool iniciarSesion(bool opt, string &type)
             sleep(1);
             cout << "Bienvenido " << username;
             sleep(1);
-            menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario());
+            menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario(), userController.getUsuario(username, contrasena).getCodigo());
             return true;
         }
         else
@@ -154,7 +143,7 @@ void registrarse()
     string tipoDocumento;
     string contrasena;
     string contrasenaConfi;
-    int opt = 1;
+    int opt;
     int docSize;
 
     do
@@ -274,20 +263,12 @@ void registrarse()
         Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
 
         userController.add(objUser);
-        system("cls");
-        cout << "Usuario: " << username << endl;
-        cout << "Contraseña: " << contrasena << endl;
-        cout << "Nombre: " << nombre << endl;
-        cout << "Apellidos: " << apellidos << endl;
-        cout << "Tipo de usuario: " << tipoUsuario << endl;
-        cout << "Tipo de documento: " << tipoDocumento << endl;
-        cout << "Numero de documento: " << numDocumento << endl;
-        system("pause");
+        objUser.listarDatos();
         system("cls");
         iniciarSesion(true, type);
     }
 }
-void menuUsuario(string userType)
+void menuUsuario(string userType, string key)
 {
     int opt;
     if (userType == "Invitado")
@@ -333,10 +314,11 @@ void menuUsuario(string userType)
             cout << "--FARMACIA MIRIAM------------" << endl;
             cout << "--Comprar-----------------[1]" << endl;
             cout << "--Consultar Stock---------[2]" << endl;
-            cout << "--Editar Perfil-----------[3]" << endl;
-            cout << "--Historial de compras----[4]" << endl;
-            cout << "--Salir-------------------[5]" << endl;
-            getValue("Ingrese opcion[1-5]: ", &opt);
+            cout << "--Ver Perfil--------------[3]" << endl;
+            cout << "--Editar Perfil-----------[4]" << endl;
+            cout << "--Historial de compras----[5]" << endl;
+            cout << "--Salir-------------------[6]" << endl;
+            getValue("Ingrese opcion[1-6]: ", &opt);
             switch (opt)
             {
             case 1:
@@ -350,25 +332,28 @@ void menuUsuario(string userType)
                 system("pause");
                 break;
             case 3:
-                system("cls");
-                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
-                system("pause");
+                userController.getUsuario(key).listarDatos();
                 break;
             case 4:
                 system("cls");
+                modifyPerfil(key);
+                break;
+            case 5:
+                system("cls");
                 cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
                 system("pause");
                 break;
-            case 5:
+            case 6:
                 break;
             default:
                 cout << "Ingrese una opción valida[1-5]" << endl;
                 system("pause");
             }
-        } while (opt != 5);
+        } while (opt != 6);
     }
     else if (userType == "Vendedor")
     {
+        string type;
         do
         {
             system("cls");
@@ -387,8 +372,9 @@ void menuUsuario(string userType)
                 break;
             case 2:
                 system("cls");
-                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
-                system("pause");
+                cout << "Para modificar su perfil debe iniciar sesion como administrador" << endl;
+                iniciarSesion(false, type);
+                modifyPerfil(key);
                 break;
             case 3:
                 system("cls");
@@ -424,8 +410,7 @@ void menuUsuario(string userType)
                 break;
             case 2:
                 system("cls");
-                cout << "--AUN ESTAMOS TRABAJANDO EN ELLO--" << endl;
-                system("pause");
+                modifyPerfil(key);
                 break;
             case 3:
                 system("cls");
@@ -445,4 +430,45 @@ void menuUsuario(string userType)
             }
         } while (opt != 5);
     }
+}
+void modifyPerfil(string key)
+{
+    int opt;
+    do
+    {
+        system("cls");
+        cout << "--EDITAR PERFIL------------" << endl;
+        cout << "--Usuario---------------[1]" << endl;
+        cout << "--Nombre----------------[2]" << endl;
+        cout << "--Apellidos-------------[3]" << endl;
+        cout << "--Contraseña-----------[4]" << endl;
+        cout << "--Documento-------------[5]" << endl;
+        cout << "--Salir-----------------[6]" << endl;
+        getValue("Ingrese opcion[1-6]: ", &opt);
+        switch (opt)
+        {
+        case 1:
+            userController.getUsuario(key).modifyUsername();
+            break;
+        case 2:
+            userController.getUsuario(key).modifyNombre();
+            break;
+        case 3:
+            userController.getUsuario(key).modifyApellidos();
+            break;
+        case 4:
+            userController.getUsuario(key).modifyContrasena();
+            break;
+        case 5:
+            userController.getUsuario(key).modifyDocumento();
+            break;
+        case 6:
+            break;
+        default:
+            cout << "Ingrese una opción valida[1-6]" << endl;
+            system("pause");
+            break;
+        }
+    } while (opt != 6);
+    
 }
