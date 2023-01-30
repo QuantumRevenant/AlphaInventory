@@ -63,5 +63,8 @@ bool programController::getIsAdmin()
 {
     return isAdmin;
 }
-
+string programController::getSesionKey()
+{
+    return sesionKey;
+}
 #endif

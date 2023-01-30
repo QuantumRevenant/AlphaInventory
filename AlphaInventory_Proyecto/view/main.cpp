@@ -6,6 +6,7 @@
 #include "../controller/usuarioController.h"
 #include "../controller/programController.h"
 #include "../model/FuncionesGenerales.h"
+
 using namespace std;
 
 usuarioController userController;
@@ -26,38 +27,101 @@ int main(int argc, char *argv[])
 
 void menuLogin()
 {
-    string type;
+    string type,
+        username;
     int opt;
+    int i;
     do
     {
         system("cls");
+        i = 1;
         cout << "--FARMACIA MIRIAM------------" << endl;
-        cout << "--Iniciar Sesion----------[1]" << endl;
-        cout << "--Registrarse-------------[2]" << endl;
-        cout << "--Continuar como Invitado-[3]" << endl;
-        cout << "--Salir-------------------[4]" << endl;
-        getValue("Ingrese opcion[1-4]: ", &opt);
-        switch (opt)
+        if (!progController.getActiveSesion())
         {
-        case 1:
-            system("cls");
-            iniciarSesion(true, type);
-            break;
-        case 2:
-            system("cls");
-            registrarse();
-            break;
-        case 3:
-            menuUsuario("Invitado", NULL);
-            break;
-        case 4:
-            cout << "#####Gracias por usar nuestro servicio#####";
-            break;
-        default:
-            cout << "Ingrese una opción valida[1-4]" << endl;
-            system("pause");
+            cout << "--Iniciar Sesion----------[" << i << "]" << endl;
+            cout << "--Registrarse-------------[" << i + 1 << "]" << endl;
+            cout << "--Continuar como Invitado-[" << i + 2 << "]" << endl;
+            i += 3;
         }
-    } while (opt != 4);
+        else
+        {
+            cout << "--Leer Mis Datos(DEMO)----[" << i << "]" << endl;
+            cout << "--Modificar Datos---------[" << i + 1 << "]" << endl;
+            cout << "--Cerrar Sesión-----------[" << i + 2 << "]" << endl;
+            i += 3;
+        }
+        cout << "--Salir-------------------[" << i << "]" << endl;
+
+        getValue("Ingrese opcion[1-" + to_string(i) + "]: ", &opt);
+
+        if (!progController.getActiveSesion())
+        {
+            switch (opt)
+            {
+            case 1:
+                system("cls");
+                iniciarSesion(true, type);
+                break;
+            case 2:
+                system("cls");
+                registrarse();
+                break;
+            case 3:
+                cout << "Ingresó como Invitado [FUNCIÓN AUN NO IMPLEMENTADA]" << endl;
+                system("pause");
+                // menuUsuario("Invitado", NULL);
+                break;
+            case 4: // cambiar el valor de acuerdo a i
+                cout << "#####Gracias por usar nuestro servicio#####" << endl;
+                system("pause");
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-" << i << +"]" << endl;
+                system("pause");
+            }
+        }
+        else
+        {
+            switch (opt)
+            {
+            case 1:
+                system("cls");
+                userController.getUsuario(progController.getSesionKey()).listarDatos();
+                break;
+            case 2:
+                system("cls");
+                modifyPerfil(progController.getSesionKey());
+                break;
+            case 3:
+                // Cerrar Sesion
+                system("cls");
+                cout << "Cerrando Sesión"; // Agregar el inicio de sesión
+                for (int i = 0; i < 3; i++)
+                {
+                    cout << ".";
+                    cout.flush();
+                    sleep(1);
+                }
+                cout << endl;
+                username = userController.getUsuario(progController.getSesionKey()).getUsername();
+                progController.closeSesion();
+                cout << "Sesion cerrada" << endl;
+                sleep(1);
+                cout << "Hasta pronto, " << username << endl;
+                sleep(1);
+                system("pause");
+                // menuUsuario("Invitado", NULL);
+                break;
+            case 4: // cambiar el valor de acuerdo a i
+                cout << "#####Gracias por usar nuestro servicio#####";
+                system("pause");
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-" << i << +"]" << endl;
+                system("pause");
+            }
+        }
+    } while (opt != i);
 }
 bool iniciarSesion(bool opt, string &type)
 {
@@ -118,9 +182,11 @@ bool iniciarSesion(bool opt, string &type)
             progController.openSesion(userController.getUsuario(username, contrasena).getCodigo(), isSell, isAdm);
             cout << "Sesion iniciada" << endl;
             sleep(1);
-            cout << "Bienvenido " << username;
+            cout << "Bienvenido " << username << endl;
             sleep(1);
-            menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario(), userController.getUsuario(username, contrasena).getCodigo());
+            cout << "Ingresó como Usuario [FUNCIÓN AUN NO IMPLEMENTADA]" << endl;
+            system("pause");
+            // menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario(), userController.getUsuario(username, contrasena).getCodigo());
             return true;
         }
         else
@@ -433,42 +499,68 @@ void menuUsuario(string userType, string key)
 }
 void modifyPerfil(string key)
 {
+    string temporal;
     int opt;
+    bool cambioKey = false;
+    Usuario objUser = userController.getUsuario(key);
     do
     {
+        temporal = "3136435667";
         system("cls");
         cout << "--EDITAR PERFIL------------" << endl;
         cout << "--Usuario---------------[1]" << endl;
         cout << "--Nombre----------------[2]" << endl;
         cout << "--Apellidos-------------[3]" << endl;
-        cout << "--Contraseña-----------[4]" << endl;
+        cout << "--Contraseña------------[4]" << endl;
         cout << "--Documento-------------[5]" << endl;
-        cout << "--Salir-----------------[6]" << endl;
+        cout << "--Guardar Cambios-------[6]" << endl;
+        cout << "--Cancelar Cambios------[7]" << endl;
         getValue("Ingrese opcion[1-6]: ", &opt);
         switch (opt)
         {
         case 1:
-            userController.getUsuario(key).modifyUsername();
+            do
+            {
+                if (temporal != "3136435667")
+                    cout << "##[USUARIO YA EXISTE, ESCOGE OTRO NOMBRE]##" << endl;
+                getValue("Nombre de usuario: ", &temporal);
+            } while (userController.validarUsuarioNoExiste(temporal));
+            if (confirmar("que \"" + temporal + "\" sea su nuevo nombre de usuario?"))
+                objUser.setUsername(temporal);
             break;
         case 2:
-            userController.getUsuario(key).modifyNombre();
+            getValue("Nombre: ", &temporal);
+            if (confirmar("que \"" + temporal + "\" sea su nombre?"))
+                objUser.setNombre(temporal);
             break;
         case 3:
-            userController.getUsuario(key).modifyApellidos();
+            cin.ignore();
+            cout << "Apellidos: ";
+            getline(cin, temporal);
+            if (confirmar("que \"" + temporal + "\" sea sus apellidos?"))
+                objUser.setApellidos(temporal);
             break;
         case 4:
-            userController.getUsuario(key).modifyContrasena();
+            objUser.modifyContrasena();
             break;
         case 5:
-            userController.getUsuario(key).modifyDocumento();
+            objUser.modifyDocumento();
             break;
         case 6:
+            if (confirmar("guardar los cambios", "Deberás reiniciar la sesión."))
+            {
+                userController.modify(objUser, userController.getUsuario(key, true));
+                progController.closeSesion();
+                break;
+            }
+
+        case 7:
+            cout << "Cancelando los cambios...";
             break;
         default:
-            cout << "Ingrese una opción valida[1-6]" << endl;
+            cout << "Ingrese una opción valida[1-7]" << endl;
             system("pause");
             break;
         }
-    } while (opt != 6);
-    
+    } while (opt != 6 && opt != 7);
 }

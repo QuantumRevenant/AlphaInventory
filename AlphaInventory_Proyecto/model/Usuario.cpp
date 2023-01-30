@@ -86,26 +86,6 @@ string Usuario::getTipoUsuario()
 {
     return tipoUsuario;
 }
-void Usuario::modifyUsername()
-{
-    string _username;
-    getValue("Nombre de usuario: ", &_username);
-    setUsername(_username);
-}
-void Usuario::modifyNombre()
-{
-    string _nombre;
-    getValue("Nombre: ", &_nombre);
-    setNombre(_nombre);
-}
-void Usuario::modifyApellidos()
-{
-    string _apellidos;
-    cin.ignore();
-    cout << "Apellidos: ";
-    getline(cin, _apellidos);
-    setApellidos(_apellidos);
-}
 void Usuario::modifyDocumento()
 {
     int opt;
@@ -123,19 +103,19 @@ void Usuario::modifyDocumento()
         switch (opt)
         {
         case 1:
-            setDocumento("DNI");
+            _documento = "DNI";
             docSize = 8;
             break;
         case 2:
-            setDocumento("CE");
+            _documento = "CE";
             docSize = 12;
             break;
         case 3:
-            setDocumento("PASAPORTE");
+            _documento = "PASAPORTE";
             docSize = 12;
             break;
         case 4:
-            setDocumento("RUC");
+            _documento = "RUC";
             docSize = 11;
             break;
         default:
@@ -160,7 +140,12 @@ void Usuario::modifyDocumento()
             system("pause");
         }
     } while (!esNumero(strInput) || strInput.size() != docSize);
-    setNumDocumento(stoi(strInput));
+
+    if (confirmar("que su documento sea " + _documento + "con el N° " + strInput))
+    {
+        setDocumento(_documento);
+        setNumDocumento(stoi(strInput));
+    }
 }
 void Usuario::modifyContrasena()
 {
@@ -168,24 +153,33 @@ void Usuario::modifyContrasena()
     string _contrasena;
     do
     {
+        cout << "###Para Cancelar digite 'CANCELAR'###" << endl
+             << endl;
         system("cls");
         getValue("Contrasena(minimo 8 caracteres): ", &_contrasena);
-        system("cls");
-        getValue("Confirmar contrasena: ", &contrasenaConfi);
-        if (_contrasena.size() < 8)
+        if (aMayuscula(contrasena) != "CANCELAR")
         {
-            cout << "La contrasena debe tener minimo 8 caracteres" << endl;
-            cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-            system("pause");
+            system("cls");
+            getValue("Confirmar contrasena: ", &contrasenaConfi);
         }
-        else if (_contrasena != contrasenaConfi)
+        if (aMayuscula(contrasena) != "CANCELAR" && aMayuscula(contrasenaConfi) != "CANCELAR")
         {
-            cout << "Las contrasenas no son iguales" << endl;
-            cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-            system("pause");
+            if (_contrasena.size() < 8)
+            {
+                cout << "La contrasena debe tener minimo 8 caracteres" << endl;
+                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
+                system("pause");
+            }
+            else if (_contrasena != contrasenaConfi)
+            {
+                cout << "Las contrasenas no son iguales" << endl;
+                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
+                system("pause");
+            }
         }
-    } while (_contrasena != contrasenaConfi || _contrasena.length() < 8);
-    setContrasena(encriptar(_contrasena));
+    } while (_contrasena != contrasenaConfi || _contrasena.length() < 8 || !(aMayuscula(contrasena) != "CANCELAR" && aMayuscula(contrasenaConfi) != "CANCELAR"));
+    if (aMayuscula(contrasena) != "CANCELAR" && aMayuscula(contrasenaConfi) != "CANCELAR")
+        setContrasena(encriptar(_contrasena));
 }
 void Usuario::listarDatos()
 {
@@ -215,7 +209,7 @@ string Usuario::desencriptar(string dato)
 {
     char a = dato[0];
     if (a < 96 || a > 122)
-        cout << "ERROR: DESENCRIPTACIÓN, RANGOS NO VÁLIDOS: " <<a<< endl;
+        cout << "ERROR: DESENCRIPTACIÓN, RANGOS NO VÁLIDOS: " << a << endl;
     else if (a == 96)
         cout << "ERROR: DESENCRIPTACIÓN, ENCRIPTACIÓN NULA" << endl;
     int valor = (int)a - 96;

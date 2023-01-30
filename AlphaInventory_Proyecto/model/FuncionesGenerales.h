@@ -97,6 +97,17 @@ void getValue(string mensaje, int *dato)
     cout << mensaje;
     cin >> *dato;
 }
-
+bool confirmar(string message,string message2=" ")
+{
+    string opt;
+    cout << endl
+         << endl
+         << "¿Seguro que desea " << message << "?"<<message2<<"(Confirmar: S/s)" << endl;
+    cin >> opt;
+    if (aMinuscula(opt) == "s")
+        return true;
+    else
+        return false;
+}
 
 #endif
