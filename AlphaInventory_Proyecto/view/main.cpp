@@ -14,13 +14,16 @@ programController progController;
 
 void menuLogin();
 bool iniciarSesion(bool, string &);
-void registrarse();
+void registrarse(bool);
 void menuUsuario(string, string);
 void modifyPerfil(string);
 
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
+    registrarse(true);
+    // Usuario temp("admin",temp.encriptar("12345678"),"Admin","Admin","DNI",12345678,"Administrador");
+    // userController.add(temp);
     menuLogin();
     return 0;
 }
@@ -64,7 +67,7 @@ void menuLogin()
                 break;
             case 2:
                 system("cls");
-                registrarse();
+                registrarse(false);
                 break;
             case 3:
                 cout << "Ingresó como Invitado [FUNCIÓN AUN NO IMPLEMENTADA]" << endl;
@@ -162,6 +165,13 @@ bool iniciarSesion(bool opt, string &type)
         }
     } while (!resultado || contador >= 3);
 
+    if (contador >= 3)
+    {
+        cout << "Límite de intentos alcanzado, volviendo al menú principal..." << endl;
+        system("pause");
+        return false;
+    }
+
     if (resultado && contador < 3)
     {
         bool isAdm = false, isSell = false;
@@ -191,13 +201,19 @@ bool iniciarSesion(bool opt, string &type)
         }
         else
         {
-            type = tempUser.getTipoUsuario();
+            if (isAdm)
+                type = "Administrador";
+            cout << "Sesion iniciada" << endl;
+            sleep(1);
+            cout << "Bienvenido " << username << endl;
+            sleep(1);
+            system("pause");
             return true;
         }
     }
     return NULL;
 }
-void registrarse()
+void registrarse(bool start)
 {
     string type;
     string username;
@@ -211,39 +227,67 @@ void registrarse()
     string contrasenaConfi;
     int opt;
     int docSize;
+    bool admLoged;
 
     do
     {
-        cout << "--TIPO DE USUARIO-----------" << endl
-             << "--CLIENTE----------------[1]" << endl
-             << "--VENDEDOR---------------[2]" << endl
-             << "--ADMINISTRADOR----------[3]" << endl
-             << "--CANCELAR---------------[4]" << endl;
-        getValue("Ingrese opcion[1-3]: ", &opt);
-        if (opt == 2 || opt == 3)
+        if (!start)
         {
-            cout << "Para crear un usuario de vendedor o administrador, debe iniciar sesion como administrador" << endl;
-            iniciarSesion(false, type);
-            break;
+            cout << "--TIPO DE USUARIO-----------" << endl
+                 << "--CLIENTE----------------[1]" << endl
+                 << "--VENDEDOR---------------[2]" << endl
+                 << "--ADMINISTRADOR----------[3]" << endl
+                 << "--CANCELAR---------------[4]" << endl;
+            getValue("Ingrese opcion[1-3]: ", &opt);
+            if (opt == 2 || opt == 3)
+            {
+                cout << "Para crear un usuario de vendedor o administrador, debe iniciar sesion como administrador" << endl;
+                admLoged = iniciarSesion(false, type);
+                break;
+            }
+            switch (opt)
+            {
+            case 1:
+                tipoUsuario = "Cliente";
+                break;
+            case 2:
+                if (admLoged && type == "Administrador")
+                    tipoUsuario = "Vendedor";
+                else
+                {
+                    opt = -1;
+                    cout << "ERROR: La sesión iniciada no es un Administrador..." << endl;
+                    tipoUsuario = "Cancelar";
+                    system("pause");
+                }
+                break;
+            case 3:
+                if (admLoged && type == "Administrador")
+                    tipoUsuario = "Administrador";
+                else
+                {
+                    opt = -1;
+                    cout << "ERROR: La sesión iniciada no es un Administrador..." << endl;
+                    tipoUsuario = "Cancelar";
+                    system("pause");
+                }
+                break;
+            case 4:
+                tipoUsuario = "Cancelar";
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-4]" << endl;
+                system("pause");
+                system("cls");
+            }
         }
-        switch (opt)
+        else
         {
-        case 1:
-            tipoUsuario = "Cliente";
-            break;
-        case 2:
-            tipoUsuario = "Vendedor";
-            break;
-        case 3:
+            cout << "--NO TENEMOS REGISTRO DE ADMINISTRADORES--------------" << endl
+                 << "--REGISTRA UN NUEVO ADMINISTRADOR ANTES DE CONTINUAR--" << endl;
+            opt = 3;
             tipoUsuario = "Administrador";
-            break;
-        case 4:
-            tipoUsuario = "Cancelar";
-            break;
-        default:
-            cout << "Ingrese una opción valida[1-4]" << endl;
             system("pause");
-            system("cls");
         }
     } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
     if (tipoUsuario != "Cancelar")
@@ -329,7 +373,7 @@ void registrarse()
         Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
 
         userController.add(objUser);
-        objUser.listarDatos();
+        objUser.listarDatos(); // BORRAR VERSION FINAL - SOLO DEBUG
         system("cls");
         iniciarSesion(true, type);
     }
@@ -362,7 +406,7 @@ void menuUsuario(string userType, string key)
                 break;
             case 3:
                 system("cls");
-                registrarse();
+                registrarse(false);
                 break;
             case 4:
                 break;
