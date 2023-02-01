@@ -133,13 +133,13 @@ void Usuario::modifyDocumento()
             cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
         }
         getValue("Numero de documento: ", &strInput);
-        if (strInput.size() != docSize)
+        if ((int)strInput.size() != docSize)
         {
             cout << "Los documentos tipo " << documento << " deben contener " << docSize << " digitos" << endl;
             cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
             system("pause");
         }
-    } while (!esNumero(strInput) || strInput.size() != docSize);
+    } while (!esNumero(strInput) || (int)strInput.size() != docSize);
 
     if (confirmar("que su documento sea " + _documento + "con el N° " + strInput))
     {
@@ -201,7 +201,7 @@ string Usuario::encriptar(string dato)
         valor = 9;
     char referencia = valor + 96;
     salida = referencia + dato;
-    for (int i = 1; i < salida.length(); i++)
+    for (int i = 1; i < (int)salida.length(); i++)
         salida[i] = salida[i] + valor;
     return salida;
 }
@@ -214,7 +214,7 @@ string Usuario::desencriptar(string dato)
         cout << "ERROR: DESENCRIPTACIÓN, ENCRIPTACIÓN NULA" << endl;
     int valor = (int)a - 96;
     string salida = dato.erase(0, 1);
-    for (int i = 0; i < salida.length(); i++)
+    for (int i = 0; i < (int)salida.length(); i++)
         salida[i] = salida[i] - valor;
     return salida;
 }

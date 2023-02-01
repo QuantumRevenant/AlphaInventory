@@ -18,7 +18,7 @@ void registrarse(bool);
 void menuUsuario(string, string);
 void modifyPerfil(string);
 
-int main(int argc, char *argv[])
+int main(/*int argc, char *argv[]*/)
 {
     srand(time(NULL));
     registrarse(true);
@@ -227,7 +227,7 @@ void registrarse(bool start)
     string contrasenaConfi;
     int opt;
     int docSize;
-    bool admLoged;
+    bool admLoged=false;
 
     do
     {
@@ -342,13 +342,13 @@ void registrarse(bool start)
                 cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
             }
             getValue("Numero de documento: ", &strInput);
-            if (strInput.size() != docSize)
+            if ((int)strInput.size() != docSize)
             {
                 cout << "Los documentos tipo " << tipoDocumento << " deben contener " << docSize << " digitos" << endl;
                 cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
                 system("pause");
             }
-        } while (!esNumero(strInput) || strInput.size() != docSize);
+        } while (!esNumero(strInput) || (int)strInput.size() != docSize);
         numDocumento = stoi(strInput);
         do
         {
@@ -545,7 +545,6 @@ void modifyPerfil(string key)
 {
     string temporal;
     int opt;
-    bool cambioKey = false;
     Usuario objUser = userController.getUsuario(key);
     do
     {
@@ -595,9 +594,9 @@ void modifyPerfil(string key)
             {
                 userController.modify(objUser, userController.getUsuario(key, true));
                 progController.closeSesion();
-                break;
             }
-
+            cout << "Cancelando los cambios...";
+            break;
         case 7:
             cout << "Cancelando los cambios...";
             break;

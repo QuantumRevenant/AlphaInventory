@@ -25,7 +25,7 @@ bool esNumero(std::string cadena)
 {
     bool resultado = true;
     int i = 0;
-    while (i < cadena.length())
+    while (i < (int)cadena.length())
     {
         if (!isdigit(cadena[i])&&cadena[i]!='-'&&cadena[i]!='.')
             resultado = false;
@@ -39,12 +39,12 @@ int subCadenaComunMasLarga(std::string cadena1, std::string cadena2)
 {
     int ans = 0;
 
-    for (int i = 0; i < cadena1.length(); i++)
+    for (int i = 0; i < (int)cadena1.length(); i++)
     {
-        for (int j = 0; j < cadena2.length(); j++)
+        for (int j = 0; j < (int)cadena2.length(); j++)
         {
             int k = 0;
-            while ((i + k) < cadena1.length() && (j + k) < cadena2.length() && cadena1[i + k] == cadena2[j + k])
+            while ((i + k) < (int)cadena1.length() && (j + k) < (int)cadena2.length() && cadena1[i + k] == cadena2[j + k])
             {
                 k = k + 1;
             }
