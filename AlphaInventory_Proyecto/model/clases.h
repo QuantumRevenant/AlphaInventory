@@ -4,7 +4,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "estructuras.h"
 using namespace std;
+
 
 class Usuario
 {
@@ -46,5 +48,27 @@ public:
     string  desencriptar(string);
     string  getCodigo();
 };
+
+class Producto
+{
+private:
+    string  codigo;
+    string  nombre;
+    float   precioUnitario;
+    vector<Compuesto> compuestos;
+
+public:
+    Producto();
+    ~Producto();
+    void    setCodigo(string);
+    void    setNombre(string);
+    void    setPrecioUnitario(float);
+    string  getCodigo();
+    string  getNombre();
+    float   getPrecioUnitario();
+    void    addCompuesto(Compuesto);
+    Compuesto getCompuesto(int);
+};
+
 
 #endif // CLASES_H
