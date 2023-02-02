@@ -13,21 +13,24 @@ private:
 
 public:
     ProductoController();
-    void    add(Producto);
-    int     binarySearch(int, int, string);
-    int     partition(int, int);
-    void    quickSort(int, int);
-    void    ordenarProductos();
-    Producto get(string);
-    Producto get(int);
+    void        add(Producto);
+    int         binarySearch(int, int, string);
+    int         partition(int, int);
+    void        quickSort(int, int);
+    void        ordenarProductos();
+    Producto    get(string);
+    Producto    get(int);
+    void        saveOnFile(Producto);
+    void        saveFile();
+    void        copyFile();
 };
 
 ProductoController::ProductoController() {}
-void ProductoController::add(Producto obj)
+void    ProductoController::add(Producto obj)
 {
     vectorProducto.push_back(obj);
 }
-int ProductoController::partition(int menor, int mayor)
+int     ProductoController::partition(int menor, int mayor)
 {
     Producto pivote = vectorProducto[mayor];
     int i = menor - 1;
@@ -40,7 +43,7 @@ int ProductoController::partition(int menor, int mayor)
     swap(vectorProducto[i + 1], vectorProducto[mayor]);
     return i + 1;
 }
-void ProductoController::quickSort(int menor, int mayor)
+void    ProductoController::quickSort(int menor, int mayor)
 {
     if (menor < mayor)
     {
@@ -49,11 +52,11 @@ void ProductoController::quickSort(int menor, int mayor)
         quickSort(pivote + 1, mayor);
     }
 }
-void ProductoController::ordenarProductos()
+void    ProductoController::ordenarProductos()
 {
     quickSort(0, vectorProducto.size() - 1);
 }
-int ProductoController::binarySearch(int inicio, int _final, string cod)
+int     ProductoController::binarySearch(int inicio, int _final, string cod)
 {
     if (_final >= inicio)
     {
@@ -80,5 +83,97 @@ Producto ProductoController::get(string codigo)
 Producto ProductoController::get(int pos)
 {
     return vectorProducto[pos];
+}
+void    ProductoController::saveOnFile(Producto obj)
+{
+    try
+    {
+        fstream archivoProductos;
+        archivoProductos.open("productos.csv", ios::app);
+        if (archivoProductos.is_open())
+        {
+            archivoProductos << obj.getCodigo() << ";" << obj.getNombre() << ";" << obj.getPrecioUnitario() << ";" << obj.getNumCompuestos() << ";";
+            for (int i = 0; i < obj.getNumCompuestos(); i++)
+                archivoProductos << obj.getCompuesto(i).compuesto << ";" << obj.getCompuesto(i).cantidad << ";";
+            archivoProductos << endl;
+            archivoProductos.close();
+        }
+    }
+    catch(exception e)
+    {
+        cout << "Ocurrio un error al momento de grabar en el archivo";
+    }
+}
+void    ProductoController::saveFile()
+{
+    try
+    {
+        fstream archivoProductos;
+        archivoProductos.open("productos.csv", ios::out);
+        if (archivoProductos.is_open())
+        {
+            for (Producto obj:vectorProducto)
+            {
+                archivoProductos << obj.getCodigo() << ";" << obj.getNombre() << ";" << obj.getPrecioUnitario() << ";" << obj.getNumCompuestos() << ";";
+                for (int i = 0; i < obj.getNumCompuestos(); i++)
+                    archivoProductos << obj.getCompuesto(i).compuesto << ";" << obj.getCompuesto(i).cantidad << ";";
+                archivoProductos << endl;
+            }
+            archivoProductos.close();
+        }
+    }
+    catch(exception e)
+    {
+        cout << "Ocurrio un error al momento de grabar en el archivo";
+    }
+    
+}
+void    ProductoController::copyFile()
+{
+    try
+    {
+        int i;
+        int j;
+        size_t posi;
+        string linea;
+        vector<string> temporal;
+        fstream archivoProductos;
+        archivoProductos.open("productos.csv", ios::in);
+        if (archivoProductos.is_open())
+        {
+            while (!archivoProductos.eof() && getline(archivoProductos, linea))
+            {
+                i = 0;
+                while ((posi = linea.find(";")) != string::npos)
+                {
+                    temporal[i] = linea.substr(0, posi);
+                    linea.erase(0, posi + 1);
+                    i++;
+                }
+                Producto obj;
+                obj.setCodigo(temporal[0]);
+                obj.setNombre(temporal[1]);
+                obj.setPrecioUnitario(std::stof(temporal[2]));
+                obj.setNumCompuestos(std::stoi(temporal[3]));
+                j = 4;
+                for (int i = 0; i < obj.getNumCompuestos(); i++)
+                {
+                    Compuesto comp;
+                    comp.compuesto = temporal[j];
+                    comp.cantidad = std::stof(temporal[j + 1]);
+                    obj.addCompuesto(comp);
+                    j = j + 2;
+                }
+                obj.ordenarCompuestos();
+                add(obj);
+            }
+            archivoProductos.close();
+        }
+    }
+    catch(exception e)
+    {
+        cout << "Ocurrio un error al leer el archivo";
+    }
+    
 }
 #endif // PRODUCTOCONTROLLER_H

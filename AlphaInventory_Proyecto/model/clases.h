@@ -55,7 +55,9 @@ private:
     string  codigo;
     string  nombre;
     float   precioUnitario;
-    vector<Compuesto> compuestos;
+    int     stock;
+    int     numCompuestos;
+    vector<Compuesto> vectorCompuestos;
 
 public:
     Producto();
@@ -63,10 +65,16 @@ public:
     void    setCodigo(string);
     void    setNombre(string);
     void    setPrecioUnitario(float);
+    void    setNumCompuestos(int);
     string  getCodigo();
     string  getNombre();
     float   getPrecioUnitario();
+    int     getNumCompuestos();
+    int     partition(int, int);
+    void    quickSort(int, int);
+    void    ordenarCompuestos();
     void    addCompuesto(Compuesto);
+    void    deleteCompuesto(int);
     Compuesto getCompuesto(int);
 };
 
