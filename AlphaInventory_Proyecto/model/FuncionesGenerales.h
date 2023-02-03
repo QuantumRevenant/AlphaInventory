@@ -2,6 +2,12 @@
 #define FUNCIONESGENERALES_H
 
 #include <string>
+#include <conio.h>
+
+using namespace std;
+
+#define ENTER 13
+#define BACKSPACE 8
 
 std::string aMayuscula(std::string cadena)
 {
@@ -108,6 +114,58 @@ bool confirmar(string message,string message2=" ")
         return true;
     else
         return false;
+}
+
+void doEndline(int i)
+{
+    for (int j = 0; j < i; j++)
+    {
+        cout << endl;
+    }
+}
+
+void doTab(int i)
+{
+    for (int j = 0; j < i; j++)
+    {
+        cout << "\t";
+    }
+}
+
+string doTab(int i, string entrada)
+{
+    string salida = entrada;
+    for (int j = 0; j < i; j++)
+    {
+        salida = salida + "\t";
+    }
+    return salida;
+}
+
+string enterContrasena()
+{
+    string password;
+    char caracter;
+    caracter = getch();
+    password = "";
+    while (caracter != ENTER)
+    {
+        if (caracter != BACKSPACE)
+        {
+            password.push_back(caracter);
+            cout << "*";
+        }
+        else
+        {
+            if (password.length() > 0)
+            {
+                cout << "\b \b";
+                password = password.substr(0, password.length() - 1);
+            }
+        }
+        caracter = getch();
+    }
+    return password;
 }
 
 #endif
