@@ -12,20 +12,34 @@ using namespace std;
 usuarioController userController;
 programController progController;
 
-void menuLogin();
+void menuPrincipal();
+void menuUsuario();
+void menuTest(string, string);
 bool iniciarSesion(bool, string &);
-void registrarse();
-void menuUsuario(string, string);
+void registrarse(bool);
 void modifyPerfil(string);
 
-int main(int argc, char *argv[])
+int main(/*int argc, char *argv[]*/)
 {
     srand(time(NULL));
-    menuLogin();
+    // registrarse(true);
+    Usuario temp("admin", temp.encriptar("12345678"), "Admin", "Admin", "DNI", 12345678, "Administrador");//
+    userController.add(temp);//
+    menuPrincipal();//
     return 0;
 }
-
-void menuLogin()
+void menuPrincipal()
+{
+    cout << "Menu Principal" << endl;
+    sleep(1);
+    cout << "Menu Usuario" << endl;
+    sleep(1);
+    if (!confirmar("cerrar el programa"))
+        menuUsuario();
+    else
+        cout << "#####Gracias por usar nuestro servicio#####" << endl;
+}
+void menuUsuario()
 {
     string type,
         username;
@@ -50,7 +64,7 @@ void menuLogin()
             cout << "--Cerrar Sesión-----------[" << i + 2 << "]" << endl;
             i += 3;
         }
-        cout << "--Salir-------------------[" << i << "]" << endl;
+        cout <<     "--Salir del Menú----------[" << i << "]" << endl;
 
         getValue("Ingrese opcion[1-" + to_string(i) + "]: ", &opt);
 
@@ -61,18 +75,20 @@ void menuLogin()
             case 1:
                 system("cls");
                 iniciarSesion(true, type);
+                menuPrincipal();
                 break;
             case 2:
                 system("cls");
-                registrarse();
+                registrarse(false);
                 break;
             case 3:
                 cout << "Ingresó como Invitado [FUNCIÓN AUN NO IMPLEMENTADA]" << endl;
+                menuPrincipal();
                 system("pause");
                 // menuUsuario("Invitado", NULL);
                 break;
             case 4: // cambiar el valor de acuerdo a i
-                cout << "#####Gracias por usar nuestro servicio#####" << endl;
+                menuPrincipal();
                 system("pause");
                 break;
             default:
@@ -87,10 +103,12 @@ void menuLogin()
             case 1:
                 system("cls");
                 userController.getUsuario(progController.getSesionKey()).listarDatos();
+                menuUsuario();
                 break;
             case 2:
                 system("cls");
                 modifyPerfil(progController.getSesionKey());
+                menuPrincipal();
                 break;
             case 3:
                 // Cerrar Sesion
@@ -110,10 +128,11 @@ void menuLogin()
                 cout << "Hasta pronto, " << username << endl;
                 sleep(1);
                 system("pause");
+                menuPrincipal();
                 // menuUsuario("Invitado", NULL);
                 break;
             case 4: // cambiar el valor de acuerdo a i
-                cout << "#####Gracias por usar nuestro servicio#####";
+                menuPrincipal();
                 system("pause");
                 break;
             default:
@@ -121,220 +140,9 @@ void menuLogin()
                 system("pause");
             }
         }
-    } while (opt != i);
+    } while (opt < 1 || i < opt);
 }
-bool iniciarSesion(bool opt, string &type)
-{
-    string username,
-        contrasena;
-    int contador = 0;
-    bool resultado = false;
-
-    do
-    {
-        cout << "--INTRODUCE 'SALIR' PARA CERRAR---" << endl;
-        cout << "--INICIO DE SESIÓN----------------" << endl;
-        cout << "USERNAME: ";
-        cin >> username;
-        if (aMinuscula(username) == "salir")
-            break;
-        cout << "CONTRASEÑA: ";
-        cin >> contrasena;
-        if (aMinuscula(contrasena) == "salir")
-            break;
-        resultado = userController.validarSesion(username, contrasena);
-        if (resultado)
-        {
-            system("cls");
-            cout << "Iniciando Sesión"; // Agregar el inicio de sesión
-            for (int i = 0; i < 3; i++)
-            {
-                cout << ".";
-                cout.flush();
-                sleep(1);
-            }
-            cout << endl;
-        }
-        else
-        {
-            cout << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
-            contador++;
-        }
-    } while (!resultado || contador >= 3);
-
-    if (resultado && contador < 3)
-    {
-        bool isAdm = false, isSell = false;
-        Usuario tempUser;
-        tempUser = userController.getUsuario(username, contrasena);
-        if (tempUser.getTipoUsuario() == "Administrador")
-            isAdm = isSell = true;
-        else if (tempUser.getTipoUsuario() == "Administrador")
-        {
-            isAdm = false;
-            isSell = true;
-        }
-        else
-            isAdm = isSell = false;
-
-        if (opt)
-        {
-            progController.openSesion(userController.getUsuario(username, contrasena).getCodigo(), isSell, isAdm);
-            cout << "Sesion iniciada" << endl;
-            sleep(1);
-            cout << "Bienvenido " << username << endl;
-            sleep(1);
-            cout << "Ingresó como Usuario [FUNCIÓN AUN NO IMPLEMENTADA]" << endl;
-            system("pause");
-            // menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario(), userController.getUsuario(username, contrasena).getCodigo());
-            return true;
-        }
-        else
-        {
-            type = tempUser.getTipoUsuario();
-            return true;
-        }
-    }
-    return NULL;
-}
-void registrarse()
-{
-    string type;
-    string username;
-    string nombre;
-    string apellidos;
-    string strInput;
-    int numDocumento;
-    string tipoUsuario;
-    string tipoDocumento;
-    string contrasena;
-    string contrasenaConfi;
-    int opt;
-    int docSize;
-
-    do
-    {
-        cout << "--TIPO DE USUARIO-----------" << endl
-             << "--CLIENTE----------------[1]" << endl
-             << "--VENDEDOR---------------[2]" << endl
-             << "--ADMINISTRADOR----------[3]" << endl
-             << "--CANCELAR---------------[4]" << endl;
-        getValue("Ingrese opcion[1-3]: ", &opt);
-        if (opt == 2 || opt == 3)
-        {
-            cout << "Para crear un usuario de vendedor o administrador, debe iniciar sesion como administrador" << endl;
-            iniciarSesion(false, type);
-            break;
-        }
-        switch (opt)
-        {
-        case 1:
-            tipoUsuario = "Cliente";
-            break;
-        case 2:
-            tipoUsuario = "Vendedor";
-            break;
-        case 3:
-            tipoUsuario = "Administrador";
-            break;
-        case 4:
-            tipoUsuario = "Cancelar";
-            break;
-        default:
-            cout << "Ingrese una opción valida[1-4]" << endl;
-            system("pause");
-            system("cls");
-        }
-    } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
-    if (tipoUsuario != "Cancelar")
-    {
-        system("cls");
-        getValue("Nombre de usuario: ", &username);
-        getValue("Nombre: ", &nombre);
-
-        cin.ignore();
-        cout << "Apellidos: ";
-        getline(cin, apellidos);
-        do
-        {
-            system("cls");
-            cout << "--TIPO DE DOCUMENTO---------" << endl;
-            cout << "--DNI--------------------[1]" << endl;
-            cout << "--CARNET EXT-------------[2]" << endl;
-            cout << "--PASAPORTE--------------[3]" << endl;
-            cout << "--RUC--------------------[4]" << endl;
-            getValue("Ingrese opcion[1-4]: ", &opt);
-            switch (opt)
-            {
-            case 1:
-                tipoDocumento = "DNI";
-                docSize = 8;
-                break;
-            case 2:
-                tipoDocumento = "CE";
-                docSize = 12;
-                break;
-            case 3:
-                tipoDocumento = "PASAPORTE";
-                docSize = 12;
-                break;
-            case 4:
-                tipoDocumento = "RUC";
-                docSize = 11;
-                break;
-            default:
-                cout << "Ingrese una opción valida[1-4]" << endl;
-                system("pause");
-            }
-        } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
-
-        strInput = "0";
-        do
-        {
-            system("cls");
-            cout << tipoDocumento << endl;
-            if (!esNumero(strInput))
-            {
-                cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
-            }
-            getValue("Numero de documento: ", &strInput);
-            if (strInput.size() != docSize)
-            {
-                cout << "Los documentos tipo " << tipoDocumento << " deben contener " << docSize << " digitos" << endl;
-                cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
-                system("pause");
-            }
-        } while (!esNumero(strInput) || strInput.size() != docSize);
-        numDocumento = stoi(strInput);
-        do
-        {
-            system("cls");
-            getValue("Contrasena(minimo 8 caracteres): ", &contrasena);
-            system("cls");
-            getValue("Confirmar contrasena: ", &contrasenaConfi);
-            if (contrasena.size() < 8)
-            {
-                cout << "La contrasena debe tener minimo 8 caracteres" << endl;
-                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-                system("pause");
-            }
-            else if (contrasena != contrasenaConfi)
-            {
-                cout << "Las contrasenas no son iguales" << endl;
-                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-                system("pause");
-            }
-        } while (contrasena != contrasenaConfi || contrasena.length() < 8);
-
-        Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
-
-        userController.add(objUser);
-        objUser.listarDatos();
-        system("cls");
-        iniciarSesion(true, type);
-    }
-}
-void menuUsuario(string userType, string key)
+void menuTest(string userType, string key)
 {
     int opt;
     if (userType == "Invitado")
@@ -362,7 +170,7 @@ void menuUsuario(string userType, string key)
                 break;
             case 3:
                 system("cls");
-                registrarse();
+                registrarse(false);
                 break;
             case 4:
                 break;
@@ -497,11 +305,263 @@ void menuUsuario(string userType, string key)
         } while (opt != 5);
     }
 }
+bool iniciarSesion(bool opt, string &type)
+{
+    string username,
+        contrasena;
+    int contador = 0;
+    bool resultado = false;
+
+    do
+    {
+        cout << "--INTRODUCE 'SALIR' PARA CERRAR---" << endl;
+        cout << "--INICIO DE SESIÓN----------------" << endl;
+        cout << "USERNAME: ";
+        cin >> username;
+        if (aMinuscula(username) == "salir")
+            break;
+        cout << "CONTRASEÑA: ";
+        cin >> contrasena;
+        if (aMinuscula(contrasena) == "salir")
+            break;
+        resultado = userController.validarSesion(username, contrasena);
+        if (resultado)
+        {
+            system("cls");
+            cout << "Iniciando Sesión"; // Agregar el inicio de sesión
+            for (int i = 0; i < 3; i++)
+            {
+                cout << ".";
+                cout.flush();
+                sleep(1);
+            }
+            cout << endl;
+        }
+        else
+        {
+            cout << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
+            contador++;
+        }
+    } while (!resultado && contador < 3);
+
+    if (contador >= 3)
+    {
+        cout << "Límite de intentos alcanzado, volviendo al menú principal..." << endl;
+        system("pause");
+        return false;
+    }
+
+    if (resultado && contador < 3)
+    {
+        bool isAdm = false, isSell = false;
+        Usuario tempUser;
+        tempUser = userController.getUsuario(username, contrasena);
+        if (tempUser.getTipoUsuario() == "Administrador")
+            isAdm = isSell = true;
+        else if (tempUser.getTipoUsuario() == "Administrador")
+        {
+            isAdm = false;
+            isSell = true;
+        }
+        else
+            isAdm = isSell = false;
+
+        if (opt)
+        {
+            progController.openSesion(userController.getUsuario(username, contrasena).getCodigo(), isSell, isAdm);
+            cout << "Sesion iniciada" << endl;
+            sleep(1);
+            cout << "Bienvenido " << username << endl;
+            sleep(1);
+            cout << "Ingresó como Usuario [FUNCIÓN AUN NO IMPLEMENTADA]" << endl;
+            system("pause");
+            // menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario(), userController.getUsuario(username, contrasena).getCodigo());
+            return true;
+        }
+        else
+        {
+            if (isAdm)
+                type = "Administrador";
+            cout << "Sesion iniciada" << endl;
+            sleep(1);
+            cout << "Bienvenido " << username << endl;
+            sleep(1);
+            system("pause");
+            return true;
+        }
+    }
+    return NULL;
+}
+void registrarse(bool start)
+{
+    string type;
+    string username;
+    string nombre;
+    string apellidos;
+    string strInput;
+    int numDocumento;
+    string tipoUsuario;
+    string tipoDocumento;
+    string contrasena;
+    string contrasenaConfi;
+    int opt;
+    int docSize;
+    bool admLoged = false;
+
+    do
+    {
+        if (!start)
+        {
+            cout << "--TIPO DE USUARIO-----------" << endl
+                 << "--CLIENTE----------------[1]" << endl
+                 << "--VENDEDOR---------------[2]" << endl
+                 << "--ADMINISTRADOR----------[3]" << endl
+                 << "--CANCELAR---------------[4]" << endl;
+            getValue("Ingrese opcion[1-3]: ", &opt);
+            if (opt == 2 || opt == 3)
+            {
+                cout << "Para crear un usuario de vendedor o administrador, debe iniciar sesion como administrador" << endl;
+                admLoged = iniciarSesion(false, type);
+                break;
+            }
+            switch (opt)
+            {
+            case 1:
+                tipoUsuario = "Cliente";
+                break;
+            case 2:
+                if (admLoged && type == "Administrador")
+                    tipoUsuario = "Vendedor";
+                else
+                {
+                    opt = -1;
+                    cout << "ERROR: La sesión iniciada no es un Administrador..." << endl;
+                    tipoUsuario = "Cancelar";
+                    system("pause");
+                }
+                break;
+            case 3:
+                if (admLoged && type == "Administrador")
+                    tipoUsuario = "Administrador";
+                else
+                {
+                    opt = -1;
+                    cout << "ERROR: La sesión iniciada no es un Administrador..." << endl;
+                    tipoUsuario = "Cancelar";
+                    system("pause");
+                }
+                break;
+            case 4:
+                tipoUsuario = "Cancelar";
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-4]" << endl;
+                system("pause");
+                system("cls");
+            }
+        }
+        else
+        {
+            cout << "--NO TENEMOS REGISTRO DE ADMINISTRADORES--------------" << endl
+                 << "--REGISTRA UN NUEVO ADMINISTRADOR ANTES DE CONTINUAR--" << endl;
+            opt = 3;
+            tipoUsuario = "Administrador";
+            system("pause");
+        }
+    } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
+    if (tipoUsuario != "Cancelar")
+    {
+        system("cls");
+        getValue("Nombre de usuario: ", &username);
+        getValue("Nombre: ", &nombre);
+
+        cin.ignore();
+        cout << "Apellidos: ";
+        getline(cin, apellidos);
+        do
+        {
+            system("cls");
+            cout << "--TIPO DE DOCUMENTO---------" << endl;
+            cout << "--DNI--------------------[1]" << endl;
+            cout << "--CARNET EXT-------------[2]" << endl;
+            cout << "--PASAPORTE--------------[3]" << endl;
+            cout << "--RUC--------------------[4]" << endl;
+            getValue("Ingrese opcion[1-4]: ", &opt);
+            switch (opt)
+            {
+            case 1:
+                tipoDocumento = "DNI";
+                docSize = 8;
+                break;
+            case 2:
+                tipoDocumento = "CE";
+                docSize = 12;
+                break;
+            case 3:
+                tipoDocumento = "PASAPORTE";
+                docSize = 12;
+                break;
+            case 4:
+                tipoDocumento = "RUC";
+                docSize = 11;
+                break;
+            default:
+                cout << "Ingrese una opción valida[1-4]" << endl;
+                system("pause");
+            }
+        } while (opt != 1 && opt != 2 && opt != 3 && opt != 4);
+
+        strInput = "0";
+        do
+        {
+            system("cls");
+            cout << tipoDocumento << endl;
+            if (!esNumero(strInput))
+            {
+                cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
+            }
+            getValue("Numero de documento: ", &strInput);
+            if ((int)strInput.size() != docSize)
+            {
+                cout << "Los documentos tipo " << tipoDocumento << " deben contener " << docSize << " digitos" << endl;
+                cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
+                system("pause");
+            }
+        } while (!esNumero(strInput) || (int)strInput.size() != docSize);
+        numDocumento = stoi(strInput);
+        do
+        {
+            system("cls");
+            getValue("Contrasena(minimo 8 caracteres): ", &contrasena);
+            system("cls");
+            getValue("Confirmar contrasena: ", &contrasenaConfi);
+            if (contrasena.size() < 8)
+            {
+                cout << "La contrasena debe tener minimo 8 caracteres" << endl;
+                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
+                system("pause");
+            }
+            else if (contrasena != contrasenaConfi)
+            {
+                cout << "Las contrasenas no son iguales" << endl;
+                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
+                system("pause");
+            }
+        } while (contrasena != contrasenaConfi || contrasena.length() < 8);
+
+        Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
+
+        userController.add(objUser);
+        objUser.listarDatos(); // BORRAR VERSION FINAL - SOLO DEBUG
+        system("cls");
+        iniciarSesion(true, type);
+        menuPrincipal();
+    }
+}
 void modifyPerfil(string key)
 {
     string temporal;
     int opt;
-    bool cambioKey = false;
     Usuario objUser = userController.getUsuario(key);
     do
     {
@@ -551,9 +611,9 @@ void modifyPerfil(string key)
             {
                 userController.modify(objUser, userController.getUsuario(key, true));
                 progController.closeSesion();
-                break;
             }
-
+            cout << "Cancelando los cambios...";
+            break;
         case 7:
             cout << "Cancelando los cambios...";
             break;

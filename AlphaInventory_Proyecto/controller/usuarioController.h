@@ -34,9 +34,9 @@ Usuario usuarioController::get(int pos)
 }
 void usuarioController::modify(Usuario obj, int pos)
 {
-    string dataToSave=obj.getContrasena();
-    if(dataToSave=="********")
-        dataToSave=vectorUsuario[pos].getContrasena();
+    string dataToSave = obj.getContrasena();
+    if (dataToSave == "********")
+        dataToSave = vectorUsuario[pos].getContrasena();
     vectorUsuario[pos] = obj;
     vectorUsuario[pos].setContrasena(dataToSave);
 }
@@ -44,7 +44,7 @@ bool usuarioController::validarUsuarioNoExiste(string username)
 {
     int i = 0;
     bool found = false;
-    while (i < vectorUsuario.size() && !found)
+    while (i < (int)vectorUsuario.size() && !found)
     {
         if (vectorUsuario[i].getUsername() == username)
             found = true;
@@ -54,10 +54,9 @@ bool usuarioController::validarUsuarioNoExiste(string username)
 }
 bool usuarioController::validarSesion(string username, string contrasena)
 {
-    int index = -1,
-        i = 0;
+    int i = 0;
     bool found = false;
-    while (i < vectorUsuario.size() && !found)
+    while (i < (int)vectorUsuario.size() && !found)
     {
         if (vectorUsuario[i].getUsername() == username)
             found = true;
@@ -78,7 +77,10 @@ int usuarioController::getUsuario(string key, bool a)
     int i = 0, index = 0;
     bool found = false;
 
-    while (i < vectorUsuario.size() && !found)
+    if(a)
+        cout<<"";
+
+    while (i < (int)vectorUsuario.size() && !found)
     {
         if (vectorUsuario[i].getCodigo() == key)
         {
@@ -97,7 +99,7 @@ Usuario usuarioController::getUsuario(string key)
     int i = 0;
     bool found = false;
 
-    while (i < vectorUsuario.size() && !found)
+    while (i < (int)vectorUsuario.size() && !found)
     {
         if (vectorUsuario[i].getCodigo() == key)
             found = true;
@@ -118,7 +120,7 @@ Usuario usuarioController::getUsuario(string username, string contrasena)
     }
     else
     {
-        while (i < vectorUsuario.size() && !found)
+        while (i < (int)vectorUsuario.size() && !found)
         {
             if (vectorUsuario[i].getUsername() == username)
                 found = true;
