@@ -55,12 +55,12 @@ private:
     string  codigo;
     string  nombre;
     float   precioUnitario;
-    int     stock;
     int     numCompuestos;
     vector<Compuesto> vectorCompuestos;
 
 public:
     Producto();
+    Producto(string, float, vector<Compuesto>&);
     ~Producto();
     void    setCodigo(string);
     void    setNombre(string);

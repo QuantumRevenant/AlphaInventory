@@ -1,7 +1,11 @@
 #ifndef FUNCIONESGENERALES_H
 #define FUNCIONESGENERALES_H
 
+#include <iostream>
 #include <string>
+#include <conio.h>
+#include <vector>
+using namespace std;
 
 std::string aMayuscula(std::string cadena)
 {
@@ -97,6 +101,11 @@ void getValue(string mensaje, int *dato)
     cout << mensaje;
     cin >> *dato;
 }
+void getValue(string mensaje, float *dato)
+{
+    cout << mensaje;
+    cin >> *dato;
+}
 bool confirmar(string message,string message2=" ")
 {
     string opt;
@@ -109,5 +118,31 @@ bool confirmar(string message,string message2=" ")
     else
         return false;
 }
-
+#define ENTER 13
+#define BACKSPACE 8
+string enterContrasena()
+{
+    string password;
+    char caracter;
+    caracter = getch();
+    password = "";
+    while (caracter != ENTER)
+    {
+        if (caracter != BACKSPACE)
+        {
+            password.push_back(caracter);
+            cout << "*";
+        }
+        else
+        {
+            if (password.length() > 0)
+            {
+                cout << "\b \b";
+                password = password.substr(0, password.length() - 1);
+            }
+        }
+        caracter = getch();
+    }
+    return password;
+}
 #endif

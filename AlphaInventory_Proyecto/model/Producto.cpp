@@ -8,6 +8,14 @@
 #include "../model/FuncionesGenerales.h"
 
 Producto::Producto() {}
+Producto::Producto(string _nombre, float _precio, vector<Compuesto> &_compuestos)
+{
+    nombre = _nombre;
+    precioUnitario = _precio;
+    vectorCompuestos = _compuestos;
+    codigo = "1";
+    numCompuestos = vectorCompuestos.size();
+}
 Producto::~Producto() {}
 void    Producto::setCodigo(string _codigo)
 {
