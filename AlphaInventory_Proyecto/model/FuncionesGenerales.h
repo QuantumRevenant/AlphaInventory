@@ -5,7 +5,11 @@
 #include <string>
 #include <conio.h>
 #include <vector>
+
 using namespace std;
+
+#define ENTER 13
+#define BACKSPACE 8
 
 std::string aMayuscula(std::string cadena)
 {
@@ -120,6 +124,33 @@ bool confirmar(string message,string message2=" ")
 }
 #define ENTER 13
 #define BACKSPACE 8
+
+void doEndline(int i)
+{
+    for (int j = 0; j < i; j++)
+    {
+        cout << endl;
+    }
+}
+
+void doTab(int i)
+{
+    for (int j = 0; j < i; j++)
+    {
+        cout << "\t";
+    }
+}
+
+string doTab(int i, string entrada)
+{
+    string salida = entrada;
+    for (int j = 0; j < i; j++)
+    {
+        salida = salida + "\t";
+    }
+    return salida;
+}
+
 string enterContrasena()
 {
     string password;

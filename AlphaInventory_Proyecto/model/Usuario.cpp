@@ -202,7 +202,11 @@ string Usuario::encriptar(string dato)
     char referencia = valor + 96;
     salida = referencia + dato;
     for (int i = 1; i < (int)salida.length(); i++)
+    {
         salida[i] = salida[i] + valor;
+        if (salida[i] == ',')
+            salida[i] = '"';
+    }
     return salida;
 }
 string Usuario::desencriptar(string dato)
@@ -215,7 +219,13 @@ string Usuario::desencriptar(string dato)
     int valor = (int)a - 96;
     string salida = dato.erase(0, 1);
     for (int i = 0; i < (int)salida.length(); i++)
+    {
+        if (salida[i] == '"')
+            salida[i] = ',';
+
         salida[i] = salida[i] - valor;
+    }
+
     return salida;
 }
 string Usuario::getCodigo()

@@ -1,0 +1,46 @@
+Farmacia "Miriam", se nos solicita un sistema de inventariado que nos permita ingresar nuevos productos y retirarlos.
+Los productos se identificarán por un Código único (ya definidos) y los procesos se realizarán por medio de este.
+Los productos tendrán datos adicionales: Nombre del Producto, Una lista que contenga una [estructura] de compuesto & cantidad (g),
+precio unitario, cantidad en inventario.
+Si al agregar un codigo de producto, no lo hemos creado antes, definirlo por primera vez todos sus datos.
+Se podrá consultar el stock de cualquier producto por su código. Los precios de los productos ya traen incluidos el IGV (18%).
+Implementar la solución en un TUI. Guardar los datos (Información del producto, Carritos de compra, Solicitudes de compra, y datos de perfiles) de manera externa a gusto.
+CIERRE DE CAJA, REPORTE DE CAJA
+
+Tendremos 3 niveles de usuario: Vendedor - Supervisor - Administrador.
+
+Vendedor:
+Puede Efectuar ventas
+Se registra cada venta con su código
+Puede consultar inventario
+Puede consultar su inicio de caja
+Puede editar perfil (necesita confirmacion superior)
+
+Supervisor:
+lo mismo que Vendedor
+puede añadir Lotes
+puede modificar informacion de productos
+puede leer registros de vendedores
+
+Administrador:
+Lo mismo que Supervisor
+puede leer registros de Supervisores
+
+VENTA:
+Validar cantidad de producto solicitado
+Registrar los productos, cantidad, descuento, precio final, Documento del cliente, codigo de venta, codigo de vendedor, fecha
+Reducir el inventario
+
+REGISTRO INVENTARIO:
+crear un nuevo producto por su código
+
+MODIFICAR INVENTARIO
+Modificar un producto previamente registrado
+
+REQUISITOS DE LA TUI:
+>CONTRASEÑA CENSURADA
+>CENTRADO EN EL CMD
+>CAMBIO DE COLOR DEL CMD
+>CAMBIO DE TAMAÑO DE FUENTE, CAMBIO DE TIPO DE LETRA, CAMBIO DE COLOR DE LETRA
+
+

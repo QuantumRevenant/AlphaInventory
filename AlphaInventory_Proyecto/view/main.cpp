@@ -22,10 +22,11 @@ void modifyPerfil(string);
 int main(/*int argc, char *argv[]*/)
 {
     srand(time(NULL));
-    // registrarse(true);
-    Usuario temp("admin", temp.encriptar("12345678"), "Admin", "Admin", "DNI", 12345678, "Administrador");//
-    userController.add(temp);//
-    menuPrincipal();//
+    userController.archRecuperarDatos();
+    registrarse(true);
+    // Usuario temp("admin", temp.encriptar("12345678"), "Admin", "Admin", "DNI", 12345678, "Administrador"); //
+    // userController.add(temp);                                                                              //
+    menuPrincipal();                                                                                       //
     return 0;
 }
 void menuPrincipal()
@@ -64,7 +65,7 @@ void menuUsuario()
             cout << "--Cerrar Sesión-----------[" << i + 2 << "]" << endl;
             i += 3;
         }
-        cout <<     "--Salir del Menú----------[" << i << "]" << endl;
+        cout << "--Salir del Menú----------[" << i << "]" << endl;
 
         getValue("Ingrese opcion[1-" + to_string(i) + "]: ", &opt);
 
@@ -108,6 +109,7 @@ void menuUsuario()
             case 2:
                 system("cls");
                 modifyPerfil(progController.getSesionKey());
+                userController.archGrabarDatos();
                 menuPrincipal();
                 break;
             case 3:
@@ -422,7 +424,6 @@ void registrarse(bool start)
             {
                 cout << "Para crear un usuario de vendedor o administrador, debe iniciar sesion como administrador" << endl;
                 admLoged = iniciarSesion(false, type);
-                break;
             }
             switch (opt)
             {
@@ -554,6 +555,7 @@ void registrarse(bool start)
         userController.add(objUser);
         objUser.listarDatos(); // BORRAR VERSION FINAL - SOLO DEBUG
         system("cls");
+        userController.archGrabarDatos();
         iniciarSesion(true, type);
         menuPrincipal();
     }
@@ -610,6 +612,7 @@ void modifyPerfil(string key)
             if (confirmar("guardar los cambios", "Deberás reiniciar la sesión."))
             {
                 userController.modify(objUser, userController.getUsuario(key, true));
+                userController.archGrabarDatos();
                 progController.closeSesion();
             }
             cout << "Cancelando los cambios...";
