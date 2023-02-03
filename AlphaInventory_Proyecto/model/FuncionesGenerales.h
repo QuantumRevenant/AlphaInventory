@@ -1,8 +1,10 @@
 #ifndef FUNCIONESGENERALES_H
 #define FUNCIONESGENERALES_H
 
+#include <iostream>
 #include <string>
 #include <conio.h>
+#include <vector>
 
 using namespace std;
 
@@ -103,6 +105,11 @@ void getValue(string mensaje, int *dato)
     cout << mensaje;
     cin >> *dato;
 }
+void getValue(string mensaje, float *dato)
+{
+    cout << mensaje;
+    cin >> *dato;
+}
 bool confirmar(string message,string message2=" ")
 {
     string opt;
@@ -142,6 +149,8 @@ string doTab(int i, string entrada)
     return salida;
 }
 
+#define ENTER 13
+#define BACKSPACE 8
 string enterContrasena()
 {
     string password;
@@ -167,5 +176,4 @@ string enterContrasena()
     }
     return password;
 }
-
 #endif
