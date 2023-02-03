@@ -122,8 +122,6 @@ bool confirmar(string message,string message2=" ")
     else
         return false;
 }
-#define ENTER 13
-#define BACKSPACE 8
 
 void doEndline(int i)
 {
@@ -151,6 +149,8 @@ string doTab(int i, string entrada)
     return salida;
 }
 
+#define ENTER 13
+#define BACKSPACE 8
 string enterContrasena()
 {
     string password;
