@@ -11,7 +11,6 @@ void verProducto();
 
 int main(int argc, char const *argv[])
 {
-    //productoController.copyFile();
     int opt;
     do
     {

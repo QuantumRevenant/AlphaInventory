@@ -26,7 +26,10 @@ public:
     void        copyFile();
 };
 
-ProductoController::ProductoController() {}
+ProductoController::ProductoController()
+{
+    copyFile();
+}
 void    ProductoController::add(Producto obj)
 {
     vectorProducto.push_back(obj);
@@ -121,17 +124,17 @@ void    ProductoController::copyFile()
         int j;
         size_t posi;
         string linea;
-        vector<string> temporal;
         fstream archivoProductos;
         archivoProductos.open("../data/productos.csv", ios::in);
         if (archivoProductos.is_open())
         {
             while (!archivoProductos.eof() && getline(archivoProductos, linea))
             {
+                vector<string> temporal;
                 i = 0;
                 while ((posi = linea.find(";")) != string::npos)
                 {
-                    temporal[i] = linea.substr(0, posi);
+                    temporal.push_back(linea.substr(0, posi));
                     linea.erase(0, posi + 1);
                     i++;
                 }
@@ -141,7 +144,7 @@ void    ProductoController::copyFile()
                 obj.setPrecioUnitario(stof(temporal[2]));
                 obj.setNumCompuestos(stoi(temporal[3]));
                 j = 4;
-                for (int i = 0; i < obj.getNumCompuestos(); i++)
+                for (int k = 0; k < obj.getNumCompuestos(); k++)
                 {
                     Compuesto comp;
                     comp.compuesto = temporal[j];
