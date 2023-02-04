@@ -7,6 +7,9 @@
 
 using namespace std;
 
+usuarioController userController;
+programController progController;
+
 // Option Menus
 void menuLogIn();     // ✅
 void menuMain();      // ✅
