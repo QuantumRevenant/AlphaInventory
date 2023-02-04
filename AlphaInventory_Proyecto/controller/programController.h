@@ -14,7 +14,7 @@ class programController
 {
 private:
     bool activeSesion = false;
-    bool isSeller = false;
+    bool isSupervisor = false;
     bool isAdmin = false;
     string sesionKey;
 
@@ -24,7 +24,7 @@ public:
     void closeSesion();
     void openSesion(string, bool, bool);
     bool getActiveSesion();
-    bool getIsSeller();
+    bool getIsSupervisor();
     bool getIsAdmin();
     string getSesionKey();
 };
@@ -32,7 +32,7 @@ public:
 programController::programController()
 {
     activeSesion = false;
-    isSeller = false;
+    isSupervisor = false;
     isAdmin = false;
     sesionKey = "null-000";
 }
@@ -40,14 +40,14 @@ programController::~programController() {}
 void programController::closeSesion()
 {
     activeSesion = false;
-    isSeller = false;
+    isSupervisor = false;
     isAdmin = false;
     sesionKey = "null-000";
 }
-void programController::openSesion(string key, bool isSeller = false, bool isAdmin = false)
+void programController::openSesion(string key, bool isSupervisor = false, bool isAdmin = false)
 {
     activeSesion = true;
-    this->isSeller = isSeller;
+    this->isSupervisor = isSupervisor;
     this->isAdmin = isAdmin;
     sesionKey = key;
 }
@@ -55,9 +55,9 @@ bool programController::getActiveSesion()
 {
     return activeSesion;
 }
-bool programController::getIsSeller()
+bool programController::getIsSupervisor()
 {
-    return isSeller;
+    return isSupervisor;
 }
 bool programController::getIsAdmin()
 {

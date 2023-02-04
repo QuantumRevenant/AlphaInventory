@@ -1,9 +1,10 @@
-#ifndef OPTIONMENUS_H
-#define OPTIONMENUS_H
+#ifndef OPTIONMENUS_CPP
+#define OPTIONMENUS_CPP
 
 #include <iostream>
 #include <string>
 #include "../model/FuncionesGenerales.h"
+#include "Funciones.h"
 
 #define VOFFSET 5
 #define HOFFSET 5
@@ -14,17 +15,10 @@ using namespace std;
 
 */
 
-// Option Menus
-void menuLogIn();     // ✅
-void menuMain();      // ✅
-void menuUser();      // ✅
-void menuInventory(); // ✅
-void menuRecords();   // ✅
-
 void menuLogIn()
 {
     system("cls");
-    string opt = "3";
+    string opt = "3",type;
     do
     {
         doEndline(VOFFSET);
@@ -42,10 +36,10 @@ void menuLogIn()
             switch (stoi(opt))
             {
             case 1:
-                // doLogin
+                doIniciarSesion(false,type);
                 break;
             case 2:
-                // doRegistro
+                doRegistrarse(false);
                 break;
             case 3:
                 //
@@ -139,19 +133,19 @@ void menuUser()
             switch (stoi(opt))
             {
             case 1:
-                // doModificarPerfil
+                doModificarPerfil(progController.getSesionKey());
                 break;
             case 2:
-                // menuRecords
+                menuRecords();
                 break;
             case 3:
-                // doRegistrarse(false)
+                doRegistrarse(false);
                 break;
             case 4:
                 // askEstadoCaja
                 break;
             case 5:
-                // doCerrarSesion
+                doCerrarSesion();
                 break;
             case 6:
                 menuMain();
