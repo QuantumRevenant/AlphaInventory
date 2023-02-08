@@ -36,7 +36,7 @@ void menuLogIn()
             switch (stoi(opt))
             {
             case 1:
-                doIniciarSesion(false,type);
+                doIniciarSesion(true,type);
                 break;
             case 2:
                 doRegistrarse(false);

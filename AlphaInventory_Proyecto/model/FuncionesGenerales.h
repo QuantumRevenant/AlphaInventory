@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <windows.h>
 #include <conio.h>
 #include <vector>
 
@@ -10,6 +11,25 @@ using namespace std;
 
 #define ENTER 13
 #define BACKSPACE 8
+
+string aMayuscula(string);
+string aMinuscula(string);
+bool esNumero(string);
+int subCadenaComunMasLarga(string, string);
+float Promediar(float[], int);
+float PromediarMayor0(float[], int);
+void getValue(string, int *);
+void getValue(string, string *);
+void getValue(string, float *);
+bool confirmar(string, string, int);
+void doEndline(int);
+void doTab(int);
+string doTab(int, string);
+string enterContrasena();
+void gotoxy(int, int);
+void centrarTexto(string, int, bool, bool, int, int);
+#define XSIZECMD 120-1
+#define YSIZECMD 30-1
 
 std::string aMayuscula(std::string cadena)
 {
@@ -19,7 +39,6 @@ std::string aMayuscula(std::string cadena)
     }
     return cadena;
 }
-
 std::string aMinuscula(std::string cadena)
 {
     for (int i = 0; i < (int)cadena.length(); i++)
@@ -28,21 +47,19 @@ std::string aMinuscula(std::string cadena)
     }
     return cadena;
 }
-
 bool esNumero(std::string cadena)
 {
     bool resultado = true;
     int i = 0;
     while (i < (int)cadena.length())
     {
-        if (!isdigit(cadena[i])&&cadena[i]!='-'&&cadena[i]!='.')
+        if (!isdigit(cadena[i]) && cadena[i] != '-' && cadena[i] != '.')
             resultado = false;
         i++;
     }
 
     return resultado;
 }
-
 int subCadenaComunMasLarga(std::string cadena1, std::string cadena2)
 {
     int ans = 0;
@@ -62,36 +79,34 @@ int subCadenaComunMasLarga(std::string cadena1, std::string cadena2)
     }
     return ans;
 }
-
 float Promediar(float datos[], int cantidadAPromediar)
 {
-    float acumulador=0, promedio=0;
-    for(int i=0;i<cantidadAPromediar;i++)
+    float acumulador = 0, promedio = 0;
+    for (int i = 0; i < cantidadAPromediar; i++)
     {
-        acumulador=acumulador+datos[i];
+        acumulador = acumulador + datos[i];
     }
 
-    if(cantidadAPromediar>0)
-    promedio=acumulador/cantidadAPromediar;
+    if (cantidadAPromediar > 0)
+        promedio = acumulador / cantidadAPromediar;
 
     return promedio;
 }
-
 float PromediarMayor0(float datos[], int cantidadDatos)
 {
-    int cantidadAPromediar=0;
+    int cantidadAPromediar = 0;
     float aPromediar[999], promedio;
 
-    for(int i=0;i<cantidadDatos;i++)
+    for (int i = 0; i < cantidadDatos; i++)
     {
-        if(datos[i]>0)
+        if (datos[i] > 0)
         {
-            aPromediar[cantidadAPromediar]=datos[i];
+            aPromediar[cantidadAPromediar] = datos[i];
             cantidadAPromediar++;
         }
     }
 
-    promedio=Promediar(aPromediar,cantidadAPromediar);
+    promedio = Promediar(aPromediar, cantidadAPromediar);
 
     return promedio;
 }
@@ -110,19 +125,19 @@ void getValue(string mensaje, float *dato)
     cout << mensaje;
     cin >> *dato;
 }
-bool confirmar(string message,string message2=" ")
+bool confirmar(string message, string message2 = " ", int hoffset = 0)
 {
     string opt;
     cout << endl
          << endl
-         << "¿Seguro que desea " << message << "?"<<message2<<"(Confirmar: S/s)" << endl;
+         << doTab(hoffset, "") << "¿Seguro que desea " << message << "?" << message2 << "(Confirmar: S/s)" << endl;
+    cout << doTab(hoffset, "") << ">_ ";
     cin >> opt;
     if (aMinuscula(opt) == "s")
         return true;
     else
         return false;
 }
-
 void doEndline(int i)
 {
     for (int j = 0; j < i; j++)
@@ -130,7 +145,6 @@ void doEndline(int i)
         cout << endl;
     }
 }
-
 void doTab(int i)
 {
     for (int j = 0; j < i; j++)
@@ -138,7 +152,6 @@ void doTab(int i)
         cout << "\t";
     }
 }
-
 string doTab(int i, string entrada)
 {
     string salida = entrada;
@@ -177,3 +190,45 @@ string enterContrasena()
     return password;
 }
 #endif
+
+void gotoxy(int x, int y)
+{
+    HANDLE hCon;
+    hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    COORD dwPos;
+    dwPos.X = x;
+    dwPos.Y = y;
+    SetConsoleCursorPosition(hCon, dwPos);
+}
+void centrarTexto(string message, int val, bool horizontal, bool vertical, int offsetx = 0, int offsety = 0)
+{
+    int x=(XSIZECMD-size(message))/2;
+    int y=YSIZECMD/2;
+    if(horizontal && vertical)
+    {
+        gotoxy(x+offsetx,y+offsety);
+        cout<<message; 
+    }
+}
+void dibujarCuadro()
+{
+    for (int i = 0; i < XSIZECMD; i++)
+    {
+        string decorador="-";
+        gotoxy(i,0);
+        cout<<decorador;
+        gotoxy(i,YSIZECMD);
+        cout<<decorador;
+    }
+    for (int i = 0; i < YSIZECMD; i++)
+    {
+        string decorador="|";
+        gotoxy(0,i);
+        cout<<decorador;
+        gotoxy(XSIZECMD,i);
+        cout<<decorador;
+    }
+    cout<<endl<<endl;
+    
+}

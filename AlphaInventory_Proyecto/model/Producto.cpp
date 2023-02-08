@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <random>
-#include "Clases.h"
+#include "clases.h"
 #include "../model/FuncionesGenerales.h"
 
 Producto::Producto() {}
