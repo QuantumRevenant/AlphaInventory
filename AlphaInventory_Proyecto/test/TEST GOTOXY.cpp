@@ -12,12 +12,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    dibujarCuadro();
-    gotoxy(60,15);
-    cout<<"TITULO";
-    gotoxy(1,28);
-    system("pause");
-    system("exit");
+    vector<string> test={"Opcion 1","Opcion 2","3","test 4"};
+
+    menu("test",test);
 
     return 0;
 }

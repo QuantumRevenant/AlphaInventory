@@ -11,6 +11,7 @@ using namespace std;
 
 #define ENTER 13
 #define BACKSPACE 8
+char baseColor[] = "0f";
 
 string aMayuscula(string);
 string aMinuscula(string);
@@ -28,8 +29,8 @@ string doTab(int, string);
 string enterContrasena();
 void gotoxy(int, int);
 void centrarTexto(string, int, bool, bool, int, int);
-#define XSIZECMD 120-1
-#define YSIZECMD 30-1
+#define XSIZECMD 120
+#define YSIZECMD 30
 
 std::string aMayuscula(std::string cadena)
 {
@@ -201,34 +202,128 @@ void gotoxy(int x, int y)
     dwPos.Y = y;
     SetConsoleCursorPosition(hCon, dwPos);
 }
-void centrarTexto(string message, int val, bool horizontal, bool vertical, int offsetx = 0, int offsety = 0)
+void centrarTexto(string message, int val = 0, bool horizontal = true, bool vertical = true, int offsetx = 0, int offsety = 0)
 {
-    int x=(XSIZECMD-size(message))/2;
-    int y=YSIZECMD/2;
-    if(horizontal && vertical)
+    int x = (XSIZECMD - size(message)) / 2;
+    int y = YSIZECMD / 2;
+    if (horizontal && vertical)
     {
-        gotoxy(x+offsetx,y+offsety);
-        cout<<message; 
+        gotoxy(x + offsetx, y + offsety);
+        cout << message;
+    }
+    else if (horizontal)
+    {
+        gotoxy(x + offsetx, val);
+        cout << message;
+    }
+    else if (vertical)
+    {
+        gotoxy(val, y + offsety);
+        cout << message;
+    }
+    else
+    {
+        gotoxy(val, val);
+        cout << message;
+    }
+}
+void alinearXTexto(string message, int y, bool izquierda = true, int offsetx = 0, int offsety = 0, bool centradoy = false)
+{
+    int valy;
+    int sizeMessage = size(message);
+    if (centradoy)
+        valy = (YSIZECMD / 2) + offsety;
+    else
+        valy = y;
+
+    if (izquierda)
+    {
+        gotoxy(offsetx, valy);
+        cout << message;
+    }
+    else
+    {
+        gotoxy(XSIZECMD - offsetx - sizeMessage, valy);
+        cout << "   " << message;
     }
 }
 void dibujarCuadro()
 {
-    for (int i = 0; i < XSIZECMD; i++)
+    for (int i = 0; i < XSIZECMD - 1; i++)
     {
-        string decorador="-";
-        gotoxy(i,0);
-        cout<<decorador;
-        gotoxy(i,YSIZECMD);
-        cout<<decorador;
+        string decorador = "-";
+        gotoxy(i + 1, 1);
+        cout << decorador;
+        gotoxy(i + 1, YSIZECMD);
+        cout << decorador;
     }
-    for (int i = 0; i < YSIZECMD; i++)
+    for (int i = 0; i < YSIZECMD - 1; i++)
     {
-        string decorador="|";
-        gotoxy(0,i);
-        cout<<decorador;
-        gotoxy(XSIZECMD,i);
-        cout<<decorador;
+        string decorador = "|";
+        gotoxy(1, i + 1);
+        cout << decorador;
+        gotoxy(XSIZECMD - 1, i + 1);
+        cout << decorador;
     }
-    cout<<endl<<endl;
-    
+    // cout << endl
+    //      << endl;
+}
+
+int menu(string title, vector<string> options)
+{
+    int sizeY = size(options) + 5 - 1;
+    int e = 0, opcionMayor = 0, salida = 0;
+    string opc;
+
+    do
+    {
+        system("cls");
+        int e = 0, opcionMayor = 0;
+        dibujarCuadro();
+        centrarTexto("____" + title + "_____", 0, true, true, 0, (-sizeY + e));
+        e++;
+        e++;
+        for (int i = 0; i < size(options); i++)
+        {
+            alinearXTexto(options[i], 0, true, 45, (-sizeY + e), true);
+            alinearXTexto("[" + to_string(i + 1) + "]", 0, false, 45, (-sizeY + e), true);
+            e++;
+            opcionMayor = i + 1;
+        }
+        alinearXTexto("Salir", 0, true, 45, (-sizeY + e), true);
+        alinearXTexto("[0]", 0, false, 45, (-sizeY + e), true);
+        e++;
+        centrarTexto(">_ ", 0, true, true, -2, (-sizeY + e));
+        cin >> opc;
+
+        if (esNumero(opc))
+        {
+            if (stoi(opc) < 0 || stoi(opc) > opcionMayor)
+            {
+                system("cls");
+                dibujarCuadro();
+                system("color 4f");
+                centrarTexto("~\t[[INTRODUZCA UNA OPCION VALIDA]]\t~");
+                Sleep(1000);
+                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
+                system(color);
+                opc = "-1";
+            }
+            else
+                salida = stoi(opc);
+        }
+        else
+        {
+            system("cls");
+            dibujarCuadro();
+            system("color 4f");
+            centrarTexto("~\t[[INTRODUZCA UNA OPCION VALIDA]]\t~");
+            Sleep(1000);
+            char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
+            system(color);
+            opc = "-1";
+        }
+    } while (stoi(opc) < 0 || stoi(opc) > opcionMayor);
+
+    return salida;
 }
