@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <conio.h>
 #include <vector>
@@ -29,6 +30,11 @@ string doTab(int, string);
 string enterContrasena();
 void gotoxy(int, int);
 void centrarTexto(string, int, bool, bool, int, int);
+void alinearXTexto(string, int, bool, int, int, bool);
+void dibujarCuadro();
+int menu(string, vector<string>);
+void esquinarTexto(string, int, bool, bool, bool);
+
 #define XSIZECMD 120
 #define YSIZECMD 30
 
@@ -190,8 +196,6 @@ string enterContrasena()
     }
     return password;
 }
-#endif
-
 void gotoxy(int x, int y)
 {
     HANDLE hCon;
@@ -268,7 +272,6 @@ void dibujarCuadro()
     // cout << endl
     //      << endl;
 }
-
 int menu(string title, vector<string> options)
 {
     int sizeY = size(options) + 5 - 1;
@@ -323,6 +326,24 @@ int menu(string title, vector<string> options)
             system(color);
             opc = "-1";
         }
-    } while (stoi(opc) < 0 );
+    } while (stoi(opc) < 0);
     return salida;
 }
+void esquinarTexto(string message, int border=0, bool up = false, bool left = true, bool print=true)
+{
+    int x;
+    int y;
+    if (left)
+        x=border+1;
+    else
+        x=XSIZECMD-1-size(message);
+    if(up)
+        y=border+1;
+    else
+        y=YSIZECMD-border;
+    
+    gotoxy(x,y);
+    if(print)
+        cout<<message;
+}
+#endif

@@ -18,242 +18,138 @@ using namespace std;
 void menuLogIn()
 {
     system("cls");
-    string opt = "3",type;
-    do
-    {
-        doEndline(VOFFSET);
-        cout << doTab(HOFFSET + 1, "") << "-----SESIÓN-----" << endl
-             << endl;
-        cout << doTab(HOFFSET, "") << "--INICIO DE SESIÓN---" << doTab(2, "") << "[1]" << endl;
-        cout << doTab(HOFFSET, "") << "--REGISTRO-----------" << doTab(2, "") << "[2]" << endl;
-        cout << doTab(HOFFSET, "") << "--SALIR DEL PROGRAMA-" << doTab(2, "") << "[3]";
-        doEndline(3);
-        cout << doTab(HOFFSET + 1, "") << ">_ ";
-        cin >> opt;
+    int opt;
+    string type;
 
-        if (esNumero(opt))
-        {
-            switch (stoi(opt))
-            {
-            case 1:
-                doIniciarSesion(true,type);
-                break;
-            case 2:
-                doRegistrarse(false);
-                break;
-            case 3:
-                //
-                break;
-            default:
-                cout << "Introduzca una opción valida [1-3]" << endl;
-                break;
-            }
-        }
-        else
-        {
-            cout << "Introduzca una opción valida [1-3]" << endl;
-            opt = "0";
-        }
-    } while (stoi(opt) < 1 || stoi(opt) > 3);
+    vector<string> options = {"Inicio de sesion", "Registro"};
+    opt = menu("BIENVENIDO", options);
+
+    switch (opt)
+    {
+    case 1:
+        doIniciarSesion(true, type);
+        break;
+    case 2:
+        doRegistrarse(false);
+        break;
+    case 0:
+        // Salir
+        break;
+    default:
+        cout << "Error, opcion no válida" << endl;
+        break;
+    }
 }
 
 void menuMain()
 {
     system("cls");
-    string opt = "5";
-    do
+    int opt;
+    vector<string> options = {"Registrar venta", "\"" + userController.getUsuario(progController.getSesionKey()).getUsername() + "\"", "Inventario", "Registro de ventas"};
+    opt = menu("MENU PRINCIPAL", options);
+    switch (opt)
     {
-        doEndline(VOFFSET);
-        cout << doTab(HOFFSET + 1, "") << "--MENU PRINCIPAL----" << endl
-             << endl;
-        cout << doTab(HOFFSET, "") << "--REGISTRAR VENTA----" << doTab(2, "") << "[1]" << endl;
-        cout << doTab(HOFFSET, "") << "--"
-             << "\"USERNAME\""
-             << "\t-----" << doTab(2, "") << "[2]" << endl;
-        cout << doTab(HOFFSET, "") << "--INVENTARIO---------" << doTab(2, "") << "[3]" << endl;
-        cout << doTab(HOFFSET, "") << "--REGISTROS----------" << doTab(2, "") << "[4]" << endl;
-        cout << doTab(HOFFSET, "") << "--SALIR DEL PROGRAMA-" << doTab(2, "") << "[5]" << endl;
-        doEndline(3);
-        cout << doTab(HOFFSET + 1, "") << ">_ ";
-        cin >> opt;
-
-        if (esNumero(opt))
-        {
-            switch (stoi(opt))
-            {
-            case 1:
-                // doVenta
-                break;
-            case 2:
-                menuUser();
-                break;
-            case 3:
-                menuInventory();
-                break;
-            case 4:
-                menuRecords();
-                break;
-            case 5:
-                cout<<"-<>-Hasta pronto-<>-"<<endl;
-                break;
-            default:
-                cout << "Introduzca una opción valida [1-5]" << endl;
-                break;
-            }
-        }
-        else
-        {
-            cout << "Introduzca una opción valida [1-5]" << endl;
-            opt = "0";
-        }
-    } while (stoi(opt) < 1 || stoi(opt) > 5);
+    case 1:
+        // doVenta
+        break;
+    case 2:
+        menuUser();
+        break;
+    case 3:
+        menuInventory();
+        break;
+    case 4:
+        menuRecords();
+        break;
+    case 0:
+        esquinarTexto("-<>-Hasta pronto-<>-", 1);
+        break;
+    }
 }
-
 void menuUser()
 {
     system("cls");
-    string opt = "6";
-    do
+    int opt;
+    vector<string> options = {"Modificar Perfil", "Registros", "Registrar Usuario", "Estado de Caja", "Cerrar Sesión"};
+    opt = menu("MENU USUARIO", options);
+
+    switch (opt)
     {
-        doEndline(VOFFSET);
-        cout << doTab(HOFFSET + 1, "") << "--MENU USUARIO-------" << endl
-             << endl;
-        cout << doTab(HOFFSET, "") << "--MODIFICAR PERFIL---" << doTab(2, "") << "[1]" << endl;
-        cout << doTab(HOFFSET, "") << "--REGISTROS----------" << doTab(2, "") << "[2]" << endl;
-        cout << doTab(HOFFSET, "") << "--REGISTRAR USUARIO--" << doTab(2, "") << "[3]" << endl;
-        cout << doTab(HOFFSET, "") << "--ESTADO DE CAJA-----" << doTab(2, "") << "[4]" << endl;
-        cout << doTab(HOFFSET, "") << "--CERRAR SESIÓN------" << doTab(2, "") << "[5]" << endl;
-        cout << doTab(HOFFSET, "") << "--SALIR--------------" << doTab(2, "") << "[6]" << endl;
-        doEndline(3);
-        cout << doTab(HOFFSET + 1, "") << ">_ ";
-        cin >> opt;
-
-        if (esNumero(opt))
-        {
-            switch (stoi(opt))
-            {
-            case 1:
-                doModificarPerfil(progController.getSesionKey());
-                break;
-            case 2:
-                menuRecords();
-                break;
-            case 3:
-                doRegistrarse(false);
-                break;
-            case 4:
-                // askEstadoCaja
-                break;
-            case 5:
-                doCerrarSesion();
-                break;
-            case 6:
-                menuMain();
-                break;
-            default:
-                cout << "Introduzca una opción valida [1-6]" << endl;
-                break;
-            }
-        }
-        else
-        {
-            cout << "Introduzca una opción valida [1-6]" << endl;
-            opt = "0";
-        }
-
-    } while (stoi(opt) < 1 || stoi(opt) > 6);
+    case 1:
+        doModificarPerfil(progController.getSesionKey());
+        break;
+    case 2:
+        menuRecords();
+        break;
+    case 3:
+        doRegistrarse(false);
+        break;
+    case 4:
+        // askEstadoCaja
+        break;
+    case 5:
+        doCerrarSesion();
+        break;
+    case 0:
+        menuMain();
+        break;
+    default:
+        cout << "Introduzca una opción valida [1-6]" << endl;
+        break;
+    }
 }
 
 void menuInventory()
 {
     system("cls");
-    string opt = "4";
-    do
+    int opt;
+    vector<string> options = {"Registrar Compra", "Consultar Inventario", "Modificar Datos de producto"}; // Añadir Marca
+    opt = menu("MENU INVENTARIO", options);
+    switch (opt)
     {
-        doEndline(VOFFSET);
-        cout << doTab(HOFFSET + 1, "") << "--MENU INVENTARIO-------" << endl
-             << endl;
-        cout << doTab(HOFFSET, "") << "--AÑADIR PRODUCTOS---" << doTab(2, "") << "[1]" << endl;
-        cout << doTab(HOFFSET, "") << "--CONSULTAR PRODUCTO-" << doTab(2, "") << "[2]" << endl;
-        cout << doTab(HOFFSET, "") << "--MODIFICAR PRODUCTO-" << doTab(2, "") << "[3]" << endl;
-        cout << doTab(HOFFSET, "") << "--SALIR--------------" << doTab(2, "") << "[4]" << endl;
-        doEndline(3);
-        cout << doTab(HOFFSET + 1, "") << ">_ ";
-        cin >> opt;
-
-        if (esNumero(opt))
-        {
-            switch (stoi(opt))
-            {
-            case 1:
-                // doAddInventario
-                break;
-            case 2:
-                // askInventario
-                break;
-            case 3:
-                // changeDataInventario
-                break;
-            case 4:
-                menuMain();
-                break;
-            default:
-                cout << "Introduzca una opción valida [1-4]" << endl;
-                break;
-            }
-        }
-        else
-        {
-            cout << "Introduzca una opción valida [1-4]" << endl;
-            opt = "0";
-        }
-    } while (stoi(opt) < 1 || stoi(opt) > 4);
+    case 1:
+        // doAddInventario
+        break;
+    case 2:
+        // askInventario
+        break;
+    case 3:
+        // changeDataInventario
+        break;
+    case 4:
+        menuMain();
+        break;
+    default:
+        cout << "Introduzca una opción valida [1-4]" << endl;
+        break;
+    }
 }
 
 void menuRecords()
 {
     system("cls");
-    string opt = "4";
-    do
-    {
-        doEndline(VOFFSET);
-        cout << doTab(HOFFSET + 1, "") << "--MENU INVENTARIO-------" << endl
-             << endl;
-        cout << doTab(HOFFSET, "") << "--ESTADO DE CAJA-------" << doTab(2, "") << "[1]" << endl;
-        cout << doTab(HOFFSET, "") << "--REGISTROS PERSONALES-" << doTab(2, "") << "[2]" << endl;
-        cout << doTab(HOFFSET, "") << "--BUSCAR REGISTROS-----" << doTab(2, "") << "[3]" << endl;
-        cout << doTab(HOFFSET, "") << "--SALIR----------------" << doTab(2, "") << "[4]" << endl;
-        doEndline(3);
-        cout << doTab(HOFFSET + 1, "") << ">_ ";
-        cin >> opt;
+    int opt;
+    vector<string> options = {"Estado de Caja", "Registros Personales", "Buscar Registros"}; // Carritos de compra, etc
+    opt = menu("MENU REGISTROS", options);
 
-        if (esNumero(opt))
-        {
-            switch (stoi(opt))
-            {
-            case 1:
-                // askEstadoCaja
-                break;
-            case 2:
-                // doConsultarRegistro
-                break;
-            case 3:
-                // doConsultarRegistro
-                break;
-            case 4:
-                menuMain();
-                break;
-            default:
-                cout << "Introduzca una opción valida [1-4]" << endl;
-                break;
-            }
-        }
-        else
-        {
-            cout << "Introduzca una opción valida [1-4]" << endl;
-            opt = "0";
-        }
-    } while (stoi(opt) < 1 || stoi(opt) > 4);
+    switch (opt)
+    {
+    case 1:
+        // askEstadoCaja
+        break;
+    case 2:
+        // doConsultarRegistro
+        break;
+    case 3:
+        // doConsultarRegistro
+        break;
+    case 4:
+        menuMain();
+        break;
+    default:
+        cout << "Introduzca una opción valida [1-4]" << endl;
+        break;
+    }
 }
 
 #endif
