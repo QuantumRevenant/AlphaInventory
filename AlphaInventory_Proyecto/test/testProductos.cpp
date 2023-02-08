@@ -1,9 +1,11 @@
 #include <iostream>
 #include "../controller/productoController.h"
+#include "../controller/marcaController.h"
 #include "../model/FuncionesGenerales.h"
 using namespace std;
 
-ProductoController productoController;
+ProductoController  productoController;
+MarcaController     marcaController;
 
 void listarProductos();
 void listarProducto(Producto);
@@ -60,6 +62,18 @@ void listarProductos()
     } else
     {
         cout << "Aun no hay productos registrados" << endl;
+    }
+}
+void listarMarcas()
+{
+    cout << "Marcas Registradas:" << endl;
+    if (marcaController.size() > 0)
+    {
+        for (int i = 0; i < marcaController.size(); i++)
+            cout << "[" << i + 1 << "]" << marcaController.get(i).getNombreMarca() << endl;
+    } else
+    {
+        cout << "Aun no hay marcas registradas" << endl;
     }
 }
 void listarProducto(Producto temp)

@@ -78,5 +78,18 @@ public:
     Compuesto getCompuesto(int);
 };
 
-
+class Marca
+{
+private:
+    int codigoMarca;
+    string nombreMarca;
+public:
+    Marca();
+    Marca(int,string);
+    ~Marca();
+    int     getCodigoMarca();
+    string  getNombreMarca();
+    void    setCodigoMarca(int);
+    void    setNombreMarca(string);
+};
 #endif // CLASES_H
