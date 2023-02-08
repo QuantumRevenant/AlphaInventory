@@ -323,7 +323,6 @@ int menu(string title, vector<string> options)
             system(color);
             opc = "-1";
         }
-    } while (stoi(opc) < 0 || stoi(opc) > opcionMayor);
-
+    } while (stoi(opc) < 0 );
     return salida;
 }
