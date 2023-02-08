@@ -13,7 +13,7 @@ Producto::Producto(string _nombre, float _precio, vector<Compuesto> &_compuestos
     nombre = _nombre;
     precioUnitario = _precio;
     vectorCompuestos = _compuestos;
-    codigo = "1";
+    codigo = getCodigo();
     numCompuestos = vectorCompuestos.size();
 }
 Producto::~Producto() {}
@@ -35,7 +35,17 @@ void    Producto::setNumCompuestos(int _numCompuestos)
 }
 string  Producto::getCodigo()
 {
-    return codigo;
+    string cod;
+    cod = nombre[0] + to_string(numCompuestos);
+    for (int i = 0; i < 5 - vectorCompuestos.size(); i++)
+        cod += "0";
+    for(Compuesto x:vectorCompuestos)
+    {
+        cod += x.compuesto[0];
+        if (cod.size() == 7)
+            break;        
+    }
+    return cod;
 }
 string  Producto::getNombre()
 {

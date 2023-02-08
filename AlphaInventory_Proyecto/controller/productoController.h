@@ -14,6 +14,7 @@ private:
 public:
     ProductoController();
     void        add(Producto);
+    void        modify(Producto, int);
     int         size();
     int         binarySearch(int, int, string);
     int         partition(int, int);
@@ -21,7 +22,6 @@ public:
     void        ordenarProductos();
     Producto    get(string);
     Producto    get(int);
-    void        saveOnFile(Producto);
     void        saveFile();
     void        copyFile();
 };
@@ -33,6 +33,10 @@ ProductoController::ProductoController()
 void    ProductoController::add(Producto obj)
 {
     vectorProducto.push_back(obj);
+}
+void    ProductoController::modify(Producto temp, int obj)
+{
+    vectorProducto[obj] = temp;
 }
 int     ProductoController::size()
 {
