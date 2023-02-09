@@ -1,5 +1,5 @@
-#ifndef PRODUCTO_H
-#define PRODUCTO_H
+#ifndef PRODUCTO_CPP
+#define PRODUCTO_CPP
 #include <iostream>
 #include <string>
 #include <vector>
@@ -98,4 +98,4 @@ Compuesto Producto::getCompuesto(int pos)
     return vectorCompuestos[pos];
 }
 
-#endif // PRODUCTO_H
+#endif // PRODUCTO_CPP

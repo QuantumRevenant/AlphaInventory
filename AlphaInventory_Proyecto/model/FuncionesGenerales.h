@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <conio.h>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 
@@ -14,26 +15,27 @@ using namespace std;
 #define BACKSPACE 8
 char baseColor[] = "0f";
 
-string aMayuscula(string);
-string aMinuscula(string);
-bool esNumero(string);
-int subCadenaComunMasLarga(string, string);
-float Promediar(float[], int);
-float PromediarMayor0(float[], int);
-void getValue(string, int *);
-void getValue(string, string *);
-void getValue(string, float *);
-bool confirmar(string, string, int);
-void doEndline(int);
-void doTab(int);
-string doTab(int, string);
-string enterContrasena();
-void gotoxy(int, int);
-void centrarTexto(string, int, bool, bool, int, int);
-void alinearXTexto(string, int, bool, int, int, bool);
-void dibujarCuadro();
-int menu(string, vector<string>);
-void esquinarTexto(string, int, bool, bool, bool);
+string  aMayuscula(string);
+string  aMinuscula(string);
+bool    esNumero(string);
+int     subCadenaComunMasLarga(string, string);
+float   Promediar(float[], int);
+float   PromediarMayor0(float[], int);
+string  currentDateTime();
+void    getValue(string, int *);
+void    getValue(string, string *);
+void    getValue(string, float *);
+bool    confirmar(string, string, int);
+void    doEndline(int);
+void    doTab(int);
+string  doTab(int, string);
+string  enterContrasena();
+void    gotoxy(int, int);
+void    centrarTexto(string, int, bool, bool, int, int);
+void    alinearXTexto(string, int, bool, int, int, bool);
+void    dibujarCuadro();
+int     menu(string, vector<string>);
+void    esquinarTexto(string, int, bool, bool, bool);
 
 #define XSIZECMD 120
 #define YSIZECMD 30
@@ -116,6 +118,15 @@ float PromediarMayor0(float datos[], int cantidadDatos)
     promedio = Promediar(aPromediar, cantidadAPromediar);
 
     return promedio;
+}
+string currentDateTime()
+{
+    time_t t = time(nullptr);
+    tm* now = localtime(&t);
+ 
+    char buffer[128];
+    strftime(buffer, sizeof(buffer), "%m-%d-%Y %X", now);
+    return buffer;
 }
 void getValue(string mensaje, string *dato)
 {
