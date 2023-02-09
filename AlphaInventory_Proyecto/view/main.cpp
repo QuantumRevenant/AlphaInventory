@@ -9,6 +9,7 @@
 #include "../controller/programController.h"
 #include "../model/FuncionesGenerales.h"
 #include "OptionMenus.h"
+#include "../controller/Encrypter/sha256.h"
 
 #define VOFFSET 5
 #define HOFFSET 5
