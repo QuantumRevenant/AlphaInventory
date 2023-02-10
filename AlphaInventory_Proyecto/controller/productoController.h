@@ -106,9 +106,9 @@ void    ProductoController::saveFile()
         {
             for (Producto obj:vectorProducto)
             {
-                archivoProductos << obj.getCodigo() << ";" << obj.getNombre() << ";" << obj.getPrecioUnitario() << ";" << obj.getNumCompuestos() << ";";
-                for (int i = 0; i < obj.getNumCompuestos(); i++)
-                    archivoProductos << obj.getCompuesto(i).compuesto << ";" << obj.getCompuesto(i).cantidad << ";";
+                archivoProductos << obj.getCodigo() << "," << obj.getNombre() << "," << obj.getPrecioUnitario() << "," << obj.getNumComponentes() << ",";
+                for (int i = 0; i < obj.getNumComponentes(); i++)
+                    archivoProductos << obj.getComponente(i).getNombre() << "," << obj.getComponente(i).getCantidad() << ",";
                 archivoProductos << endl;
             }
             archivoProductos.close();
@@ -136,7 +136,7 @@ void    ProductoController::copyFile()
             {
                 vector<string> temporal;
                 i = 0;
-                while ((posi = linea.find(";")) != string::npos)
+                while ((posi = linea.find(",")) != string::npos)
                 {
                     temporal.push_back(linea.substr(0, posi));
                     linea.erase(0, posi + 1);
@@ -146,14 +146,14 @@ void    ProductoController::copyFile()
                 obj.setCodigo(temporal[0]);
                 obj.setNombre(temporal[1]);
                 obj.setPrecioUnitario(stof(temporal[2]));
-                obj.setNumCompuestos(stoi(temporal[3]));
+                obj.setNumComponentes(stoi(temporal[3]));
                 j = 4;
-                for (int k = 0; k < obj.getNumCompuestos(); k++)
+                for (int k = 0; k < obj.getNumComponentes(); k++)
                 {
-                    Compuesto comp;
-                    comp.compuesto = temporal[j];
-                    comp.cantidad = stof(temporal[j + 1]);
-                    obj.addCompuesto(comp);
+                    Componente comp;
+                    comp.setNombre(temporal[j]);
+                    comp.setCantidad(temporal[j + 1]);
+                    obj.addComponente(comp);
                     j = j + 2;
                 }
                 add(obj);

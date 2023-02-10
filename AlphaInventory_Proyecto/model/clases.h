@@ -4,9 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "estructuras.h"
 using namespace std;
-
 
 class Usuario
 {
@@ -55,27 +53,27 @@ private:
     string  codigo;
     string  nombre;
     float   precioUnitario;
-    int     numCompuestos;
-    vector<Compuesto> vectorCompuestos;
+    int     numComponentes;
+    vector<Componente> vectorComponentes;
 
 public:
     Producto();
-    Producto(string, float, vector<Compuesto>&);
+    Producto(string, float, vector<Componente>&);
     ~Producto();
     void    setCodigo(string);
     void    setNombre(string);
     void    setPrecioUnitario(float);
-    void    setNumCompuestos(int);
+    void    setNumComponentes(int);
     string  getCodigo();
     string  getNombre();
     float   getPrecioUnitario();
-    int     getNumCompuestos();
+    int     getNumComponentes();
     int     partition(int, int);
     void    quickSort(int, int);
-    void    ordenarCompuestos();
-    void    addCompuesto(Compuesto);
-    void    deleteCompuesto(int);
-    Compuesto getCompuesto(int);
+    void    ordenarComponentes();
+    void    addComponente(Componente);
+    void    deleteComponente(int);
+    Componente getComponente(int);
 };
 
 class Marca
@@ -92,6 +90,7 @@ public:
     void    setCodigoMarca(int);
     void    setNombreMarca(string);
 };
+
 class Procesos
 {
 private:
@@ -188,6 +187,21 @@ public:
     ~DVenta();
     int getCodVenta();
     void setCodVenta(int);
+};
+
+class Componente
+{
+private:
+    string  nombre;
+    string  cantidad;
+public:
+    Componente();
+    Componente(string, string);
+    ~Componente();
+    string getNombre();
+    string getCantidad();
+    void setNombre(string);
+    void setCantidad(string);
 };
 
 #endif // CLASES_H

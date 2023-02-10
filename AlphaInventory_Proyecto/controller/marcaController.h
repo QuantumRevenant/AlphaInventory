@@ -13,22 +13,29 @@ private:
 
 public:
     MarcaController();
-    void        add(Marca);
-    void        modify(Marca, int);
-    int         size();
-    int         binarySearch(int, int, int);
-    int         partition(int, int);
-    void        quickSort(int, int);
-    void        ordenarMarcas();
-    Marca       get(int);
-    Marca       get(int);
-    void        saveFile();
-    void        copyFile();
+    int     getCorrelativo();
+    void    add(Marca);
+    void    modify(Marca, int);
+    int     size();
+    Marca   get(int);
+    void    saveFile();
+    void    copyFile();
 };
 
 MarcaController::MarcaController()
 {
     copyFile();
+}
+int     MarcaController::getCorrelativo()
+{
+	if(size()==0)		
+	{
+		return 1;	
+	}
+	else
+	{
+		return vectorMarca[size() - 1].getCodigoMarca() + 1;
+	}
 }
 void    MarcaController::add(Marca obj)
 {
@@ -41,56 +48,6 @@ void    MarcaController::modify(Marca temp, int obj)
 int     MarcaController::size()
 {
     return vectorMarca.size();
-}
-int     MarcaController::partition(int menor, int mayor)
-{
-    Marca pivote = vectorMarca[mayor];
-    int i = menor - 1;
-    for (int j = menor; j <= mayor - 1; j++)
-        if (vectorMarca[j].getCodigoMarca() < pivote.getCodigoMarca())
-        {
-            i++;
-            swap(vectorMarca[i], vectorMarca[j]);
-        }
-    swap(vectorMarca[i + 1], vectorMarca[mayor]);
-    return i + 1;
-}
-void    MarcaController::quickSort(int menor, int mayor)
-{
-    if (menor < mayor)
-    {
-        int pivote = partition(menor, mayor);
-        quickSort(menor, pivote - 1);
-        quickSort(pivote + 1, mayor);
-    }
-}
-void    MarcaController::ordenarMarcas()
-{
-    quickSort(0, size() - 1);
-}
-int     MarcaController::binarySearch(int inicio, int _final, int cod)
-{
-    if (_final >= inicio)
-    {
-        int mitad = inicio + (_final - inicio) / 2;
-        if (vectorMarca[mitad].getCodigoMarca() == cod)
-            return mitad;
-        if (vectorMarca[mitad].getCodigoMarca() > cod)
-            return binarySearch(inicio, mitad - 1, cod);
-        return binarySearch(mitad + 1, _final, cod);
-    }
-    return -1;
-}
-Marca MarcaController::get(int codigo)
-{
-    Marca obj;
-    int pos;
-    obj.setNombreMarca("error");
-    pos = binarySearch(0, size() - 1, codigo);
-    if (pos != -1)
-        return get(pos);
-    else
-        return obj;
 }
 Marca MarcaController::get(int pos)
 {
