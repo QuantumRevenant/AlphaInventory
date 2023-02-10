@@ -6,9 +6,10 @@
 #include "../model/FuncionesGenerales.h"
 
 Marca::Marca() {}
-Marca::Marca(int, string)
+Marca::Marca(int cod, string _nombreMarca)
 {
-
+    codigoMarca = cod;
+    nombreMarca = _nombreMarca;
 }
 Marca::~Marca() {}
 int     Marca::getCodigoMarca()

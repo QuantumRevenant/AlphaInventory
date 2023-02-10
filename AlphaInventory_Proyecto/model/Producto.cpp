@@ -1,5 +1,5 @@
-#ifndef PRODUCTO_H
-#define PRODUCTO_H
+#ifndef PRODUCTO_CPP
+#define PRODUCTO_CPP
 #include <iostream>
 #include <string>
 #include <vector>
@@ -8,13 +8,13 @@
 #include "../model/FuncionesGenerales.h"
 
 Producto::Producto() {}
-Producto::Producto(string _nombre, float _precio, vector<Compuesto> &_compuestos)
+Producto::Producto(string _nombre, float _precio, vector<Componente> &_Componentes)
 {
     nombre = _nombre;
     precioUnitario = _precio;
-    vectorCompuestos = _compuestos;
+    vectorComponentes = _Componentes;
     codigo = getCodigo();
-    numCompuestos = vectorCompuestos.size();
+    numComponentes = vectorComponentes.size();
 }
 Producto::~Producto() {}
 void    Producto::setCodigo(string _codigo)
@@ -29,19 +29,19 @@ void    Producto::setPrecioUnitario(float _precioUnitario)
 {
     precioUnitario = _precioUnitario;
 }
-void    Producto::setNumCompuestos(int _numCompuestos)
+void    Producto::setNumComponentes(int _numComponentes)
 {
-    numCompuestos = _numCompuestos;
+    numComponentes = _numComponentes;
 }
 string  Producto::getCodigo()
 {
     string cod;
-    cod = nombre[0] + to_string(numCompuestos);
-    for (int i = 0; i < 5 - vectorCompuestos.size(); i++)
+    cod = nombre[0] + to_string(numComponentes);
+    for (int i = 0; i < 5 - vectorComponentes.size(); i++)
         cod += "0";
-    for(Compuesto x:vectorCompuestos)
+    for(Componente x:vectorComponentes)
     {
-        cod += x.compuesto[0];
+        cod += x.getNombre()[0];
         if (cod.size() == 7)
             break;        
     }
@@ -55,21 +55,21 @@ float   Producto::getPrecioUnitario()
 {
     return precioUnitario;
 }
-int     Producto::getNumCompuestos()
+int     Producto::getNumComponentes()
 {
-    return numCompuestos;
+    return numComponentes;
 }
 int     Producto::partition(int menor, int mayor)
 {
-    Compuesto pivote = vectorCompuestos[mayor];
+    Componente pivote = vectorComponentes[mayor];
     int i = menor - 1;
     for (int j = menor; j <= mayor - 1; j++)
-        if (vectorCompuestos[j].compuesto < pivote.compuesto)
+        if (vectorComponentes[j].getNombre() < pivote.getNombre())
         {
             i++;
-            swap(vectorCompuestos[i], vectorCompuestos[j]);
+            swap(vectorComponentes[i], vectorComponentes[j]);
         }
-    swap(vectorCompuestos[i + 1], vectorCompuestos[mayor]);
+    swap(vectorComponentes[i + 1], vectorComponentes[mayor]);
     return i + 1;
 }
 void    Producto::quickSort(int menor, int mayor)
@@ -81,21 +81,21 @@ void    Producto::quickSort(int menor, int mayor)
         quickSort(pivote + 1, mayor);
     }
 }
-void    Producto::ordenarCompuestos()
+void    Producto::ordenarComponentes()
 {
-    quickSort(0, vectorCompuestos.size() - 1);
+    quickSort(0, vectorComponentes.size() - 1);
 }
-void    Producto::addCompuesto(Compuesto comp)
+void    Producto::addComponente(Componente comp)
 {
-    vectorCompuestos.push_back(comp);
+    vectorComponentes.push_back(comp);
 }
-void    Producto::deleteCompuesto(int pos)
+void    Producto::deleteComponente(int pos)
 {
-    vectorCompuestos.erase(vectorCompuestos.begin() + pos);
+    vectorComponentes.erase(vectorComponentes.begin() + pos);
 }
-Compuesto Producto::getCompuesto(int pos)
+Componente Producto::getComponente(int pos)
 {
-    return vectorCompuestos[pos];
+    return vectorComponentes[pos];
 }
 
-#endif // PRODUCTO_H
+#endif // PRODUCTO_CPP

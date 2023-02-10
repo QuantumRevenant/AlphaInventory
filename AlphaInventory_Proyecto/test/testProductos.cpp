@@ -8,25 +8,20 @@ ProductoController  productoController;
 MarcaController     marcaController;
 
 void listarProductos();
-void listarProducto(Producto);
+vector<string> listarProducto(Producto);
 void listarComponentes(Producto);
+void listarMarcas();
 void addProductos();
 void verProducto();
 void menuProducto(int);
 
 int main(int argc, char const *argv[])
 {
+    vector<string> lista = {"Anadir Productos", "Anadir Stock", "Ver Producto"};
     int opt;
     do
     {
-        system("cls");
-        cout << "Menu productos\n" << endl;
-        listarProductos();
-        cout << " \nAnadir productos-------------[1]" << endl;
-        cout << "Anadir stock-----------------[2]" << endl;
-        cout << "Ver Producto-----------------[3]" << endl;
-        cout << "Salir------------------------[4]" << endl;
-        getValue("Ingrese Opcion[1-4]: ", &opt);
+        opt = menu("MENU PRODUCTOS", lista);
         switch (opt)
         {
         case 1:
@@ -40,18 +35,15 @@ int main(int argc, char const *argv[])
             system("cls");
             verProducto();
             break;
-        case 4:
+        case 0:
             cout << "Bye :D" << endl;
             break;
         default:
-            cout << "Ingrese una opcion valida[1-4]" << endl;
-            system("pause");
             break;
         }
-    } while (opt !=4);
+    } while (opt != 0);
     return 0;
 }
-
 void listarProductos()
 {
     cout << "Productos Registrados:" << endl;
@@ -76,19 +68,17 @@ void listarMarcas()
         cout << "Aun no hay marcas registradas" << endl;
     }
 }
-void listarProducto(Producto temp)
+vector<string> listarProducto(Producto temp)
 {
-    cout << "Codigo: " << temp.getCodigo() << endl;
-    cout << "Nombre: " << temp.getNombre() << endl;
-    cout << "Precio unitario: S/" << temp.getPrecioUnitario() << endl;
-    cout << "# de componentes: " << temp.getNumCompuestos() << endl;
-    cout << "Componentes:" << endl;
-    listarComponentes(temp);
+    vector<string> text;
+    text.push_back("Nombre: " + temp.getNombre());
+    text.push_back("Precio unitario: S/" + to_string(temp.getPrecioUnitario()));
+    return text;
 }
 void listarComponentes(Producto temp)
 {
-    for (int i = 0; i < temp.getNumCompuestos(); i++)
-        cout << "[" << i + 1 << "]" << temp.getCompuesto(i).compuesto << "\t" << temp.getCompuesto(i).cantidad << endl;
+    for (int i = 0; i < temp.getNumComponentes(); i++)
+        cout << "[" << i + 1 << "]" << temp.getComponente(i).getNombre() << "\t" << temp.getComponente(i).getCantidad() << endl;
 }
 void addProductos()
 {
@@ -97,30 +87,29 @@ void addProductos()
     {
         string nombre;
         float precio;
-        vector<Compuesto> componentes;
+        vector<Componente> componentes;
         string nombreComponente;
-        float cantidadComponente;
+        string cantidadComponente;
         int i = 0;
-
         cout << "Nombre y Precio" << endl;
         getValue("Nombre: ", &nombre);
-        getValue("Precio: ", &precio);
+        getValue("Precio: S/", &precio);
         system("cls");
         do
         {
             i++;
-            Compuesto comp;
+            Componente comp;
             cout << "Componente [" << i << "]" << endl;
             getValue("Componente: ", &nombreComponente);
-            comp.compuesto = nombreComponente;
+            comp.setNombre(nombreComponente);
             getValue("Cantidad: ", &cantidadComponente);
-            comp.cantidad = cantidadComponente;
+            comp.setCantidad(cantidadComponente);
             componentes.push_back(comp);
             getValue("¿Desea anadir otro componente?(S/s): ", &opt);
             system("cls");
         } while (aMinuscula(opt) == "s");
         Producto objProducto(nombre, precio, componentes);
-        objProducto.ordenarCompuestos();
+        objProducto.ordenarComponentes();
         productoController.add(objProducto);
         productoController.ordenarProductos();
         productoController.saveFile();
@@ -158,22 +147,17 @@ void menuProducto(int obj)
     Producto temp;
     string nombre;
     float precio;
-    Compuesto comp;
-    string nombreCompuesto;
-    float cantidad;
+    Componente comp;
+    string nombreComponente;
+    string cantidad;
     temp = productoController.get(obj);
+    vector<string> lista;
     do
     {
-        system("cls");
-        listarProducto(temp);
-        cout << "\n";
-        cout << "Opciones:\n";
-        cout << "[1] Editar Nombre\n";
-        cout << "[2] Editar Precio\n";
-        cout << "[3] Anadir Componente\n";
-        cout << "[4] Eliminar Componente\n";
-        cout << "[5] Salir\n";
-        getValue("Ingrese opcion[1-5]:", &opt);
+        lista = listarProducto(temp);
+        lista.push_back("Anadir Componente");
+        lista.push_back("Eliminar Componente");
+        opt = menu("EDITAR PRODUCTO", lista);
         switch (opt)
         {
         case 1:
@@ -190,31 +174,29 @@ void menuProducto(int obj)
             break;
         case 3:
             system("cls");
-            getValue("Nombre del componente: ", &nombreCompuesto);
-            comp.compuesto = nombreCompuesto;
+            getValue("Nombre del componente: ", &nombreComponente);
+            comp.setNombre(nombreComponente);
             getValue("Cantidad: ", &cantidad);
-            comp.cantidad = cantidad;
-            temp.addCompuesto(comp);
-            temp.ordenarCompuestos();
-            temp.setNumCompuestos(temp.getNumCompuestos() + 1);
+            comp.setCantidad(cantidad);
+            temp.addComponente(comp);
+            temp.ordenarComponentes();
+            temp.setNumComponentes(temp.getNumComponentes() + 1);
             break;
         case 4:
             system("cls");
             listarComponentes(temp);
-            cout << "Componente a eliminar[1-" << temp.getNumCompuestos() << "]: ";
+            cout << "Componente a eliminar[1-" << temp.getNumComponentes() << "]: ";
             cin >> optComp;
-            temp.deleteCompuesto(optComp - 1);
-            temp.ordenarCompuestos();
-            temp.setNumCompuestos(temp.getNumCompuestos() - 1);
+            temp.deleteComponente(optComp - 1);
+            temp.ordenarComponentes();
+            temp.setNumComponentes(temp.getNumComponentes() - 1);
             break;
-        case 5:
+        case 0:
             productoController.modify(temp, obj);
             productoController.saveFile();
             break;
         default:
-            cout << "Ingrese una opcion valida[1-5]\n";
-            system("pause");
             break;
         }
-    } while (opt != 5);
+    } while (opt != 0);
 }
