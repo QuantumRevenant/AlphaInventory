@@ -16,27 +16,27 @@ using namespace std;
 #define BACKSPACE 8
 char baseColor[] = "0f";
 
-string  aMayuscula(string);
-string  aMinuscula(string);
-bool    esNumero(string);
-int     subCadenaComunMasLarga(string, string);
-float   Promediar(float[], int);
-float   PromediarMayor0(float[], int);
-string  currentDateTime();
-void    getValue(string, int *);
-void    getValue(string, string *);
-void    getValue(string, float *);
-bool    confirmar(string, string, int);
-void    doEndline(int);
-void    doTab(int);
-string  doTab(int, string);
-string  enterContrasena();
-void    gotoxy(int, int);
-void    centrarTexto(string, int, bool, bool, int, int);
-void    alinearXTexto(string, int, bool, int, int, bool);
-void    dibujarCuadro();
-int     menu(string, vector<string>);
-void    esquinarTexto(string, int, bool, bool, bool);
+string aMayuscula(string);
+string aMinuscula(string);
+bool esNumero(string);
+int subCadenaComunMasLarga(string, string);
+float Promediar(float[], int);
+float PromediarMayor0(float[], int);
+string currentDateTime();
+void getValue(string, int *);
+void getValue(string, string *);
+void getValue(string, float *);
+bool confirmar(string, string, int);
+void doEndline(int);
+void doTab(int);
+string doTab(int, string);
+string enterContrasena();
+void gotoxy(int, int);
+void centrarTexto(string, int, bool, bool, int, int);
+void alinearXTexto(string, int, bool, int, int, bool);
+void dibujarCuadro();
+int menu(string, vector<string>);
+void esquinarTexto(string, int, bool, bool, bool);
 
 #define XSIZECMD 120
 #define YSIZECMD 30
@@ -123,8 +123,8 @@ float PromediarMayor0(float datos[], int cantidadDatos)
 string currentDateTime()
 {
     time_t t = time(nullptr);
-    tm* now = localtime(&t);
- 
+    tm *now = localtime(&t);
+
     char buffer[128];
     strftime(buffer, sizeof(buffer), "%m-%d-%Y %X", now);
     return buffer;
@@ -284,6 +284,86 @@ void dibujarCuadro()
     // cout << endl
     //      << endl;
 }
+void esquinarTexto(string message, int border = 0, bool up = false, bool left = true, bool print = true)
+{
+    int x;
+    int y;
+    if (left)
+        x = border + 1;
+    else
+        x = XSIZECMD - 1 - size(message);
+    if (up)
+        y = border + 1;
+    else
+        y = YSIZECMD - border;
+
+    gotoxy(x, y);
+    if (print)
+        cout << message;
+}
+void menuListado(vector<string> messages, int separation = 0, string title = "", bool pausar = true)
+{
+    int sizeY = size(messages) + (size(messages) * separation) / 2 - 1;
+    int e = 0;
+    system("cls");
+    dibujarCuadro();
+    if (title != "")
+    {
+        sizeY += 2 + separation / 2;
+        centrarTexto(title, 0, true, true, 0, (-sizeY + e));
+        e += 2 + separation;
+    }
+    for (string x : messages)
+    {
+        centrarTexto(x, 0, true, true, 0, (-sizeY + e));
+        e += 1 + separation;
+    }
+    if (pausar)
+    {
+        esquinarTexto("", 1, false, true, false);
+        system("pause");
+    }
+}
+void menuError(vector<string> messages, int separation = 0, string color = "0f", string title = "")
+{
+    system("color 4f");
+    menuListado(messages, separation, title, false);
+    Sleep(1000);
+    char inp[] = {'c', 'o', 'l', 'o', 'r', ' ', color[0], color[1], '\0'};
+    system(inp);
+}
+void menuDatos(vector<string> messages, vector<string> &answers, int quantCensor = 0, int separation = 0, string title = "")
+{
+    int sizeY = size(messages) + (size(messages) * separation) / 2 - 1;
+    int e = 0, f;
+    system("cls");
+    dibujarCuadro();
+    if (title != "")
+    {
+        sizeY += 2 + separation / 2;
+        centrarTexto(title, 0, true, true, 0, (-sizeY + e));
+        e += 2 + separation;
+    }
+    f = e;
+    for (string x : messages)
+    {
+        alinearXTexto(x + ": ", 0, true, 30, (-sizeY + e), true);
+        e+=separation+1;
+    }
+    e = f;
+    int val = messages.size() - quantCensor;
+    for (int i = 0; i < messages.size(); i++)
+    {
+        string answ;
+        alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
+        if (i < val)
+            getline(cin, answ);
+        else
+            answ=enterContrasena();
+        e+=separation+1;
+        answers.push_back(answ);
+    }
+}
 int menu(string title, vector<string> options)
 {
     int sizeY = size(options) + 5 - 1;
@@ -315,13 +395,8 @@ int menu(string title, vector<string> options)
         {
             if (stoi(opc) < 0 || stoi(opc) > opcionMayor)
             {
-                system("cls");
-                dibujarCuadro();
-                system("color 4f");
-                centrarTexto("~\t[[INTRODUZCA UNA OPCION VALIDA]]\t~");
-                Sleep(1000);
-                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
-                system(color);
+                vector<string> messages = {"~[[INTRODUZCA UNA OPCION VALIDA]]~"};
+                menuError(messages);
                 opc = "-1";
             }
             else
@@ -329,33 +404,11 @@ int menu(string title, vector<string> options)
         }
         else
         {
-            system("cls");
-            dibujarCuadro();
-            system("color 4f");
-            centrarTexto("~\t[[INTRODUZCA UNA OPCION VALIDA]]\t~");
-            Sleep(1000);
-            char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
-            system(color);
+            vector<string> messages = {"~[[INTRODUZCA UNA OPCION VALIDA]]~"};
+            menuError(messages);
             opc = "-1";
         }
     } while (stoi(opc) < 0);
     return salida;
-}
-void esquinarTexto(string message, int border=0, bool up = false, bool left = true, bool print=true)
-{
-    int x;
-    int y;
-    if (left)
-        x=border+1;
-    else
-        x=XSIZECMD-1-size(message);
-    if(up)
-        y=border+1;
-    else
-        y=YSIZECMD-border;
-    
-    gotoxy(x,y);
-    if(print)
-        cout<<message;
 }
 #endif
