@@ -44,33 +44,20 @@ public:
     string getCodigo();
 };
 
-class Producto
+class Componente
 {
 private:
-    string codigo;
     string nombre;
-    float precioUnitario;
-    int numComponentes;
-    vector<Componente> vectorComponentes;
+    string cantidad;
 
 public:
-    Producto();
-    Producto(string, float, vector<Componente> &);
-    ~Producto();
-    void setCodigo(string);
-    void setNombre(string);
-    void setPrecioUnitario(float);
-    void setNumComponentes(int);
-    string getCodigo();
+    Componente();
+    Componente(string, string);
+    ~Componente();
     string getNombre();
-    float getPrecioUnitario();
-    int getNumComponentes();
-    int partition(int, int);
-    void quickSort(int, int);
-    void ordenarComponentes();
-    void addComponente(Componente);
-    void deleteComponente(int);
-    Componente getComponente(int);
+    string getCantidad();
+    void setNombre(string);
+    void setCantidad(string);
 };
 
 class Marca
@@ -87,6 +74,45 @@ public:
     string getNombreMarca();
     void setCodigoMarca(int);
     void setNombreMarca(string);
+};
+
+class Producto
+{
+private:
+    string codigo;
+    string nombre;
+    vector<Marca> vectorMarcas;
+    vector<float> precioUnitario;
+    vector<int> stock;
+    int numMarcas;
+    int numComponentes;
+    vector<Componente> vectorComponentes;
+
+public:
+    Producto();
+    Producto(string, vector<Componente> &);
+    ~Producto();
+    void setCodigo(string);
+    void setNombre(string);
+    void setNumComponentes(int);
+    void setNumMarcas(int);
+    void modifyPrecioUnitario(float, int);
+    void modifyStock(int, int);
+    string getCodigo();
+    string getNombre();
+    int getNumComponentes();
+    int getNumMarcas();
+    int partition(int, int);
+    void quickSort(int, int);
+    void ordenarComponentes();
+    void addComponente(Componente);
+    void addMarca(Marca, float);
+    void deleteComponente(int);
+    void deleteMarca(int);
+    Componente getComponente(int);
+    Marca getMarca(int);
+    float getPrecioUnitario(int);
+    int getStock(int);
 };
 
 class Procesos
@@ -188,22 +214,6 @@ public:
     ~DVenta();
     int getCodVenta();
     void setCodVenta(int);
-};
-
-class Componente
-{
-private:
-    string nombre;
-    string cantidad;
-
-public:
-    Componente();
-    Componente(string, string);
-    ~Componente();
-    string getNombre();
-    string getCantidad();
-    void setNombre(string);
-    void setCantidad(string);
 };
 
 #endif // CLASES_H

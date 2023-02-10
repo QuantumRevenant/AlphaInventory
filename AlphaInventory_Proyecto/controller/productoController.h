@@ -28,7 +28,7 @@ public:
 
 ProductoController::ProductoController()
 {
-    copyFile();
+    //copyFile();
 }
 void    ProductoController::add(Producto obj)
 {
@@ -96,7 +96,7 @@ Producto ProductoController::get(int pos)
 {
     return vectorProducto[pos];
 }
-void    ProductoController::saveFile()
+/* void    ProductoController::saveFile()
 {
     try
     {
@@ -166,5 +166,5 @@ void    ProductoController::copyFile()
         cout << "Ocurrio un error al leer el archivo";
     }
     
-}
+} */
 #endif // PRODUCTOCONTROLLER_H

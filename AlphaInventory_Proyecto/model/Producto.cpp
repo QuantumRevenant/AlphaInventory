@@ -6,14 +6,16 @@
 #include <random>
 #include "clases.h"
 #include "../model/FuncionesGenerales.h"
+#include "Componente.cpp"
+#include "Marca.cpp"
 
 Producto::Producto() {}
-Producto::Producto(string _nombre, float _precio, vector<Componente> &_Componentes)
+Producto::Producto(string _nombre, vector<Componente> &_Componentes)
 {
     nombre = _nombre;
-    precioUnitario = _precio;
     vectorComponentes = _Componentes;
     codigo = getCodigo();
+    numMarcas = 0;
     numComponentes = vectorComponentes.size();
 }
 Producto::~Producto() {}
@@ -25,13 +27,21 @@ void    Producto::setNombre(string _nombre)
 {
     nombre = _nombre;
 }
-void    Producto::setPrecioUnitario(float _precioUnitario)
-{
-    precioUnitario = _precioUnitario;
-}
 void    Producto::setNumComponentes(int _numComponentes)
 {
     numComponentes = _numComponentes;
+}
+void    Producto::setNumMarcas(int _numMarcas)
+{
+    numMarcas = _numMarcas;
+}
+void    Producto::modifyPrecioUnitario(float _precio, int pos)
+{
+    precioUnitario[pos] = _precio;
+}
+void    Producto::modifyStock(int _stock, int pos)
+{
+    stock[pos] = _stock;
 }
 string  Producto::getCodigo()
 {
@@ -42,8 +52,8 @@ string  Producto::getCodigo()
     for(Componente x:vectorComponentes)
     {
         cod += x.getNombre()[0];
-        if (cod.size() == 7)
-            break;        
+        if (cod.size() == 8)
+            break;
     }
     return cod;
 }
@@ -51,13 +61,13 @@ string  Producto::getNombre()
 {
     return nombre;
 }
-float   Producto::getPrecioUnitario()
-{
-    return precioUnitario;
-}
 int     Producto::getNumComponentes()
 {
     return numComponentes;
+}
+int     Producto::getNumMarcas()
+{
+    return numMarcas;
 }
 int     Producto::partition(int menor, int mayor)
 {
@@ -89,13 +99,39 @@ void    Producto::addComponente(Componente comp)
 {
     vectorComponentes.push_back(comp);
 }
+void    Producto::addMarca(Marca marca, float precio)
+{
+    vectorMarcas.push_back(marca);
+    precioUnitario.push_back(precio);
+    stock.push_back(0);
+    numMarcas++;
+}
 void    Producto::deleteComponente(int pos)
 {
     vectorComponentes.erase(vectorComponentes.begin() + pos);
 }
+void    Producto::deleteMarca(int pos)
+{
+    vectorMarcas.erase(vectorMarcas.begin() + pos);
+    precioUnitario.erase(precioUnitario.begin() + pos);
+    stock.erase(stock.begin() + pos);
+    numMarcas--;
+}
 Componente Producto::getComponente(int pos)
 {
     return vectorComponentes[pos];
+}
+Marca Producto::getMarca(int pos)
+{
+    return vectorMarcas[pos];
+}
+float   Producto::getPrecioUnitario(int pos)
+{
+    return precioUnitario[pos];
+}
+int    Producto::getStock(int pos)
+{
+    return stock[pos];
 }
 
 #endif // PRODUCTO_CPP
