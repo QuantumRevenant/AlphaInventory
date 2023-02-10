@@ -9,7 +9,7 @@
 #include "../controller/programController.h"
 #include "../model/FuncionesGenerales.h"
 #include "OptionMenus.h"
-#include "../controller/Encrypter/sha256.h"
+#include "../controller/Encrypter/sha256.cpp"
 
 #define VOFFSET 5
 #define HOFFSET 5
@@ -76,190 +76,238 @@ void doRegistrarse(bool start)
     string tipoDocumento;
     string contrasena;
     string contrasenaConfi;
-    string opt;
     int docSize;
     bool loged = false;
+    int opt;
 
-    do
+    int sizeY = 3, e = 0;
+
+    system("cls");
+    if (!start)
     {
-        system("cls");
-        if (!start)
+        vector<string> options = {"VENDEDOR", "SUPERVISOR", "ADMINISTRADOR"}; // Carritos de compra, etc
+        opt = menu("REGISTRO - TIPO DE USUARIO", options);
+        switch (opt)
         {
-            doEndline(VOFFSET);
-            cout << doTab(HOFFSET + 1, "") << "-----REGISTRO------" << endl
-                 << endl;
-            cout << doTab(HOFFSET + 1, "") << "--TIPO DE USUARIO--" << endl
-                 << endl
-                 << doTab(HOFFSET, "") << "--VENDEDOR---------------" << doTab(1, "") << "[1]" << endl
-                 << doTab(HOFFSET, "") << "--SUPERVISOR-------------" << doTab(1, "") << "[2]" << endl
-                 << doTab(HOFFSET, "") << "--ADMINISTRADOR----------" << doTab(1, "") << "[3]" << endl
-                 << doTab(HOFFSET, "") << "--CANCELAR---------------" << doTab(1, "") << "[4]" << endl
-                 << endl;
-            getValue(doTab(HOFFSET + 1, "") + "Ingrese opcion[1-3]: \n" + doTab(HOFFSET + 1, "") + ">_", &opt);
+        case 1:
 
-            if (esNumero(opt))
-            {
-                switch (stoi(opt))
-                {
-                case 1:
-                    system("cls");
-                    doEndline(VOFFSET);
-                    cout << doTab(HOFFSET, "") << "-NECESITAS INICIAR SESIÓN COMO SUPERVISOR O ADMINISTRADOR-" << endl;
-                    sleep(3);
-                    loged = doIniciarSesion(false, type);
-                    if (loged && (type == "Administrador" || type == "Supervisor"))
-                        tipoUsuario = "Vendedor";
-                    else
-                        cout << doTab(HOFFSET + 1, "") << "##=CANCELASTE EL REGISTRO##=" << endl;
-                    tipoUsuario = "Cancelar";
-                    system("pause");
-                    break;
-                case 2:
-                    system("cls");
-                    doEndline(VOFFSET);
-                    cout << doTab(HOFFSET, "") << "-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-" << endl;
-                    sleep(3);
-                    loged = doIniciarSesion(false, type);
-                    if (loged && type == "Administrador")
-                        tipoUsuario = "Supervisor";
-                    else
-                        cout << doTab(HOFFSET+1, "") << "##=CANCELASTE EL REGISTRO##=" << endl;
-                    tipoUsuario = "Cancelar";
-                    system("pause");
-                    break;
-                case 3:
-                    system("cls");
-                    doEndline(VOFFSET);
-                    cout << doTab(HOFFSET, "") << "-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-" << endl;
-                    sleep(3);
-                    loged = doIniciarSesion(false, type);
-                    if (loged && type == "Administrador")
-                        tipoUsuario = "Administrador";
-                    else
-                        cout << doTab(HOFFSET + 1, "") << "##=CANCELASTE EL REGISTRO##=" << endl;
-                    tipoUsuario = "Cancelar";
-                    system("pause");
-                    break;
-                    break;
-                case 4:
-                    tipoUsuario = "Cancelar";
-                    break;
-                default:
-                    cout << "Ingrese una opción valida[1-4]" << endl;
-                    system("pause");
-                    system("cls");
-                }
-            }
+            system("cls");
+            dibujarCuadro();
+            centrarTexto("~\t-NECESITAS INICIAR SESIÓN COMO SUPERVISOR O ADMINISTRADOR-\t~");
+            Sleep(1000);
+
+            loged = doIniciarSesion(false, type);
+
+            if (loged && (type == "Administrador" || type == "Supervisor"))
+                tipoUsuario = "Vendedor";
             else
             {
-                cout << "Ingrese una opción valida[1-4]" << endl;
-                system("pause");
                 system("cls");
-                opt = "0";
+                dibujarCuadro();
+                centrarTexto("~\t-CANCELASTE EL REGISTRO-\t~");
+                tipoUsuario = "Cancelar";
+                esquinarTexto("", 1, false, true, false);
+                system("pause");
             }
-        }
-        else
-        {
-            doEndline(VOFFSET - 3);
-            cout << doTab(HOFFSET, "") << "-------NO TENEMOS REGISTRO DE ADMINISTRADORES-------" << endl
-                 << doTab(HOFFSET, "") << "-REGISTRA UN NUEVO ADMINISTRADOR ANTES DE CONTINUAR-" << endl;
-            sleep(1);
-            opt = "3";
-            tipoUsuario = "Administrador";
-            system("pause");
-        }
-    } while (stoi(opt) < 1 || stoi(opt) > 4);
-    if (tipoUsuario != "Cancelar")
-    {
+            break;
+        case 2:
+            system("cls");
+            dibujarCuadro();
+            centrarTexto("~\t-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-\t~");
+            Sleep(1000);
+
+            loged = doIniciarSesion(false, type);
+
+            if (loged && type == "Administrador")
+                tipoUsuario = "Supervisor";
+            else
+            {
+                system("cls");
+                dibujarCuadro();
+                centrarTexto("~\t-CANCELASTE EL REGISTRO-\t~");
+                tipoUsuario = "Cancelar";
+                esquinarTexto("", 1, false, true, false);
+                system("pause");
+            }
+            break;
+        case 3:
+            system("cls");
+            dibujarCuadro();
+            centrarTexto("~\t-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-\t~");
+            Sleep(1000);
+
+            loged = doIniciarSesion(false, type);
+
+            if (loged && type == "Administrador")
+                tipoUsuario = "Administrador";
+            else
+            {
+                system("cls");
+                dibujarCuadro();
+                centrarTexto("~\t-CANCELASTE EL REGISTRO-\t~");
+                tipoUsuario = "Cancelar";
+                esquinarTexto("", 1, false, true, false);
+                system("pause");
+            }
+            break;
+        case 0:
+            tipoUsuario = "Cancelar";
+            break;
+        };
+        if (tipoUsuario == "Cancelar")
+            return;
+
         system("cls");
-        getValue("Nombre de usuario: ", &username);
-        getValue("Nombre: ", &nombre);
+        dibujarCuadro();
+        alinearXTexto("Nombre de usuario: ", 0, true, 30, (-sizeY + e), true);
+        e++;
+        alinearXTexto("Nombres: ", 0, true, 30, (-sizeY + e), true);
+        e++;
+        alinearXTexto("Apellidos: ", 0, true, 30, (-sizeY + e), true);
+        e++;
+
+        e = 0;
+        alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
+        cin >> username;
+        e++;
 
         cin.ignore();
-        cout << "Apellidos: ";
+        alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
+        getline(cin, nombre);
+        e++;
+
+        alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
         getline(cin, apellidos);
-        do
+        e++;
+
+        options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
+        opt = menu("REGISTRO - TIPO DE USUARIO", options);
+
+        switch (opt)
         {
-            system("cls");
-            cout << "--TIPO DE DOCUMENTO---------" << endl;
-            cout << "--DNI--------------------[1]" << endl;
-            cout << "--CARNET EXT-------------[2]" << endl;
-            cout << "--PASAPORTE--------------[3]" << endl;
-            cout << "--RUC--------------------[4]" << endl;
-            getValue("Ingrese opcion[1-4]: ", &opt);
-            if (esNumero(opt))
-            {
-                switch (stoi(opt))
-                {
-                case 1:
-                    tipoDocumento = "DNI";
-                    docSize = 8;
-                    break;
-                case 2:
-                    tipoDocumento = "CE";
-                    docSize = 12;
-                    break;
-                case 3:
-                    tipoDocumento = "PASAPORTE";
-                    docSize = 12;
-                    break;
-                case 4:
-                    tipoDocumento = "RUC";
-                    docSize = 11;
-                    break;
-                default:
-                    cout << "Ingrese una opción valida[1-4]" << endl;
-                    system("pause");
-                }
-            }
-            else
-            {
-                cout << "Ingrese una opción valida[1-4]" << endl;
-                system("pause");
-                system("cls");
-                opt = "0";
-            }
-        } while (stoi(opt) < 1 || stoi(opt) > 4);
+        case 1:
+            tipoDocumento = "DNI";
+            docSize = 8;
+            break;
+        case 2:
+            tipoDocumento = "CE";
+            docSize = 12;
+            break;
+        case 3:
+            tipoDocumento = "PASAPORTE";
+            docSize = 12;
+            break;
+        case 4:
+            tipoDocumento = "RUC";
+            docSize = 11;
+            break;
+        case 0:
+            tipoDocumento = "Cancelar";
+            break;
+        }
+
+        if (tipoDocumento == "Cancelar")
+            return;
 
         strInput = "0";
         do
         {
+            sizeY = 4;
+            e = 0;
             system("cls");
-            cout << tipoDocumento << endl;
-            if (!esNumero(strInput))
-            {
-                cout << "===[INTRODUCE UN VALOR NUMERICO]===" << endl;
-            }
-            getValue("Numero de documento: ", &strInput);
+            dibujarCuadro();
+            centrarTexto("_" + tipoDocumento + "_", 0, true, true, 0, (-sizeY + e));
+            e++;
+            centrarTexto("['Salir' para salir]", 0, true, true, 0, (-sizeY + e));
+            e += 2;
+            alinearXTexto("Numero de documento: ", 0, true, 30, (-sizeY + e));
+            alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
+            cin >> strInput;
+
+            if (aMinuscula(strInput) == "salir")
+                return;
+
             if ((int)strInput.size() != docSize)
             {
-                cout << "Los documentos tipo " << tipoDocumento << " deben contener " << docSize << " digitos" << endl;
-                cout << "VUELVA A INGRESAR SU NUMERO DE DOCUMENTO" << endl;
-                system("pause");
+                sizeY = 3;
+                e = 0;
+                system("cls");
+                dibujarCuadro();
+                system("color 4f");
+                centrarTexto("~\t-Los documentos tipo " + tipoDocumento + " deben contener " + to_string(docSize) + " digitos-\t~", 0, true, true, 0, (-sizeY + e));
+                e += 2;
+                centrarTexto("~\tVUELVA A INGRESAR SU NUMERO DE DOCUMENTO\t~", 0, true, true, 0, (-sizeY + e));
+                Sleep(1000);
+                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
+                system(color);
+            }
+            if (!esNumero(strInput))
+            {
+                system("cls");
+                dibujarCuadro();
+                system("color 4f");
+                centrarTexto("~\t[[INTRODUCE UN VALOR NUMERICO]]\t~");
+                Sleep(1000);
+                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
+                system(color);
             }
         } while (!esNumero(strInput) || (int)strInput.size() != docSize);
+
         numDocumento = stoi(strInput);
+
+        int sizePass;
         do
         {
+            sizeY = 3;
+            e = 0;
             system("cls");
-            getValue("Contrasena(minimo 8 caracteres): ", &contrasena);
-            system("cls");
-            getValue("Confirmar contrasena: ", &contrasenaConfi);
-            if (contrasena.size() < 8)
+            dibujarCuadro();
+            alinearXTexto("Contraseña: ", 0, true, 30, (-sizeY + e), true);
+            e += 2;
+            alinearXTexto("Repetir contraseña: ", 0, true, 30, (-sizeY + e), true);
+
+            e = 0;
+            alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
+            strInput = enterContrasena();
+            sizePass = strInput.size();
+            contrasena = sha256(strInput);
+            strInput = "";
+            e += 2;
+
+            alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
+            contrasenaConfi = sha256(enterContrasena());
+            e++;
+            if (sizePass < 8)
             {
-                cout << "La contrasena debe tener minimo 8 caracteres" << endl;
-                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-                system("pause");
+                sizeY = 3;
+                e = 0;
+                system("cls");
+                dibujarCuadro();
+                system("color 4f");
+                centrarTexto("~\t-La contrasena debe tener minimo 8 caracteres-\t~", 0, true, true, 0, (-sizeY + e));
+                e += 2;
+                centrarTexto("~\tVUELVA A INGRESAR UNA CONTRASENA\t~", 0, true, true, 0, (-sizeY + e));
+                Sleep(1000);
+                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
+                system(color);
             }
             else if (contrasena != contrasenaConfi)
             {
-                cout << "Las contrasenas no son iguales" << endl;
-                cout << "VUELVA A INGRESAR UNA CONTRASENA" << endl;
-                system("pause");
+                sizeY = 3;
+                e = 0;
+                system("cls");
+                dibujarCuadro();
+                system("color 4f");
+                centrarTexto("~\t-Las contrasenas no son iguales-\t~", 0, true, true, 0, (-sizeY + e));
+                e += 2;
+                centrarTexto("~\tVUELVA A INGRESAR UNA CONTRASENA\t~", 0, true, true, 0, (-sizeY + e));
+                Sleep(1000);
+                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
+                system(color);
             }
-        } while (contrasena != contrasenaConfi || contrasena.length() < 8);
+        } while (contrasena != contrasenaConfi || sizePass < 8);
 
-        Usuario objUser(username, objUser.encriptar(contrasena), nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
+        Usuario objUser(userController.getCodigo(),username, contrasena, nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
 
         userController.add(objUser);
         objUser.listarDatos(); // BORRAR VERSION FINAL - SOLO DEBUG
@@ -267,6 +315,7 @@ void doRegistrarse(bool start)
         userController.archGrabarDatos();
     }
 }
+
 void doModificarPerfil(string key)
 {
     string temporal;
@@ -385,8 +434,8 @@ bool doIniciarSesion(bool opt, string &type)
 
             contador++
             */
-            cout << doTab(HOFFSET-1, "") << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
-            cout << doTab(HOFFSET-1, "");
+            cout << doTab(HOFFSET - 1, "") << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
+            cout << doTab(HOFFSET - 1, "");
             system("pause");
             contador++;
         }
@@ -394,7 +443,7 @@ bool doIniciarSesion(bool opt, string &type)
 
     if (contador >= 3)
     {
-        cout << doTab(HOFFSET-1, "") << "Límite de intentos alcanzado, volviendo al menú principal..." << endl;
+        cout << doTab(HOFFSET - 1, "") << "Límite de intentos alcanzado, volviendo al menú principal..." << endl;
         system("pause");
         return false;
     }

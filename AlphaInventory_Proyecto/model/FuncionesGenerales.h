@@ -8,6 +8,7 @@
 #include <conio.h>
 #include <vector>
 #include <ctime>
+#include "../controller/Encrypter/sha256.cpp"
 
 using namespace std;
 

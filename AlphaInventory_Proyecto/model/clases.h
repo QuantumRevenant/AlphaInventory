@@ -9,163 +9,164 @@ using namespace std;
 class Usuario
 {
 private:
-    string  username;
-    string  nombre;
-    string  apellidos;
-    string  documento;
-    int     numDocumento;
-    string  contrasena;
-    string  tipoUsuario;
+    int codUsuario;
+    string username;
+    string nombre;
+    string apellidos;
+    string documento;
+    int numDocumento;
+    string contrasena;
+    string tipoUsuario;
 
 public:
     Usuario();
     ~Usuario();
-    Usuario(string, string);//username y contraseña (capaz agregar string e int para hacer el codigo a futuro)
-    Usuario(string,string,string,string,string,int,string);
-    void    setUsername(string);
-    void    setNombre(string);
-    void    setApellidos(string);
-    void    setDocumento(string);
-    void    setNumDocumento(int);
-    void    setContrasena(string);
-    void    setTipoUsuario(string);
-    string  getUsername();
-    string  getNombre();
-    string  getApellidos();
-    string  getDocumento();
-    int     getNumDocumento();
-    string  getContrasena();
-    string  getTipoUsuario();
-    void    modifyUsername();
-    void    modifyNombre();
-    void    modifyApellidos();
-    void    modifyDocumento();
-    void    modifyContrasena();
-    void    listarDatos();
-    string  encriptar(string);
-    string  desencriptar(string);
-    string  getCodigo();
+    Usuario(int, string, string, string, string, string, int, string);
+    void setCodUsuario(int);
+    void setUsername(string);
+    void setNombre(string);
+    void setApellidos(string);
+    void setDocumento(string);
+    void setNumDocumento(int);
+    void setContrasena(string);
+    void setTipoUsuario(string);
+    int getCodUsuario();
+    string getUsername();
+    string getNombre();
+    string getApellidos();
+    string getDocumento();
+    int getNumDocumento();
+    string getContrasena();
+    string getTipoUsuario();
+    void modifyDocumento();
+    void modifyContrasena();
+    void listarDatos();
+    string getCodigo();
 };
 
 class Producto
 {
 private:
-    string  codigo;
-    string  nombre;
-    float   precioUnitario;
-    int     numComponentes;
+    string codigo;
+    string nombre;
+    float precioUnitario;
+    int numComponentes;
     vector<Componente> vectorComponentes;
 
 public:
     Producto();
-    Producto(string, float, vector<Componente>&);
+    Producto(string, float, vector<Componente> &);
     ~Producto();
-    void    setCodigo(string);
-    void    setNombre(string);
-    void    setPrecioUnitario(float);
-    void    setNumComponentes(int);
-    string  getCodigo();
-    string  getNombre();
-    float   getPrecioUnitario();
-    int     getNumComponentes();
-    int     partition(int, int);
-    void    quickSort(int, int);
-    void    ordenarComponentes();
-    void    addComponente(Componente);
-    void    deleteComponente(int);
+    void setCodigo(string);
+    void setNombre(string);
+    void setPrecioUnitario(float);
+    void setNumComponentes(int);
+    string getCodigo();
+    string getNombre();
+    float getPrecioUnitario();
+    int getNumComponentes();
+    int partition(int, int);
+    void quickSort(int, int);
+    void ordenarComponentes();
+    void addComponente(Componente);
+    void deleteComponente(int);
     Componente getComponente(int);
 };
 
 class Marca
 {
 private:
-    int     codigoMarca;
-    string  nombreMarca;
+    int codigoMarca;
+    string nombreMarca;
+
 public:
     Marca();
-    Marca(int,string);
+    Marca(int, string);
     ~Marca();
-    int     getCodigoMarca();
-    string  getNombreMarca();
-    void    setCodigoMarca(int);
-    void    setNombreMarca(string);
+    int getCodigoMarca();
+    string getNombreMarca();
+    void setCodigoMarca(int);
+    void setNombreMarca(string);
 };
 
 class Procesos
 {
 private:
-    int     codUsuario;
-    string  fecha;
-    double  monto;
-    bool    estado;
+    int codUsuario;
+    string fecha;
+    double monto;
+    bool estado;
+
 public:
     Procesos();
-    Procesos(int,double, bool);
+    Procesos(int, double, bool);
     ~Procesos();
-    int     getCodUsuario();
-    string  getFecha();
-    double  getMonto();
-    bool    getEstado();
-    void    setCodUsuario(int);
-    void    setFecha(string);
-    void    setMonto(double);
-    void    setEstado(bool);
+    int getCodUsuario();
+    string getFecha();
+    double getMonto();
+    bool getEstado();
+    void setCodUsuario(int);
+    void setFecha(string);
+    void setMonto(double);
+    void setEstado(bool);
 };
 
-class Compra: public Procesos
+class Compra : public Procesos
 {
 private:
-    int     codCompra;
-    int     codProveedor;
+    int codCompra;
+    int codProveedor;
+
 public:
     Compra();
     ~Compra();
-    int     getCodCompra();
-    int     getCodProveedor();
-    void    setCodCompra(int);
-    void    setCodProveedor(int);
+    int getCodCompra();
+    int getCodProveedor();
+    void setCodCompra(int);
+    void setCodProveedor(int);
 };
 
-class Venta: public Procesos
+class Venta : public Procesos
 {
 private:
-    int     codVenta;
-    int     codCliente;
+    int codVenta;
+    int codCliente;
+
 public:
     Venta();
     ~Venta();
-    int     getcodVenta();
-    int     getCodCliente();
-    void    setCodVenta(int);
-    void    setCodCliente(int);
+    int getcodVenta();
+    int getCodCliente();
+    void setCodVenta(int);
+    void setCodCliente(int);
 };
 
 class ProcesosD
 {
 private:
-    int     codProducto;
-    int     cantidad;
-    double  precio;
-    double  monto;
-    bool    estado;
+    int codProducto;
+    int cantidad;
+    double precio;
+    double monto;
+    bool estado;
 
 public:
     ProcesosD();
     ProcesosD(int, int, double, double, bool);
     ~ProcesosD();
-    int     getCodProducto();
-    int     getCantidad();
-    double  getPrecio();
-    double  getMonto();
-    bool    getEstado();
-    void    setCodProducto(int);
-    void    setCantidad(int);
-    void    setPrecio(double);
-    void    setMonto(double);
-    void    setEstado(bool);
+    int getCodProducto();
+    int getCantidad();
+    double getPrecio();
+    double getMonto();
+    bool getEstado();
+    void setCodProducto(int);
+    void setCantidad(int);
+    void setPrecio(double);
+    void setMonto(double);
+    void setEstado(bool);
 };
 
-class DCompra: public ProcesosD
+class DCompra : public ProcesosD
 {
 private:
     int codCompra;
@@ -177,7 +178,7 @@ public:
     void setCodCompra(int);
 };
 
-class DVenta: public ProcesosD
+class DVenta : public ProcesosD
 {
 private:
     int codVenta;
@@ -192,8 +193,9 @@ public:
 class Componente
 {
 private:
-    string  nombre;
-    string  cantidad;
+    string nombre;
+    string cantidad;
+
 public:
     Componente();
     Componente(string, string);

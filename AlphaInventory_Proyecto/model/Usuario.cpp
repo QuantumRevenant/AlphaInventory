@@ -11,16 +11,9 @@ using namespace std;
 
 Usuario::Usuario() {}
 Usuario::~Usuario() {}
-Usuario::Usuario(string _username, string _contrasena)
+Usuario::Usuario(int _codUsuario,string _username, string _contrasena, string _nombre, string _apellidos, string _documento, int _numDocumento, string _tipoUsuario)
 {
-    documento = "null";
-    numDocumento = 999999999;
-    username = _username;
-    contrasena = _contrasena;
-}
-
-Usuario::Usuario(string _username, string _contrasena, string _nombre, string _apellidos, string _documento, int _numDocumento, string _tipoUsuario)
-{
+    codUsuario=_codUsuario;
     username = _username;
     contrasena = _contrasena;
     nombre = _nombre;
@@ -29,7 +22,10 @@ Usuario::Usuario(string _username, string _contrasena, string _nombre, string _a
     numDocumento = _numDocumento;
     tipoUsuario = _tipoUsuario;
 }
-
+void Usuario::setCodUsuario(int _codUsuario)
+{
+    codUsuario=_codUsuario;
+}
 void Usuario::setUsername(string _username)
 {
     username = _username;
@@ -57,6 +53,10 @@ void Usuario::setContrasena(string _contrasena)
 void Usuario::setTipoUsuario(string _tipoUsuario)
 {
     tipoUsuario = _tipoUsuario;
+}
+int Usuario::getCodUsuario()
+{
+    return codUsuario;
 }
 string Usuario::getUsername()
 {
@@ -179,11 +179,12 @@ void Usuario::modifyContrasena()
         }
     } while (_contrasena != contrasenaConfi || _contrasena.length() < 8 || !(aMayuscula(contrasena) != "CANCELAR" && aMayuscula(contrasenaConfi) != "CANCELAR"));
     if (aMayuscula(contrasena) != "CANCELAR" && aMayuscula(contrasenaConfi) != "CANCELAR")
-        setContrasena(encriptar(_contrasena));
+        setContrasena(sha256(_contrasena));
 }
 void Usuario::listarDatos()
 {
     system("cls");
+    cout<<"Codigo: "<<getCodigo()<<endl;
     cout << "Usuario: " << getUsername() << endl;
     cout << "Contraseña: " << getContrasena() << endl;
     cout << "Nombre: " << getNombre() << endl;
@@ -192,45 +193,5 @@ void Usuario::listarDatos()
     cout << "Tipo de documento: " << getDocumento() << endl;
     cout << "Numero de documento: " << getNumDocumento() << endl;
     system("pause");
-}
-string Usuario::encriptar(string dato)
-{
-    int valor = rand() % 9;
-    string salida = "";
-    if (valor <= 0 || valor >= 10)
-        valor = 9;
-    char referencia = valor + 96;
-    salida = referencia + dato;
-    for (int i = 1; i < (int)salida.length(); i++)
-    {
-        salida[i] = salida[i] + valor;
-        if (salida[i] == ',')
-            salida[i] = '"';
-    }
-    return salida;
-}
-string Usuario::desencriptar(string dato)
-{
-    char a = dato[0];
-    if (a < 96 || a > 122)
-        cout << "ERROR: DESENCRIPTACIÓN, RANGOS NO VÁLIDOS: " << a << endl;
-    else if (a == 96)
-        cout << "ERROR: DESENCRIPTACIÓN, ENCRIPTACIÓN NULA" << endl;
-    int valor = (int)a - 96;
-    string salida = dato.erase(0, 1);
-    for (int i = 0; i < (int)salida.length(); i++)
-    {
-        if (salida[i] == '"')
-            salida[i] = ',';
-
-        salida[i] = salida[i] - valor;
-    }
-
-    return salida;
-}
-string Usuario::getCodigo()
-{
-    string codigo = documento + to_string(numDocumento);
-    return codigo;
 }
 #endif

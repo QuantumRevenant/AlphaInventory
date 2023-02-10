@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include "../model/Usuario.cpp"
+#include "../controller/Encrypter/sha256.cpp"
 
 class usuarioController
 {
@@ -19,6 +20,8 @@ public:
     void modify(Usuario, int);
     bool validarUsuarioNoExiste(string);
     bool validarSesion(string, string); // nos valida si existe una sesión.
+    bool existeUsuario(string);
+    int getCodigo();
     int getUsuario(string, bool);
     Usuario getUsuario(string);         // nos devuelve el usuario por medio de su key. (censurar la contraseña).
     Usuario getUsuario(string, string); // nos devuelve el usuario por medio de su usuario y contraseña.
@@ -67,13 +70,17 @@ bool usuarioController::validarSesion(string username, string contrasena)
     }
     if (found)
     {
-        if (contrasena == vectorUsuario[i - 1].desencriptar(vectorUsuario[i - 1].getContrasena()))
+        if (sha256(contrasena) == vectorUsuario[i - 1].getContrasena())
             return true;
         else
             return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
     }
     else
         return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
+}
+int usuarioController::getCodigo()
+{
+    return vectorUsuario.size();
 }
 int usuarioController::getUsuario(string key, bool a)
 {
