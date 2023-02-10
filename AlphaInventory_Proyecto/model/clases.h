@@ -6,18 +6,6 @@
 #include <vector>
 using namespace std;
 
-class Usuario;
-class Producto;
-class Componente;
-class Marca;
-class Lote;
-class Procesos;
-class Compra;
-class Venta;
-class ProcesosD;
-class DCompra;
-class DVenta;
-
 class Usuario
 {
 private:
@@ -66,44 +54,26 @@ private:
     string  nombre;
     float   precioUnitario;
     int     numComponentes;
-    Marca   marca;
     vector<Componente> vectorComponentes;
 
 public:
     Producto();
-    Producto(string, float, vector<Componente>&, Marca);
+    Producto(string, float, vector<Componente>&);
     ~Producto();
     void    setCodigo(string);
     void    setNombre(string);
     void    setPrecioUnitario(float);
     void    setNumComponentes(int);
-    void    setMarca(Marca);
     string  getCodigo();
     string  getNombre();
     float   getPrecioUnitario();
     int     getNumComponentes();
-    Marca   getMarca();
     int     partition(int, int);
     void    quickSort(int, int);
     void    ordenarComponentes();
     void    addComponente(Componente);
     void    deleteComponente(int);
     Componente getComponente(int);
-};
-
-class Componente
-{
-private:
-    string  nombre;
-    string  cantidad;
-public:
-    Componente();
-    Componente(string, string);
-    ~Componente();
-    string getNombre();
-    string getCantidad();
-    void setNombre(string);
-    void setCantidad(string);
 };
 
 class Marca
@@ -219,5 +189,19 @@ public:
     void setCodVenta(int);
 };
 
+class Componente
+{
+private:
+    string  nombre;
+    string  cantidad;
+public:
+    Componente();
+    Componente(string, string);
+    ~Componente();
+    string getNombre();
+    string getCantidad();
+    void setNombre(string);
+    void setCantidad(string);
+};
 
 #endif // CLASES_H

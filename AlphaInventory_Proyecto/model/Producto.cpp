@@ -8,12 +8,11 @@
 #include "../model/FuncionesGenerales.h"
 
 Producto::Producto() {}
-Producto::Producto(string _nombre, float _precio, vector<Componente> &_Componentes, Marca _marca)
+Producto::Producto(string _nombre, float _precio, vector<Componente> &_Componentes)
 {
     nombre = _nombre;
     precioUnitario = _precio;
     vectorComponentes = _Componentes;
-    marca = _marca;
     codigo = getCodigo();
     numComponentes = vectorComponentes.size();
 }
@@ -33,10 +32,6 @@ void    Producto::setPrecioUnitario(float _precioUnitario)
 void    Producto::setNumComponentes(int _numComponentes)
 {
     numComponentes = _numComponentes;
-}
-void    Producto::setMarca(Marca _marca)
-{
-    marca = _marca;
 }
 string  Producto::getCodigo()
 {
@@ -63,10 +58,6 @@ float   Producto::getPrecioUnitario()
 int     Producto::getNumComponentes()
 {
     return numComponentes;
-}
-Marca   Producto::getMarca()
-{
-    return marca;
 }
 int     Producto::partition(int menor, int mayor)
 {
