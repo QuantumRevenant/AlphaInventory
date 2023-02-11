@@ -28,7 +28,7 @@ public:
 
 ProductoController::ProductoController()
 {
-    //copyFile();
+    copyFile();
 }
 void    ProductoController::add(Producto obj)
 {
@@ -96,7 +96,7 @@ Producto ProductoController::get(int pos)
 {
     return vectorProducto[pos];
 }
-/* void    ProductoController::saveFile()
+void    ProductoController::saveFile()
 {
     try
     {
@@ -106,9 +106,18 @@ Producto ProductoController::get(int pos)
         {
             for (Producto obj:vectorProducto)
             {
-                archivoProductos << obj.getCodigo() << "," << obj.getNombre() << "," << obj.getPrecioUnitario() << "," << obj.getNumComponentes() << ",";
+                archivoProductos << obj.getCodigo() << ","
+                                 << obj.getNombre() << ","
+                                 << obj.getNumMarcas() << ",";
+                for (int i = 0; i < obj.getNumMarcas(); i++)
+                    archivoProductos << obj.getMarca(i).getCodigoMarca() << ","
+                                     << obj.getMarca(i).getNombreMarca() << ","
+                                     << obj.getPrecioUnitario(i) << ","
+                                     << obj.getStock(i) << ",";
+                archivoProductos << obj.getNumComponentes() << ",";
                 for (int i = 0; i < obj.getNumComponentes(); i++)
-                    archivoProductos << obj.getComponente(i).getNombre() << "," << obj.getComponente(i).getCantidad() << ",";
+                    archivoProductos << obj.getComponente(i).getNombre() << ","
+                                     << obj.getComponente(i).getCantidad() << ",";
                 archivoProductos << endl;
             }
             archivoProductos.close();
@@ -143,11 +152,21 @@ void    ProductoController::copyFile()
                     i++;
                 }
                 Producto obj;
-                obj.setCodigo(temporal[0]);
-                obj.setNombre(temporal[1]);
-                obj.setPrecioUnitario(stof(temporal[2]));
-                obj.setNumComponentes(stoi(temporal[3]));
+                obj.setCodigo(temporal[1]);
+                obj.setNombre(temporal[2]);
+                obj.setNumMarcas(stoi(temporal[3]));
                 j = 4;
+                for (int k = 0; k < obj.getNumMarcas(); k++)
+                {
+                    Marca marca;
+                    marca.setCodigoMarca(stoi(temporal[j]));
+                    marca.setNombreMarca(temporal[j + 1]);
+                    obj.addMarca(marca, stof(temporal[j + 2]));
+                    obj.modifyStock(stoi(temporal[j + 3]), k);
+                    j = j + 4;
+                }
+                obj.setNumComponentes(stoi(temporal[j]));
+                j++;
                 for (int k = 0; k < obj.getNumComponentes(); k++)
                 {
                     Componente comp;
@@ -166,5 +185,5 @@ void    ProductoController::copyFile()
         cout << "Ocurrio un error al leer el archivo";
     }
     
-} */
+}
 #endif // PRODUCTOCONTROLLER_H

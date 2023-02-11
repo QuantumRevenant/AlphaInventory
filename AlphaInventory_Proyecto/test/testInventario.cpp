@@ -150,6 +150,7 @@ void changeDataInventario()
                         break;
                     case 0:
                         productoController.modify(temp, opt0 - 1);
+                        productoController.saveFile();
                         break;
                     default:
                         break;
@@ -195,9 +196,10 @@ void doAddProducto()
         Producto producto(nombre, componentes);
         producto.ordenarComponentes();
         productoController.add(producto);
-        productoController.ordenarProductos();
         getValue("Desea agregar otro producto?(S/s): ", &opt);
     } while (aMinuscula(opt) == "s");
+    productoController.ordenarProductos();
+    productoController.saveFile();
 }
 void doAddMarca()
 {
