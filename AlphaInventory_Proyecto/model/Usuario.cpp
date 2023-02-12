@@ -11,14 +11,14 @@ using namespace std;
 
 Usuario::Usuario() {}
 Usuario::~Usuario() {}
-Usuario::Usuario(int _codUsuario,string _username, string _contrasena, string _nombre, string _apellidos, string _documento, int _numDocumento, string _tipoUsuario)
+Usuario::Usuario(int _codUsuario,string _username, string _contrasena, string _nombre, string _apellidos, string _tipoDocumento, int _numDocumento, string _tipoUsuario)
 {
     codUsuario=_codUsuario;
     username = _username;
     contrasena = _contrasena;
     nombre = _nombre;
     apellidos = _apellidos;
-    documento = _documento;
+    tipoDocumento = _tipoDocumento;
     numDocumento = _numDocumento;
     tipoUsuario = _tipoUsuario;
 }
@@ -38,9 +38,9 @@ void Usuario::setApellidos(string _apellidos)
 {
     apellidos = _apellidos;
 }
-void Usuario::setDocumento(string _documento)
+void Usuario::setDocumento(string _tipoDocumento)
 {
-    documento = _documento;
+    tipoDocumento = _tipoDocumento;
 }
 void Usuario::setNumDocumento(int _numDocumento)
 {
@@ -70,9 +70,9 @@ string Usuario::getApellidos()
 {
     return apellidos;
 }
-string Usuario::getDocumento()
+string Usuario::getTipoDocumento()
 {
-    return documento;
+    return tipoDocumento;
 }
 int Usuario::getNumDocumento()
 {
@@ -95,7 +95,7 @@ void Usuario::listarDatos()
     cout << "Nombre: " << getNombre() << endl;
     cout << "Apellidos: " << getApellidos() << endl;
     cout << "Tipo de usuario: " << getTipoUsuario() << endl;
-    cout << "Tipo de documento: " << getDocumento() << endl;
+    cout << "Tipo de documento: " << getTipoDocumento() << endl;
     cout << "Numero de documento: " << getNumDocumento() << endl;
     system("pause");
 }

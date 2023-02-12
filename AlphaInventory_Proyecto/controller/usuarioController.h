@@ -145,7 +145,7 @@ void usuarioController::archGrabarDatos()
         {
             for (Usuario obj : vectorUsuario)
             {
-                archivoUsuarios << obj.getDocumento() << "," << obj.getNumDocumento() << ","
+                archivoUsuarios << obj.getTipoDocumento() << "," << obj.getNumDocumento() << ","
                                 << obj.getUsername() << "," << obj.getContrasena() << ","
                                 << obj.getNombre() << "," << obj.getApellidos() << ","
                                 << obj.getTipoUsuario() << "," << obj.getCodUsuario() << "," << endl;

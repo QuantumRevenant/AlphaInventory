@@ -13,11 +13,11 @@ private:
     string username;
     string nombre;
     string apellidos;
-    string documento;
+    string tipoDocumento;
     int numDocumento;
     string contrasena;
     string tipoUsuario;
-
+    
 public:
     Usuario();
     ~Usuario();
@@ -34,7 +34,7 @@ public:
     string getUsername();
     string getNombre();
     string getApellidos();
-    string getDocumento();
+    string getTipoDocumento();
     int getNumDocumento();
     string getContrasena();
     string getTipoUsuario();
