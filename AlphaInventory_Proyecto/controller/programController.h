@@ -37,6 +37,7 @@ programController::programController()
     sesionKey = -1;
 }
 programController::~programController() {}
+
 void programController::closeSesion()
 {
     activeSesion = false;
@@ -51,20 +52,9 @@ void programController::openSesion(int key, bool isSupervisor = false, bool isAd
     this->isAdmin = isAdmin;
     sesionKey = key;
 }
-bool programController::getActiveSesion()
-{
-    return activeSesion;
-}
-bool programController::getIsSupervisor()
-{
-    return isSupervisor;
-}
-bool programController::getIsAdmin()
-{
-    return isAdmin;
-}
-int programController::getSesionKey()
-{
-    return sesionKey;
-}
+
+bool programController::getActiveSesion() { return activeSesion; }
+bool programController::getIsSupervisor() { return isSupervisor; }
+bool programController::getIsAdmin() { return isAdmin; }
+int programController::getSesionKey() { return sesionKey; }
 #endif

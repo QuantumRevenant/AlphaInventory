@@ -15,35 +15,44 @@ private:
 
 public:
     usuarioController();
+    ~usuarioController();
+
     void add(Usuario);
     Usuario get(int);
     void modify(Usuario, int);
+
     bool validarSesion(string, string); // nos valida si existe una sesión.
     bool existeUsuario(string);
-    int getCodUsuario();
-    int getUsuario(int, bool);
-    Usuario getUsuario(int);         // nos devuelve el usuario por medio de su key. (censurar la contraseña).
+
+    int getNewCodUsuario();
+    Usuario getUsuario(int);            // nos devuelve el usuario por medio de su key. (censurar la contraseña).
     Usuario getUsuario(string, string); // nos devuelve el usuario por medio de su usuario y contraseña.
+
     void archGrabarDatos();
     void archRecuperarDatos();
 };
 
 usuarioController::usuarioController() { archRecuperarDatos(); }
-void usuarioController::add(Usuario obj)
+usuarioController::~usuarioController() {}
+
+void usuarioController::add(Usuario obj) { vectorUsuario.push_back(obj); }
+Usuario usuarioController::get(int pos) { return vectorUsuario[pos]; }
+void usuarioController::modify(Usuario obj, int pos) { vectorUsuario[pos] = obj; }
+
+bool usuarioController::validarSesion(string username, string contrasena)
 {
-    vectorUsuario.push_back(obj);
-}
-Usuario usuarioController::get(int pos)
-{
-    return vectorUsuario[pos];
-}
-void usuarioController::modify(Usuario obj, int pos)
-{
-    string dataToSave = obj.getContrasena();
-    if (dataToSave == "********")
-        dataToSave = vectorUsuario[pos].getContrasena();
-    vectorUsuario[pos] = obj;
-    vectorUsuario[pos].setContrasena(dataToSave);
+    int i = 0;
+    bool found = false;
+    found = existeUsuario(username);
+    if (found)
+    {
+        if (sha256(contrasena) == vectorUsuario[i - 1].getContrasena())
+            return true;
+        else
+            return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
+    }
+    else
+        return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
 }
 bool usuarioController::existeUsuario(string username)
 {
@@ -57,47 +66,8 @@ bool usuarioController::existeUsuario(string username)
     }
     return found;
 }
-bool usuarioController::validarSesion(string username, string contrasena)
-{
-    int i = 0;
-    bool found = false;
-    found=existeUsuario(username);
-    if (found)
-    {
-        if (sha256(contrasena) == vectorUsuario[i - 1].getContrasena())
-            return true;
-        else
-            return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
-    }
-    else
-        return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
-}
-int usuarioController::getCodUsuario()
-{
-    return vectorUsuario.size();
-}
-int usuarioController::getUsuario(int key, bool a)
-{
-    int i = 0, index = 0;
-    bool found = false;
 
-    if (a)
-        cout << "";
-
-    while (i < (int)vectorUsuario.size() && !found)
-    {
-        if (vectorUsuario[i].getCodUsuario() == key)
-        {
-            found = true;
-            index = i;
-        }
-        i++;
-    }
-    if (found)
-        return index;
-    else
-        return -1;
-}
+int usuarioController::getNewCodUsuario() { return vectorUsuario.size(); }
 Usuario usuarioController::getUsuario(int key)
 {
     int i = 0;
@@ -110,7 +80,6 @@ Usuario usuarioController::getUsuario(int key)
         i++;
     }
     Usuario objSalida = vectorUsuario[i - 1];
-    objSalida.setContrasena("********");
     return objSalida;
 }
 Usuario usuarioController::getUsuario(string username, string contrasena)
@@ -135,6 +104,7 @@ Usuario usuarioController::getUsuario(string username, string contrasena)
         return objSalida;
     }
 }
+
 void usuarioController::archGrabarDatos()
 {
     try
@@ -158,6 +128,7 @@ void usuarioController::archGrabarDatos()
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
+
 void usuarioController::archRecuperarDatos()
 {
     int i;
@@ -187,7 +158,7 @@ void usuarioController::archRecuperarDatos()
             usuario.setApellidos(temporal[5]);
             usuario.setTipoUsuario(temporal[6]);
             cout << "Usuario " << temporal[7] << " cargado..." << endl;
-            sleep(0.25);
+            Sleep(1);
             add(usuario);
         }
     }

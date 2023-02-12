@@ -5,11 +5,8 @@
 #include <ctime>
 #include <unistd.h>
 #include "../model/Usuario.cpp"
-#include "../controller/usuarioController.h"
-#include "../controller/programController.h"
-#include "../model/FuncionesGenerales.h"
+#include "../controller/controllers.h"
 #include "OptionMenus.h"
-#include "../controller/Encrypter/sha256.cpp"
 
 #define VOFFSET 5
 #define HOFFSET 5
@@ -241,7 +238,7 @@ void doRegistrarse(bool start = false)
 
         } while (contrasena != contrasenaConfi || sizePass < 8);
 
-        Usuario objUser(userController.getCodUsuario(), username, contrasena, nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
+        Usuario objUser(userController.getNewCodUsuario(), username, contrasena, nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
 
         userController.add(objUser);
         objUser.listarDatos(); // BORRAR VERSION FINAL - SOLO DEBUG
@@ -364,7 +361,7 @@ void doModificarPerfil(int key)
         case 6:
             if (menuConfirmar("Desea guardar los cambios", "Deberas reiniciar la sesion"))
             {
-                userController.modify(objUser, userController.getUsuario(key, true));
+                userController.modify(objUser, key);
                 userController.archGrabarDatos();
                 progController.closeSesion();
             }
