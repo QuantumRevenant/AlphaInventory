@@ -12,7 +12,7 @@ Marca::Marca(int cod, string _nombreMarca)
     nombreMarca = _nombreMarca;
 }
 Marca::~Marca() {}
-int     Marca::getCodigoMarca()
+int     Marca::getCodUsuarioMarca()
 {
     return codigoMarca;
 }

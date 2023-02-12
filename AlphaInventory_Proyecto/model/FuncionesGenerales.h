@@ -324,11 +324,12 @@ void menuListado(vector<string> messages, int separation = 0, string title = "",
         system("pause");
     }
 }
-void menuError(vector<string> messages, int separation = 0, string color = "0f", string title = "")
+void menuError(vector<string> messages, int separation = 0, string color = "0f", string title = "", bool pausar = false)
 {
     system("color 4f");
-    menuListado(messages, separation, title, false);
-    Sleep(1000);
+    menuListado(messages, separation, title, pausar);
+    if (!pausar)
+        Sleep(1000);
     char inp[] = {'c', 'o', 'l', 'o', 'r', ' ', color[0], color[1], '\0'};
     system(inp);
 }
@@ -348,7 +349,7 @@ void menuDatos(vector<string> messages, vector<string> &answers, int quantCensor
     for (string x : messages)
     {
         alinearXTexto(x + ": ", 0, true, 30, (-sizeY + e), true);
-        e+=separation+1;
+        e += separation + 1;
     }
     e = f;
     int val = messages.size() - quantCensor;
@@ -359,10 +360,26 @@ void menuDatos(vector<string> messages, vector<string> &answers, int quantCensor
         if (i < val)
             getline(cin, answ);
         else
-            answ=enterContrasena();
-        e+=separation+1;
+            answ = enterContrasena();
+        e += separation + 1;
         answers.push_back(answ);
     }
+}
+bool menuConfirmar(string message, string message2 = " ")
+{
+    system("cls");
+    dibujarCuadro();
+    int sizeY = 3;
+    int e = 0;
+    string opt;
+    centrarTexto("¿" + message + "? " + message2 + ". (Confirmar: S/s)", 0, true, true, 0, -3);
+    e += 2;
+    centrarTexto(">_ ", 0, true, true, -5, 0);
+    cin >> opt;
+    if (aMinuscula(opt) == "s" || aMinuscula(opt) == "y" || aMinuscula(opt) == "si" || aMinuscula(opt) == "yes")
+        return true;
+    else
+        return false;
 }
 int menu(string title, vector<string> options)
 {
@@ -411,4 +428,5 @@ int menu(string title, vector<string> options)
     } while (stoi(opc) < 0);
     return salida;
 }
+
 #endif

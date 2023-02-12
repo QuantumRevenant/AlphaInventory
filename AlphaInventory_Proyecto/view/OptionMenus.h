@@ -33,7 +33,14 @@ void menuLogIn()
         doRegistrarse(false);
         break;
     case 0:
-        // Salir
+        esquinarTexto("Cerrando Programa",1);
+        for (int i = 0; i < 3; i++)
+            {
+                cout << ".";
+                cout.flush();
+                sleep(1);
+            }
+        Sleep(1000);
         break;
     default:
         cout << "Error, opcion no válida" << endl;

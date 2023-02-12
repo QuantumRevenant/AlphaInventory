@@ -370,14 +370,14 @@ bool iniciarSesion(bool opt, string &type)
 
         if (opt)
         {
-            progController.openSesion(userController.getUsuario(username, contrasena).getCodigo(), isSell, isAdm);
+            progController.openSesion(userController.getUsuario(username, contrasena).getCodUsuario(), isSell, isAdm);
             cout << "Sesion iniciada" << endl;
             sleep(1);
             cout << "Bienvenido " << username << endl;
             sleep(1);
             cout << "Ingresó como Usuario [FUNCIÓN AUN NO IMPLEMENTADA]" << endl;
             system("pause");
-            // menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario(), userController.getUsuario(username, contrasena).getCodigo());
+            // menuUsuario(userController.getUsuario(username, contrasena).getTipoUsuario(), userController.getUsuario(username, contrasena).getCodUsuario());
             return true;
         }
         else

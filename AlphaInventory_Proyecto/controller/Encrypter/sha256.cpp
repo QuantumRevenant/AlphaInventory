@@ -1,3 +1,5 @@
+#ifndef SHA256_CPP
+#define SHA256_CPP
 #include <cstring>
 #include <fstream>
 #include "sha256.h"
@@ -130,3 +132,4 @@ std::string sha256(std::string input)
         sprintf(buf+i*2, "%02x", digest[i]);
     return std::string(buf);
 }
+#endif

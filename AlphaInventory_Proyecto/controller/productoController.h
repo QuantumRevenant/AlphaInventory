@@ -47,7 +47,7 @@ int     ProductoController::partition(int menor, int mayor)
     Producto pivote = vectorProducto[mayor];
     int i = menor - 1;
     for (int j = menor; j <= mayor - 1; j++)
-        if (vectorProducto[j].getCodigo() < pivote.getCodigo())
+        if (vectorProducto[j].getCodUsuario() < pivote.getCodUsuario())
         {
             i++;
             swap(vectorProducto[i], vectorProducto[j]);
@@ -73,9 +73,9 @@ int     ProductoController::binarySearch(int inicio, int _final, string cod)
     if (_final >= inicio)
     {
         int mitad = inicio + (_final - inicio) / 2;
-        if (vectorProducto[mitad].getCodigo() == cod)
+        if (vectorProducto[mitad].getCodUsuario() == cod)
             return mitad;
-        if (vectorProducto[mitad].getCodigo() > cod)
+        if (vectorProducto[mitad].getCodUsuario() > cod)
             return binarySearch(inicio, mitad - 1, cod);
         return binarySearch(mitad + 1, _final, cod);
     }
@@ -106,7 +106,7 @@ void    ProductoController::saveFile()
         {
             for (Producto obj:vectorProducto)
             {
-                archivoProductos << obj.getCodigo() << "," << obj.getNombre() << "," << obj.getPrecioUnitario() << "," << obj.getNumComponentes() << ",";
+                archivoProductos << obj.getCodUsuario() << "," << obj.getNombre() << "," << obj.getPrecioUnitario() << "," << obj.getNumComponentes() << ",";
                 for (int i = 0; i < obj.getNumComponentes(); i++)
                     archivoProductos << obj.getComponente(i).getNombre() << "," << obj.getComponente(i).getCantidad() << ",";
                 archivoProductos << endl;

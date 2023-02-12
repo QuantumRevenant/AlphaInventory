@@ -18,12 +18,11 @@ public:
     void add(Usuario);
     Usuario get(int);
     void modify(Usuario, int);
-    bool validarUsuarioNoExiste(string);
     bool validarSesion(string, string); // nos valida si existe una sesión.
     bool existeUsuario(string);
-    int getCodigo();
-    int getUsuario(string, bool);
-    Usuario getUsuario(string);         // nos devuelve el usuario por medio de su key. (censurar la contraseña).
+    int getCodUsuario();
+    int getUsuario(int, bool);
+    Usuario getUsuario(int);         // nos devuelve el usuario por medio de su key. (censurar la contraseña).
     Usuario getUsuario(string, string); // nos devuelve el usuario por medio de su usuario y contraseña.
     void archGrabarDatos();
     void archRecuperarDatos();
@@ -46,7 +45,7 @@ void usuarioController::modify(Usuario obj, int pos)
     vectorUsuario[pos] = obj;
     vectorUsuario[pos].setContrasena(dataToSave);
 }
-bool usuarioController::validarUsuarioNoExiste(string username)
+bool usuarioController::existeUsuario(string username)
 {
     int i = 0;
     bool found = false;
@@ -62,12 +61,7 @@ bool usuarioController::validarSesion(string username, string contrasena)
 {
     int i = 0;
     bool found = false;
-    while (i < (int)vectorUsuario.size() && !found)
-    {
-        if (vectorUsuario[i].getUsername() == username)
-            found = true;
-        i++;
-    }
+    found=existeUsuario(username);
     if (found)
     {
         if (sha256(contrasena) == vectorUsuario[i - 1].getContrasena())
@@ -78,11 +72,11 @@ bool usuarioController::validarSesion(string username, string contrasena)
     else
         return false; // "Username y contraseña incorrectos y/o no registrados en nuestra base de datos."
 }
-int usuarioController::getCodigo()
+int usuarioController::getCodUsuario()
 {
     return vectorUsuario.size();
 }
-int usuarioController::getUsuario(string key, bool a)
+int usuarioController::getUsuario(int key, bool a)
 {
     int i = 0, index = 0;
     bool found = false;
@@ -92,7 +86,7 @@ int usuarioController::getUsuario(string key, bool a)
 
     while (i < (int)vectorUsuario.size() && !found)
     {
-        if (vectorUsuario[i].getCodigo() == key)
+        if (vectorUsuario[i].getCodUsuario() == key)
         {
             found = true;
             index = i;
@@ -104,14 +98,14 @@ int usuarioController::getUsuario(string key, bool a)
     else
         return -1;
 }
-Usuario usuarioController::getUsuario(string key)
+Usuario usuarioController::getUsuario(int key)
 {
     int i = 0;
     bool found = false;
 
     while (i < (int)vectorUsuario.size() && !found)
     {
-        if (vectorUsuario[i].getCodigo() == key)
+        if (vectorUsuario[i].getCodUsuario() == key)
             found = true;
         i++;
     }
@@ -154,7 +148,7 @@ void usuarioController::archGrabarDatos()
                 archivoUsuarios << obj.getDocumento() << "," << obj.getNumDocumento() << ","
                                 << obj.getUsername() << "," << obj.getContrasena() << ","
                                 << obj.getNombre() << "," << obj.getApellidos() << ","
-                                << obj.getTipoUsuario() << "," << obj.getCodigo() << "," << endl;
+                                << obj.getTipoUsuario() << "," << obj.getCodUsuario() << "," << endl;
             }
         }
         archivoUsuarios.close();

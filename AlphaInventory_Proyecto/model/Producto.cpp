@@ -13,7 +13,7 @@ Producto::Producto(string _nombre, float _precio, vector<Componente> &_Component
     nombre = _nombre;
     precioUnitario = _precio;
     vectorComponentes = _Componentes;
-    codigo = getCodigo();
+    codigo = getCodUsuario();
     numComponentes = vectorComponentes.size();
 }
 Producto::~Producto() {}
@@ -33,7 +33,7 @@ void    Producto::setNumComponentes(int _numComponentes)
 {
     numComponentes = _numComponentes;
 }
-string  Producto::getCodigo()
+string  Producto::getCodUsuario()
 {
     string cod;
     cod = nombre[0] + to_string(numComponentes);

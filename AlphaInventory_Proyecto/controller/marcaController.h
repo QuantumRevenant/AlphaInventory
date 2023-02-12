@@ -34,7 +34,7 @@ int     MarcaController::getCorrelativo()
 	}
 	else
 	{
-		return vectorMarca[size() - 1].getCodigoMarca() + 1;
+		return vectorMarca[size() - 1].getCodUsuarioMarca() + 1;
 	}
 }
 void    MarcaController::add(Marca obj)
@@ -63,7 +63,7 @@ void    MarcaController::saveFile()
         {
             for (Marca obj:vectorMarca)
             {
-                archivoMarcas << obj.getCodigoMarca() << "," << obj.getNombreMarca() << ",";
+                archivoMarcas << obj.getCodUsuarioMarca() << "," << obj.getNombreMarca() << ",";
                 archivoMarcas << endl;
             }
             archivoMarcas.close();

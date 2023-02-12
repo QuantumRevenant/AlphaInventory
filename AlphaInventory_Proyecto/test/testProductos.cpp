@@ -50,7 +50,7 @@ void listarProductos()
     if (productoController.size() > 0)
     {
         for (int i = 0; i < productoController.size(); i++)
-            cout << "[" << i + 1 << "]" << productoController.get(i).getCodigo() << "\t" << productoController.get(i).getNombre() << "\tS/." << productoController.get(i).getPrecioUnitario() << endl;
+            cout << "[" << i + 1 << "]" << productoController.get(i).getCodUsuario() << "\t" << productoController.get(i).getNombre() << "\tS/." << productoController.get(i).getPrecioUnitario() << endl;
     } else
     {
         cout << "Aun no hay productos registrados" << endl;

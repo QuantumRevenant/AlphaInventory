@@ -38,12 +38,9 @@ public:
     int getNumDocumento();
     string getContrasena();
     string getTipoUsuario();
-    void modifyDocumento();
-    void modifyContrasena();
     void listarDatos();
-    string getCodigo();
 };
-
+/*
 class Producto
 {
 private:
@@ -61,7 +58,7 @@ public:
     void setNombre(string);
     void setPrecioUnitario(float);
     void setNumComponentes(int);
-    string getCodigo();
+    string getCodUsuario();
     string getNombre();
     float getPrecioUnitario();
     int getNumComponentes();
@@ -72,7 +69,7 @@ public:
     void deleteComponente(int);
     Componente getComponente(int);
 };
-
+*/
 class Marca
 {
 private:
@@ -83,7 +80,7 @@ public:
     Marca();
     Marca(int, string);
     ~Marca();
-    int getCodigoMarca();
+    int getCodUsuarioMarca();
     string getNombreMarca();
     void setCodigoMarca(int);
     void setNombreMarca(string);
@@ -101,7 +98,7 @@ public:
     Procesos();
     Procesos(int, double, bool);
     ~Procesos();
-    int getCodUsuario();
+    int getCodUsuario;
     string getFecha();
     double getMonto();
     bool getEstado();

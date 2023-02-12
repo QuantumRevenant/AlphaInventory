@@ -54,18 +54,19 @@ void changeDataInventario();
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
+    // Usuario objUser(0,"admin",sha256("admin"),"admin","admin","DNI",10000000,"Administrador");
+    // userController.add(objUser);
+    // userController.archGrabarDatos();
+    userController.archRecuperarDatos();
     // Validar si hay administrador en el registro, sino:
     //  doRegistrarse(true)
     menuLogIn();
-    cout << endl
-         << endl
-         << doTab(2, "") << "##Cerrando el programa##" << endl;
+    esquinarTexto("", 2, false, true, false);
     return 0;
 }
 
-void doRegistrarse(bool start)
+void doRegistrarse(bool start = false)
 {
-
     string type;
     string username;
     string nombre;
@@ -85,7 +86,7 @@ void doRegistrarse(bool start)
     system("cls");
     if (!start)
     {
-        vector<string> options = {"VENDEDOR", "SUPERVISOR", "ADMINISTRADOR"}; // Carritos de compra, etc
+        vector<string> options = {"VENDEDOR", "SUPERVISOR", "ADMINISTRADOR"};
         opt = menu("REGISTRO - TIPO DE USUARIO", options);
         switch (opt)
         {
@@ -156,29 +157,21 @@ void doRegistrarse(bool start)
         };
         if (tipoUsuario == "Cancelar")
             return;
+        vector<string> inputs;
+        do
+        {
+            cin.ignore();
+            inputs.clear();
+            options = {"Nombre de usuario", "Nombres", "Apellidos"};
+            menuDatos(options, inputs, 0, 0, "__DATOS__");
 
-        system("cls");
-        dibujarCuadro();
-        alinearXTexto("Nombre de usuario: ", 0, true, 30, (-sizeY + e), true);
-        e++;
-        alinearXTexto("Nombres: ", 0, true, 30, (-sizeY + e), true);
-        e++;
-        alinearXTexto("Apellidos: ", 0, true, 30, (-sizeY + e), true);
-        e++;
+            username = inputs[0].substr(0, inputs[0].find(' '));
+            nombre = inputs[1];
+            apellidos = inputs[2];
 
-        e = 0;
-        alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
-        cin >> username;
-        e++;
-
-        cin.ignore();
-        alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
-        getline(cin, nombre);
-        e++;
-
-        alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
-        getline(cin, apellidos);
-        e++;
+            if (userController.existeUsuario(username))
+                menuError({"~USUARIO YA EXISTE, ESCOGE OTRO~"});
+        } while (userController.existeUsuario(username));
 
         options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
         opt = menu("REGISTRO - TIPO DE USUARIO", options);
@@ -212,45 +205,21 @@ void doRegistrarse(bool start)
         strInput = "0";
         do
         {
-            sizeY = 4;
-            e = 0;
-            system("cls");
-            dibujarCuadro();
-            centrarTexto("_" + tipoDocumento + "_", 0, true, true, 0, (-sizeY + e));
-            e++;
-            centrarTexto("['Salir' para salir]", 0, true, true, 0, (-sizeY + e));
-            e += 2;
-            alinearXTexto("Numero de documento: ", 0, true, 30, (-sizeY + e));
-            alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
-            cin >> strInput;
+            cin.ignore();
+            inputs.clear();
+            menuDatos({"Numero de documento"}, inputs, 0, 0, "_" + tipoDocumento + "_ -('Salir' para salir)");
+            strInput = inputs[0].substr(0, inputs[0].find(' '));
 
             if (aMinuscula(strInput) == "salir")
                 return;
 
             if ((int)strInput.size() != docSize)
             {
-                sizeY = 3;
-                e = 0;
-                system("cls");
-                dibujarCuadro();
-                system("color 4f");
-                centrarTexto("~\t-Los documentos tipo " + tipoDocumento + " deben contener " + to_string(docSize) + " digitos-\t~", 0, true, true, 0, (-sizeY + e));
-                e += 2;
-                centrarTexto("~\tVUELVA A INGRESAR SU NUMERO DE DOCUMENTO\t~", 0, true, true, 0, (-sizeY + e));
-                Sleep(1000);
-                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
-                system(color);
+                options = {"~-Los documentos tipo " + tipoDocumento + " deben contener " + to_string(docSize) + " digitos-~", "~VUELVA A INGRESAR SU NUMERO DE DOCUMENTO~"};
+                menuError(options, 1);
             }
             if (!esNumero(strInput))
-            {
-                system("cls");
-                dibujarCuadro();
-                system("color 4f");
-                centrarTexto("~\t[[INTRODUCE UN VALOR NUMERICO]]\t~");
-                Sleep(1000);
-                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
-                system(color);
-            }
+                menuError({"~[[INTRODUCE UN VALOR NUMERICO]]~"});
         } while (!esNumero(strInput) || (int)strInput.size() != docSize);
 
         numDocumento = stoi(strInput);
@@ -258,56 +227,21 @@ void doRegistrarse(bool start)
         int sizePass;
         do
         {
-            sizeY = 3;
-            e = 0;
-            system("cls");
-            dibujarCuadro();
-            alinearXTexto("Contraseña: ", 0, true, 30, (-sizeY + e), true);
-            e += 2;
-            alinearXTexto("Repetir contraseña: ", 0, true, 30, (-sizeY + e), true);
+            inputs.clear();
+            menuDatos({"Contrasena", "Repetir Contrasena"}, inputs, 2, 1);
+            contrasena = sha256(inputs[0]);
+            contrasenaConfi = sha256(inputs[1]);
+            sizePass = inputs[0].size();
+            inputs.clear();
 
-            e = 0;
-            alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
-            strInput = enterContrasena();
-            sizePass = strInput.size();
-            contrasena = sha256(strInput);
-            strInput = "";
-            e += 2;
-
-            alinearXTexto(">_ ", 0, false, 65, (-sizeY + e), true);
-            contrasenaConfi = sha256(enterContrasena());
-            e++;
             if (sizePass < 8)
-            {
-                sizeY = 3;
-                e = 0;
-                system("cls");
-                dibujarCuadro();
-                system("color 4f");
-                centrarTexto("~\t-La contrasena debe tener minimo 8 caracteres-\t~", 0, true, true, 0, (-sizeY + e));
-                e += 2;
-                centrarTexto("~\tVUELVA A INGRESAR UNA CONTRASENA\t~", 0, true, true, 0, (-sizeY + e));
-                Sleep(1000);
-                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
-                system(color);
-            }
+                menuError({"~-La contrasena debe tener minimo 8 caracteres-~", "~VUELVA A INGRESAR UNA CONTRASENA~"});
             else if (contrasena != contrasenaConfi)
-            {
-                sizeY = 3;
-                e = 0;
-                system("cls");
-                dibujarCuadro();
-                system("color 4f");
-                centrarTexto("~\t-Las contrasenas no son iguales-\t~", 0, true, true, 0, (-sizeY + e));
-                e += 2;
-                centrarTexto("~\tVUELVA A INGRESAR UNA CONTRASENA\t~", 0, true, true, 0, (-sizeY + e));
-                Sleep(1000);
-                char color[] = {'c', 'o', 'l', 'o', 'r', ' ', baseColor[0], baseColor[1], '\0'};
-                system(color);
-            }
+                menuError({"~-Las contrasenas no son iguales-~", "~VUELVA A INGRESAR UNA CONTRASENA~"});
+
         } while (contrasena != contrasenaConfi || sizePass < 8);
 
-        Usuario objUser(userController.getCodigo(),username, contrasena, nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
+        Usuario objUser(userController.getCodUsuario(), username, contrasena, nombre, apellidos, tipoDocumento, numDocumento, tipoUsuario);
 
         userController.add(objUser);
         objUser.listarDatos(); // BORRAR VERSION FINAL - SOLO DEBUG
@@ -315,136 +249,174 @@ void doRegistrarse(bool start)
         userController.archGrabarDatos();
     }
 }
-
-void doModificarPerfil(string key)
+void doModificarPerfil(int key)
 {
-    string temporal;
-    int opt;
+    string temporal, temporal2;
+    int opt, sizeTemporal;
     Usuario objUser = userController.getUsuario(key);
+    vector<string> options;
+    vector<string> inputs;
     do
     {
-        temporal = "3136435667";
-        system("cls");
-        cout << "--EDITAR PERFIL------------" << endl;
-        cout << "--Usuario---------------[1]" << endl;
-        cout << "--Nombre----------------[2]" << endl;
-        cout << "--Apellidos-------------[3]" << endl;
-        cout << "--Contraseña------------[4]" << endl;
-        cout << "--Documento-------------[5]" << endl;
-        cout << "--Guardar Cambios-------[6]" << endl;
-        cout << "--Cancelar Cambios------[7]" << endl;
-        getValue("Ingrese opcion[1-6]: ", &opt);
+        inputs.clear();
+        options = {"Usuario", "Nombres", "Apellidos", "Contrasena", "Documento", "Guardar Cambios"};
+        opt = menu("EDITAR PERFIL", options);
         switch (opt)
         {
         case 1:
-            do
-            {
-                if (temporal != "3136435667")
-                    cout << "##[USUARIO YA EXISTE, ESCOGE OTRO NOMBRE]##" << endl;
-                getValue("Nombre de usuario: ", &temporal);
-            } while (userController.validarUsuarioNoExiste(temporal));
-            if (confirmar("que \"" + temporal + "\" sea su nuevo nombre de usuario?"))
+            menuDatos({"Nombre de usuario"}, inputs);
+            temporal = inputs[0].substr(0, inputs[0].find(' '));
+            if (userController.existeUsuario(temporal) && temporal != objUser.getUsername())
+                menuError({"##[USUARIO YA EXISTE, ESCOGE OTRO NOMBRE]##"});
+            if (menuConfirmar("Desea que\"" + temporal + "\"sea su nuevo nombre de usuario"))
                 objUser.setUsername(temporal);
             break;
         case 2:
-            getValue("Nombre: ", &temporal);
-            if (confirmar("que \"" + temporal + "\" sea su nombre?"))
+            menuDatos({"Nombre"}, inputs);
+            temporal = inputs[0].substr(0, inputs[0].find(' '));
+            if (menuConfirmar("Desea que\"" + temporal + "\"sea su nuevo nombre"))
                 objUser.setNombre(temporal);
             break;
         case 3:
-            cin.ignore();
-            cout << "Apellidos: ";
-            getline(cin, temporal);
-            if (confirmar("que \"" + temporal + "\" sea sus apellidos?"))
+            menuDatos({"Apellidos"}, inputs);
+            temporal = inputs[0].substr(0, inputs[0].find(' '));
+            if (menuConfirmar("Desea que\"" + temporal + "\"sea sus nuevos apelidos"))
                 objUser.setApellidos(temporal);
             break;
         case 4:
-            objUser.modifyContrasena();
+            do
+            {
+                inputs.clear();
+                menuDatos({"Contrasena", "Repetir Contrasena"}, inputs, 2, 1, "-('Salir' para salir)-");
+                if (aMinuscula(inputs[0]) != "salir" && aMinuscula(inputs[1]) != "salir")
+                {
+                    temporal = sha256(inputs[0]);
+                    temporal2 = sha256(inputs[1]);
+                    sizeTemporal = inputs[0].size();
+                    inputs.clear();
+                }
+                else
+                    break;
+
+                if (sizeTemporal < 8)
+                    menuError({"~-La contrasena debe tener minimo 8 caracteres-~", "~VUELVA A INGRESAR UNA CONTRASENA~"});
+                else if (temporal != temporal2)
+                    menuError({"~-Las contrasenas no son iguales-~", "~VUELVA A INGRESAR UNA CONTRASENA~"});
+
+            } while (temporal != temporal2 || sizeTemporal < 8);
+            objUser.setContrasena(temporal);
+            temporal = temporal2 = "";
+            sizeTemporal = 0;
             break;
         case 5:
-            objUser.modifyDocumento();
+            options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
+            opt = menu("REGISTRO - TIPO DE USUARIO", options);
+
+            switch (opt)
+            {
+            case 1:
+                temporal = "DNI";
+                sizeTemporal = 8;
+                break;
+            case 2:
+                temporal = "CE";
+                sizeTemporal = 12;
+                break;
+            case 3:
+                temporal = "PASAPORTE";
+                sizeTemporal = 12;
+                break;
+            case 4:
+                temporal = "RUC";
+                sizeTemporal = 11;
+                break;
+            case 0:
+                temporal = "Cancelar";
+                break;
+            }
+
+            if (temporal == "Cancelar")
+                break;
+
+            temporal2 = "0";
+            do
+            {
+                cin.ignore();
+                inputs.clear();
+                menuDatos({"Numero de documento"}, inputs, 0, 0, "_" + temporal + "_ -('Salir' para salir)");
+                temporal2 = inputs[0].substr(0, inputs[0].find(' '));
+
+                if (aMinuscula(temporal2) == "salir")
+                    return;
+
+                if ((int)temporal2.size() != sizeTemporal)
+                {
+                    options = {"~-Los documentos tipo " + temporal + " deben contener " + to_string(sizeTemporal) + " digitos-~", "~VUELVA A INGRESAR SU NUMERO DE DOCUMENTO~"};
+                    menuError(options, 1);
+                }
+                if (!esNumero(temporal2))
+                    menuError({"~[[INTRODUCE UN VALOR NUMERICO]]~"});
+            } while (!esNumero(temporal2) || (int)temporal2.size() != sizeTemporal);
+
+            objUser.setDocumento(temporal);
+            objUser.setNumDocumento(stoi(temporal2));
             break;
         case 6:
-            if (confirmar("guardar los cambios", "Deberás reiniciar la sesión."))
+            if (menuConfirmar("Desea guardar los cambios", "Deberas reiniciar la sesion"))
             {
                 userController.modify(objUser, userController.getUsuario(key, true));
                 userController.archGrabarDatos();
                 progController.closeSesion();
             }
-            cout << "Cancelando los cambios...";
+            else
+                menuError({"Cancelando los cambios..."});
             break;
-        case 7:
-            cout << "Cancelando los cambios...";
-            break;
-        default:
-            cout << "Ingrese una opción valida[1-7]" << endl;
-            system("pause");
+        case 0:
+            if (menuConfirmar("Desea cancelar los cambios", "Se perderAn permanentemente"))
+                menuError({"Cancelando los cambios..."});
+            else
+                opt = 7;
             break;
         }
-    } while (opt != 6 && opt != 7);
+    } while (opt != 6 && opt != 0);
 }
 bool doIniciarSesion(bool opt, string &type)
 {
+    cin.ignore();
     string username,
         contrasena;
     int contador = 0;
     bool resultado = false;
-
     do
     {
-        system("cls");
-        doEndline(VOFFSET);
-        cout << doTab(HOFFSET + 1, "") << "-----INICIO DE SESIÓN-----" << endl;
-        cout << doTab(HOFFSET, "") << "--INTRODUCE 'SALIR' PARA CERRAR---" << endl;
-        cout << doTab(HOFFSET, "") << "USERNAME: " << endl
-             << doTab(HOFFSET, "") << ">_ ";
-        cin >> username;
-        if (aMinuscula(username) == "salir")
-            break;
-        cout << doTab(HOFFSET, "") << "CONTRASEÑA: " << endl
-             << doTab(HOFFSET, "") << ">_ ";
-        cin >> contrasena;
-        if (aMinuscula(contrasena) == "salir")
+        vector<string> options = {"USERNAME", "CONTRASENA"};
+        vector<string> inputs;
+        menuDatos(options, inputs, 1, 1, "##INICIO DE SESIÓN## - ('Salir' para salir) ");
+        if (aMinuscula(options[0]) != "salir" || aMinuscula(options[1]) != "salir")
             break;
         resultado = userController.validarSesion(username, contrasena);
         if (resultado)
         {
             system("cls");
-            doEndline(VOFFSET);
-            cout << doTab(HOFFSET, "") << "Iniciando Sesión"; // Agregar el inicio de sesión
+            dibujarCuadro();
+            centrarTexto("Iniciando Sesión", 0, true, true, -3);
             for (int i = 0; i < 3; i++)
             {
                 cout << ".";
                 cout.flush();
                 sleep(1);
             }
-            cout << endl;
         }
         else
         {
-            /*
-            INICIO DE SESION INCORRECTO
-
-            Si(username && contrasena no encontrados)
-                No tenemos username y contraseña en nuestra base de datos
-            else si(username no encontrado)
-                Username Incorrecto
-            else
-                Contrasena Incorrecta
-
-            contador++
-            */
-            cout << doTab(HOFFSET - 1, "") << "Username y contraseña incorrectos y/o no registrados en nuestra base de datos." << endl;
-            cout << doTab(HOFFSET - 1, "");
-            system("pause");
+            menuError({"Username y/o contraseña incorrectos."}, 0, 0, "", true);
             contador++;
         }
     } while (!resultado && contador < 3);
 
     if (contador >= 3)
     {
-        cout << doTab(HOFFSET - 1, "") << "Límite de intentos alcanzado, volviendo al menú principal..." << endl;
-        system("pause");
+        menuError({"Límite de intentos alcanzado, volviendo al menú principal..."}, 0, 0, "", true);
         return false;
     }
 
@@ -463,13 +435,10 @@ bool doIniciarSesion(bool opt, string &type)
         else
             isAdm = isSupervisor = false;
 
-        cout << doTab(HOFFSET, "") << "Sesion iniciada" << endl;
-        sleep(1);
-        cout << doTab(HOFFSET, "") << "Bienvenido " << username << endl;
-        sleep(1);
+        menuListado({"Sesion iniciada", "Bienvenido " + username});
         if (opt)
         {
-            progController.openSesion(userController.getUsuario(username, contrasena).getCodigo(), isSupervisor, isAdm);
+            progController.openSesion(userController.getUsuario(username, contrasena).getCodUsuario(), isSupervisor, isAdm);
             menuMain();
             return true;
         }
@@ -479,7 +448,6 @@ bool doIniciarSesion(bool opt, string &type)
                 type = "Administrador";
             else if (isSupervisor)
                 type = "Supervisor";
-            system("pause");
             return true;
         }
     }

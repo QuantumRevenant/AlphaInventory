@@ -14,7 +14,7 @@ Procesos::Procesos(int _codUsuario, double _monto, bool _estado)
     fecha = currentDateTime();
 }
 Procesos::~Procesos() {}
-int     Procesos::getCodUsuario()
+int     Procesos::getCodUsuario
 {
     return codUsuario;
 }

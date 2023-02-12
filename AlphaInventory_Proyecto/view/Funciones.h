@@ -21,6 +21,6 @@ void menuRecords();   // ✅
 void doRegistrarse(bool);               // ✅
 bool doIniciarSesion(bool, string &);   // ✅
 void doCerrarSesion();                  // ✅
-void doModificarPerfil(string);         // ✅
+void doModificarPerfil(int);         // ✅
 
 #endif
