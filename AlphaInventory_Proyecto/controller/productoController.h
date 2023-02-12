@@ -14,13 +14,14 @@ private:
 public:
     ProductoController();
     void        add(Producto);
+    int         getCorrelativo();
     void        modify(Producto, int);
     int         size();
-    int         binarySearch(int, int, int);
+    int         binarySearch(int, int, string);
     int         partition(int, int);
     void        quickSort(int, int);
     void        ordenarProductos();
-    Producto    get(int);
+    Producto    get(string);
     Producto    get(int);
     void        saveFile();
     void        copyFile();
@@ -29,6 +30,17 @@ public:
 ProductoController::ProductoController()
 {
     copyFile();
+}
+int     ProductoController::getCorrelativo()
+{
+	if(size()==0)		
+	{
+		return 1;	
+	}
+	else
+	{
+		return vectorProducto[size() - 1].getCodigo() + 1;
+	}
 }
 void    ProductoController::add(Producto obj)
 {
@@ -47,7 +59,7 @@ int     ProductoController::partition(int menor, int mayor)
     Producto pivote = vectorProducto[mayor];
     int i = menor - 1;
     for (int j = menor; j <= mayor - 1; j++)
-        if (vectorProducto[j].getCodUsuario() < pivote.getCodUsuario())
+        if (vectorProducto[j].getNombre() < pivote.getNombre())
         {
             i++;
             swap(vectorProducto[i], vectorProducto[j]);
@@ -68,25 +80,25 @@ void    ProductoController::ordenarProductos()
 {
     quickSort(0, size() - 1);
 }
-int     ProductoController::binarySearch(int inicio, int _final, int cod)
+int     ProductoController::binarySearch(int inicio, int _final, string _nombre)
 {
     if (_final >= inicio)
     {
         int mitad = inicio + (_final - inicio) / 2;
-        if (vectorProducto[mitad].getCodUsuario() == cod)
+        if (vectorProducto[mitad].getNombre() == _nombre)
             return mitad;
-        if (vectorProducto[mitad].getCodUsuario() > cod)
-            return binarySearch(inicio, mitad - 1, cod);
-        return binarySearch(mitad + 1, _final, cod);
+        if (vectorProducto[mitad].getNombre() > _nombre)
+            return binarySearch(inicio, mitad - 1, _nombre);
+        return binarySearch(mitad + 1, _final, _nombre);
     }
     return -1;
 }
-Producto ProductoController::get(int codigo)
+Producto ProductoController::get(string nombre)
 {
     Producto obj;
     int pos;
     obj.setNombre("error");
-    pos = binarySearch(0, size() - 1, codigo);
+    pos = binarySearch(0, size() - 1, nombre);
     if (pos != -1)
         return get(pos);
     else
@@ -152,10 +164,10 @@ void    ProductoController::copyFile()
                     i++;
                 }
                 Producto obj;
-                obj.setCodigo(temporal[1]);
-                obj.setNombre(temporal[2]);
-                obj.setNumMarcas(stoi(temporal[3]));
-                j = 4;
+                obj.setCodigo(stoi(temporal[0]));
+                obj.setNombre(temporal[1]);
+                obj.setNumMarcas(stoi(temporal[2]));
+                j = 3;
                 for (int k = 0; k < obj.getNumMarcas(); k++)
                 {
                     Marca marca;
@@ -183,6 +195,7 @@ void    ProductoController::copyFile()
     catch(exception e)
     {
         cout << "Ocurrio un error al leer el archivo";
+        system("pause");
     }
     
 }

@@ -76,26 +76,26 @@ public:
 class Producto
 {
 private:
-    string codigo;
+    int codigo;
     string nombre;
+    int numMarcas;
     vector<Marca> vectorMarcas;
     vector<float> precioUnitario;
     vector<int> stock;
-    int numMarcas;
     int numComponentes;
     vector<Componente> vectorComponentes;
 
 public:
     Producto();
-    Producto(string, vector<Componente> &);
+    Producto(string, vector<Componente> &, int);
     ~Producto();
-    void setCodigo(string);
+    void setCodigo(int);
     void setNombre(string);
     void setNumComponentes(int);
     void setNumMarcas(int);
     void modifyPrecioUnitario(float, int);
     void modifyStock(int, int);
-    string getCodigo();
+    int getCodigo();
     string getNombre();
     int getNumComponentes();
     int getNumMarcas();
@@ -110,7 +110,6 @@ public:
     Marca getMarca(int);
     float getPrecioUnitario(int);
     int getStock(int);
-    int getCodUsuario();
 };
 
 class Procesos

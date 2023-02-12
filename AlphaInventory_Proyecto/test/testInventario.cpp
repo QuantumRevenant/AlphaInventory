@@ -41,7 +41,6 @@ int main(int argc, char const *argv[])
             //menuMain();
             break;
         default:
-            cout << "Introduzca una opción valida [1-5]" << endl;
             break;
         }
     } while (opt != 0);
@@ -114,12 +113,26 @@ void changeDataInventario()
                     case 2:
                         do
                         {
-                            opt3 = menu("MARCAS", optionsM);
+                            opt3 = menu("AGREGAR MARCAS", optionsM);
                             if (opt3 != 0)
                             {
-                                getValue("Precio: S/", &precio);
-                                if (opt3 > 0 && opt3 <= marcaController.size())
-                                    temp.addMarca(marcaController.get(opt3 - 1), precio);
+                                bool MRegistrada = false;
+                                for (int i = 0; i < temp.getNumMarcas(); i++)
+                                    if (opt3 == temp.getMarca(i).getCodigoMarca())
+                                        MRegistrada = true;
+                                if (!MRegistrada)
+                                {
+                                    getValue("Precio: S/", &precio);
+                                    if (opt3 > 0 && opt3 <= marcaController.size())
+                                    {
+                                        temp.addMarca(marcaController.get(opt3 - 1), precio);
+                                        temp.setNumMarcas(temp.getNumMarcas() + 1);
+                                    }
+                                } else
+                                {
+                                    cout << "Marca ya registrada para este producto" << endl;
+                                    system("pause");
+                                }
                             }
                         } while (opt3 != 0);
                         break;
@@ -131,7 +144,10 @@ void changeDataInventario()
                                 optionsM1.push_back(temp.getMarca(i).getNombreMarca() + "\tS/" + to_string(temp.getPrecioUnitario(i)));
                             opt4 = menu("MARCAS", optionsM1);
                             if (opt4 != 0)
+                            {
                                 temp.deleteMarca(opt4 - 1);
+                                temp.setNumMarcas(temp.getNumMarcas() - 1);
+                            }
                         } while (opt4 != 0);
                         break;
                     case 4:
@@ -177,24 +193,56 @@ void doAddProducto()
 {
     string opt;
     string opt1;
+    int opt2;
+    float precio;
     int i = 1;
+    vector<string> optionsM;
+    for (int i = 0; i < marcaController.size(); i++)
+        optionsM.push_back(marcaController.get(i).getNombreMarca());
     do
     {
         string nombre;
         vector<Componente> componentes;
+        int codigo = productoController.getCorrelativo();
         string nombreComp;
         string cantidadComp;
         getValue("Nombre del Producto: ", &nombre);
         do
         {
+            cout << "Componente [" << i << "]" << endl;
             getValue("Nombre del componente: ", &nombreComp);
             getValue("Cantidad del componente: ", &cantidadComp);
             Componente temp(nombreComp, cantidadComp);
             componentes.push_back(temp);
+            i++;
             getValue("Desea agregar otro componente?(S/s): ", &opt1);
         } while (aMinuscula(opt1) == "s");
-        Producto producto(nombre, componentes);
+        Producto producto(nombre, componentes, codigo);
         producto.ordenarComponentes();
+        do
+        {
+            opt2 = menu("AGREGAR MARCAS", optionsM);
+            if (opt2 != 0)
+            {
+                bool MRegistrada = false;
+                for (int i = 0; i < producto.getNumMarcas(); i++)
+                    if (opt2 == producto.getMarca(i).getCodigoMarca())
+                        MRegistrada = true;
+                if (!MRegistrada)
+                {
+                    getValue("Precio: S/", &precio);
+                    if (opt2 > 0 && opt2 <= marcaController.size())
+                    {
+                        producto.addMarca(marcaController.get(opt2 - 1), precio);
+                        producto.setNumMarcas(producto.getNumMarcas() + 1);
+                    }
+                } else
+                {
+                    cout << "Marca ya registrada para este producto" << endl;
+                    system("pause");
+                }
+            }
+        } while (opt2 != 0);
         productoController.add(producto);
         getValue("Desea agregar otro producto?(S/s): ", &opt);
     } while (aMinuscula(opt) == "s");

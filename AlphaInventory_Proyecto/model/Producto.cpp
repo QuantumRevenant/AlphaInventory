@@ -10,16 +10,16 @@
 #include "Marca.cpp"
 
 Producto::Producto() {}
-Producto::Producto(string _nombre, vector<Componente> &_Componentes)
+Producto::Producto(string _nombre, vector<Componente> &_Componentes, int _codigo)
 {
     nombre = _nombre;
     vectorComponentes = _Componentes;
-    codigo = getCodigo();
+    codigo = _codigo;
     numMarcas = 0;
     numComponentes = vectorComponentes.size();
 }
 Producto::~Producto() {}
-void    Producto::setCodigo(string _codigo)
+void    Producto::setCodigo(int _codigo)
 {
     codigo = _codigo;
 }
@@ -43,19 +43,9 @@ void    Producto::modifyStock(int _stock, int pos)
 {
     stock[pos] = _stock;
 }
-string  Producto::getCodigo()
+int  Producto::getCodigo()
 {
-    string cod;
-    cod = nombre[0] + to_string(numComponentes);
-    for (int i = 0; i < 5 - vectorComponentes.size(); i++)
-        cod += "0";
-    for(Componente x:vectorComponentes)
-    {
-        cod += x.getNombre()[0];
-        if (cod.size() == 8)
-            break;
-    }
-    return cod;
+    return codigo;
 }
 string  Producto::getNombre()
 {
@@ -104,7 +94,6 @@ void    Producto::addMarca(Marca marca, float precio)
     vectorMarcas.push_back(marca);
     precioUnitario.push_back(precio);
     stock.push_back(0);
-    numMarcas++;
 }
 void    Producto::deleteComponente(int pos)
 {
@@ -115,7 +104,6 @@ void    Producto::deleteMarca(int pos)
     vectorMarcas.erase(vectorMarcas.begin() + pos);
     precioUnitario.erase(precioUnitario.begin() + pos);
     stock.erase(stock.begin() + pos);
-    numMarcas--;
 }
 Componente Producto::getComponente(int pos)
 {
