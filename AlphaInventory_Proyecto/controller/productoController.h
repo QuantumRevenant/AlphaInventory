@@ -16,11 +16,11 @@ public:
     void        add(Producto);
     void        modify(Producto, int);
     int         size();
-    int         binarySearch(int, int, string);
+    int         binarySearch(int, int, int);
     int         partition(int, int);
     void        quickSort(int, int);
     void        ordenarProductos();
-    Producto    get(string);
+    Producto    get(int);
     Producto    get(int);
     void        saveFile();
     void        copyFile();
@@ -68,7 +68,7 @@ void    ProductoController::ordenarProductos()
 {
     quickSort(0, size() - 1);
 }
-int     ProductoController::binarySearch(int inicio, int _final, string cod)
+int     ProductoController::binarySearch(int inicio, int _final, int cod)
 {
     if (_final >= inicio)
     {
@@ -81,7 +81,7 @@ int     ProductoController::binarySearch(int inicio, int _final, string cod)
     }
     return -1;
 }
-Producto ProductoController::get(string codigo)
+Producto ProductoController::get(int codigo)
 {
     Producto obj;
     int pos;
@@ -106,9 +106,18 @@ void    ProductoController::saveFile()
         {
             for (Producto obj:vectorProducto)
             {
-                archivoProductos << obj.getCodUsuario() << "," << obj.getNombre() << "," << obj.getPrecioUnitario() << "," << obj.getNumComponentes() << ",";
+                archivoProductos << obj.getCodigo() << ","
+                                 << obj.getNombre() << ","
+                                 << obj.getNumMarcas() << ",";
+                for (int i = 0; i < obj.getNumMarcas(); i++)
+                    archivoProductos << obj.getMarca(i).getCodigoMarca() << ","
+                                     << obj.getMarca(i).getNombreMarca() << ","
+                                     << obj.getPrecioUnitario(i) << ","
+                                     << obj.getStock(i) << ",";
+                archivoProductos << obj.getNumComponentes() << ",";
                 for (int i = 0; i < obj.getNumComponentes(); i++)
-                    archivoProductos << obj.getComponente(i).getNombre() << "," << obj.getComponente(i).getCantidad() << ",";
+                    archivoProductos << obj.getComponente(i).getNombre() << ","
+                                     << obj.getComponente(i).getCantidad() << ",";
                 archivoProductos << endl;
             }
             archivoProductos.close();
@@ -143,11 +152,21 @@ void    ProductoController::copyFile()
                     i++;
                 }
                 Producto obj;
-                obj.setCodigo(temporal[0]);
-                obj.setNombre(temporal[1]);
-                obj.setPrecioUnitario(stof(temporal[2]));
-                obj.setNumComponentes(stoi(temporal[3]));
+                obj.setCodigo(temporal[1]);
+                obj.setNombre(temporal[2]);
+                obj.setNumMarcas(stoi(temporal[3]));
                 j = 4;
+                for (int k = 0; k < obj.getNumMarcas(); k++)
+                {
+                    Marca marca;
+                    marca.setCodigoMarca(stoi(temporal[j]));
+                    marca.setNombreMarca(temporal[j + 1]);
+                    obj.addMarca(marca, stof(temporal[j + 2]));
+                    obj.modifyStock(stoi(temporal[j + 3]), k);
+                    j = j + 4;
+                }
+                obj.setNumComponentes(stoi(temporal[j]));
+                j++;
                 for (int k = 0; k < obj.getNumComponentes(); k++)
                 {
                     Componente comp;
