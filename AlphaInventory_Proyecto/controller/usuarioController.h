@@ -23,6 +23,7 @@ public:
 
     bool validarSesion(string, string); // nos valida si existe una sesión.
     bool existeUsuario(string);
+    bool existeUsuario(string, int&);
 
     int getNewCodUsuario();
     Usuario getUsuario(int);            // nos devuelve el usuario por medio de su key. (censurar la contraseña).
@@ -43,7 +44,8 @@ bool usuarioController::validarSesion(string username, string contrasena)
 {
     int i = 0;
     bool found = false;
-    found = existeUsuario(username);
+    found = existeUsuario(username,i);
+    cout<<i<<"  "<<vectorUsuario[i - 1].getCodUsuario()<<endl;
     if (found)
     {
         if (sha256(contrasena) == vectorUsuario[i - 1].getContrasena())
@@ -64,6 +66,19 @@ bool usuarioController::existeUsuario(string username)
             found = true;
         i++;
     }
+    return found;
+}
+bool usuarioController::existeUsuario(string username,int &e)
+{
+    int i = 0;
+    bool found = false;
+    while (i < (int)vectorUsuario.size() && !found)
+    {
+        if (vectorUsuario[i].getUsername() == username)
+            found = true;
+        i++;
+    }
+    e=i;
     return found;
 }
 
@@ -154,9 +169,11 @@ void usuarioController::archRecuperarDatos()
             usuario.setNumDocumento(stoi(temporal[1]));
             usuario.setUsername(temporal[2]);
             usuario.setContrasena(temporal[3]);
+            cout<<temporal[3]<<"   ";
             usuario.setNombre(temporal[4]);
             usuario.setApellidos(temporal[5]);
             usuario.setTipoUsuario(temporal[6]);
+            usuario.setCodUsuario(stoi(temporal[7]));
             cout << "Usuario " << temporal[7] << " cargado..." << endl;
             Sleep(1);
             add(usuario);

@@ -51,14 +51,13 @@ void changeDataInventario();
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
-    // Usuario objUser(0,"admin",sha256("admin"),"admin","admin","DNI",10000000,"Administrador");
+    // Usuario objUser(userController.getNewCodUsuario(),"admin",sha256("admin"),"admin","admin","DNI",10000000,"Administrador");
     // userController.add(objUser);
     // userController.archGrabarDatos();
-    userController.archRecuperarDatos();
     // Validar si hay administrador en el registro, sino:
     //  doRegistrarse(true)
     menuLogIn();
-    esquinarTexto("", 2, false, true, false);
+    esquinarTexto("...", 2, false, true, true);
     return 0;
 }
 
@@ -389,8 +388,10 @@ bool doIniciarSesion(bool opt, string &type)
         vector<string> options = {"USERNAME", "CONTRASENA"};
         vector<string> inputs;
         menuDatos(options, inputs, 1, 1, "##INICIO DE SESIÓN## - ('Salir' para salir) ");
-        if (aMinuscula(options[0]) != "salir" || aMinuscula(options[1]) != "salir")
+        if (aMinuscula(inputs[0]) == "salir" || aMinuscula(inputs[1]) == "salir")
             break;
+        username=inputs[0];
+        contrasena=inputs[1];
         resultado = userController.validarSesion(username, contrasena);
         if (resultado)
         {
@@ -406,14 +407,14 @@ bool doIniciarSesion(bool opt, string &type)
         }
         else
         {
-            menuError({"Username y/o contraseña incorrectos."}, 0, 0, "", true);
+            menuError({"Username y/o contraseña incorrectos."}, 0, "0f", "", true);
             contador++;
         }
     } while (!resultado && contador < 3);
 
     if (contador >= 3)
     {
-        menuError({"Límite de intentos alcanzado, volviendo al menú principal..."}, 0, 0, "", true);
+        menuError({"Límite de intentos alcanzado, volviendo al menú principal..."}, 0, "0f", "", true);
         return false;
     }
 

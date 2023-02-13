@@ -31,6 +31,7 @@ void menuLogIn()
         break;
     case 2:
         doRegistrarse(false);
+        menuLogIn();
         break;
     case 0:
         esquinarTexto("Cerrando Programa",1);

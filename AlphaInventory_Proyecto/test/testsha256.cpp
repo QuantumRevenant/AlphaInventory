@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "../controller/Encrypter/sha256.cpp"
+#include "../controller/controllers.h"
 
 using namespace std;
 
@@ -9,12 +10,12 @@ using namespace std;
 
 */
 
+usuarioController userController;
+
 int main(int argc, char *argv[])
 {
-    string value1,value2;
-    cin>>value1;
-    value2=sha256(value1);
-    cout<<value2;
-    
+    string contra;
+    cin>>contra;
+    cout<<endl<<sha256(contra)<<endl<<userController.getUsuario(0).getContrasena()<<endl<<(sha256(contra)==userController.getUsuario(0).getContrasena());
     return 0;
 }
