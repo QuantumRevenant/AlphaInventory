@@ -76,6 +76,7 @@ public:
     string getNombre();
     int getNumComponentes();
     int getNumMarcas();
+    bool marcaRegistrada(int);
     int partition(int, int);
     void quickSort(int, int);
     void ordenarComponentes();

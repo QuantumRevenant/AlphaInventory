@@ -59,6 +59,19 @@ int     Producto::getNumMarcas()
 {
     return numMarcas;
 }
+bool    Producto::marcaRegistrada(int _cod)
+{
+    for(Marca x:vectorMarcas)
+    {
+        if (x.getCodigoMarca() == _cod)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+}
 int     Producto::partition(int menor, int mayor)
 {
     Componente pivote = vectorComponentes[mayor];

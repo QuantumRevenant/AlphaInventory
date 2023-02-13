@@ -17,12 +17,8 @@ public:
     int         getCorrelativo();
     void        modify(Producto, int);
     int         size();
-    int         binarySearch(int, int, string);
-    int         partition(int, int);
-    void        quickSort(int, int);
-    void        ordenarProductos();
-    Producto    get(string);
     Producto    get(int);
+    bool        nombreRegistrado(string);
     void        saveFile();
     void        copyFile();
 };
@@ -54,59 +50,22 @@ int     ProductoController::size()
 {
     return vectorProducto.size();
 }
-int     ProductoController::partition(int menor, int mayor)
-{
-    Producto pivote = vectorProducto[mayor];
-    int i = menor - 1;
-    for (int j = menor; j <= mayor - 1; j++)
-        if (vectorProducto[j].getNombre() < pivote.getNombre())
-        {
-            i++;
-            swap(vectorProducto[i], vectorProducto[j]);
-        }
-    swap(vectorProducto[i + 1], vectorProducto[mayor]);
-    return i + 1;
-}
-void    ProductoController::quickSort(int menor, int mayor)
-{
-    if (menor < mayor)
-    {
-        int pivote = partition(menor, mayor);
-        quickSort(menor, pivote - 1);
-        quickSort(pivote + 1, mayor);
-    }
-}
-void    ProductoController::ordenarProductos()
-{
-    quickSort(0, size() - 1);
-}
-int     ProductoController::binarySearch(int inicio, int _final, string _nombre)
-{
-    if (_final >= inicio)
-    {
-        int mitad = inicio + (_final - inicio) / 2;
-        if (vectorProducto[mitad].getNombre() == _nombre)
-            return mitad;
-        if (vectorProducto[mitad].getNombre() > _nombre)
-            return binarySearch(inicio, mitad - 1, _nombre);
-        return binarySearch(mitad + 1, _final, _nombre);
-    }
-    return -1;
-}
-Producto ProductoController::get(string nombre)
-{
-    Producto obj;
-    int pos;
-    obj.setNombre("error");
-    pos = binarySearch(0, size() - 1, nombre);
-    if (pos != -1)
-        return get(pos);
-    else
-        return obj;
-}
 Producto ProductoController::get(int pos)
 {
     return vectorProducto[pos];
+}
+bool    ProductoController::nombreRegistrado(string _nombre)
+{
+    for(Producto x:vectorProducto)
+    {
+        if (aMayuscula(x.getNombre()) == aMayuscula(_nombre))
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
 }
 void    ProductoController::saveFile()
 {
