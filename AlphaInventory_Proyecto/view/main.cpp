@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     // userController.archGrabarDatos();
     // Validar si hay administrador en el registro, sino:
     //  doRegistrarse(true)
+    // progController.openSesion(0,true,true);
     menuLogIn();
     esquinarTexto("...", 2, false, true, true);
     return 0;
@@ -87,10 +88,7 @@ void doRegistrarse(bool start = false)
         switch (opt)
         {
         case 1:
-
-            system("cls");
-            dibujarCuadro();
-            centrarTexto("~\t-NECESITAS INICIAR SESIÓN COMO SUPERVISOR O ADMINISTRADOR-\t~");
+            menuListado({"~-NECESITAS INICIAR SESIÓN COMO SUPERVISOR O ADMINISTRADOR-~"},0,"",false);
             Sleep(1000);
 
             loged = doIniciarSesion(false, type);
@@ -99,18 +97,14 @@ void doRegistrarse(bool start = false)
                 tipoUsuario = "Vendedor";
             else
             {
-                system("cls");
-                dibujarCuadro();
-                centrarTexto("~\t-CANCELASTE EL REGISTRO-\t~");
+                menuListado({"~-CANCELASTE EL REGISTRO-~"},0,"",true);
                 tipoUsuario = "Cancelar";
                 esquinarTexto("", 1, false, true, false);
                 system("pause");
             }
             break;
         case 2:
-            system("cls");
-            dibujarCuadro();
-            centrarTexto("~\t-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-\t~");
+            menuListado({"~-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-~"},0,"",false);
             Sleep(1000);
 
             loged = doIniciarSesion(false, type);
@@ -119,18 +113,14 @@ void doRegistrarse(bool start = false)
                 tipoUsuario = "Supervisor";
             else
             {
-                system("cls");
-                dibujarCuadro();
-                centrarTexto("~\t-CANCELASTE EL REGISTRO-\t~");
+                menuListado({"~-CANCELASTE EL REGISTRO-~"},0,"",true);
                 tipoUsuario = "Cancelar";
                 esquinarTexto("", 1, false, true, false);
                 system("pause");
             }
             break;
         case 3:
-            system("cls");
-            dibujarCuadro();
-            centrarTexto("~\t-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-\t~");
+            menuListado({"~-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-~"},0,"",false);
             Sleep(1000);
 
             loged = doIniciarSesion(false, type);
@@ -139,9 +129,7 @@ void doRegistrarse(bool start = false)
                 tipoUsuario = "Administrador";
             else
             {
-                system("cls");
-                dibujarCuadro();
-                centrarTexto("~\t-CANCELASTE EL REGISTRO-\t~");
+                menuListado({"~-CANCELASTE EL REGISTRO-~"},0,"",true);
                 tipoUsuario = "Cancelar";
                 esquinarTexto("", 1, false, true, false);
                 system("pause");
@@ -156,7 +144,6 @@ void doRegistrarse(bool start = false)
         vector<string> inputs;
         do
         {
-            cin.ignore();
             inputs.clear();
             options = {"Nombre de usuario", "Nombres", "Apellidos"};
             menuDatos(options, inputs, 0, 0, "__DATOS__");
@@ -201,7 +188,7 @@ void doRegistrarse(bool start = false)
         strInput = "0";
         do
         {
-            cin.ignore();
+             
             inputs.clear();
             menuDatos({"Numero de documento"}, inputs, 0, 0, "_" + tipoDocumento + "_ -('Salir' para salir)");
             strInput = inputs[0].substr(0, inputs[0].find(' '));
@@ -257,6 +244,7 @@ void doModificarPerfil(int key)
         inputs.clear();
         options = {"Usuario", "Nombres", "Apellidos", "Contrasena", "Documento", "Guardar Cambios"};
         opt = menu("EDITAR PERFIL", options);
+         
         switch (opt)
         {
         case 1:
@@ -337,7 +325,7 @@ void doModificarPerfil(int key)
             temporal2 = "0";
             do
             {
-                cin.ignore();
+                 
                 inputs.clear();
                 menuDatos({"Numero de documento"}, inputs, 0, 0, "_" + temporal + "_ -('Salir' para salir)");
                 temporal2 = inputs[0].substr(0, inputs[0].find(' '));
@@ -378,7 +366,7 @@ void doModificarPerfil(int key)
 }
 bool doIniciarSesion(bool opt, string &type)
 {
-    cin.ignore();
+     
     string username,
         contrasena;
     int contador = 0;

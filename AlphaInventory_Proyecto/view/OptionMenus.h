@@ -27,7 +27,8 @@ void menuLogIn()
     switch (opt)
     {
     case 1:
-        doIniciarSesion(true, type);
+        if(!doIniciarSesion(true, type))
+            menuLogIn();
         break;
     case 2:
         doRegistrarse(false);
@@ -43,12 +44,8 @@ void menuLogIn()
             }
         Sleep(1000);
         break;
-    default:
-        cout << "Error, opcion no válida" << endl;
-        break;
     }
 }
-
 void menuMain()
 {
     system("cls");
@@ -85,12 +82,14 @@ void menuUser()
     {
     case 1:
         doModificarPerfil(progController.getSesionKey());
+        menuUser();
         break;
     case 2:
         menuRecords();
         break;
     case 3:
         doRegistrarse(false);
+        menuUser();
         break;
     case 4:
         // askEstadoCaja
@@ -100,9 +99,6 @@ void menuUser()
         break;
     case 0:
         menuMain();
-        break;
-    default:
-        cout << "Introduzca una opción valida [1-6]" << endl;
         break;
     }
 }
@@ -124,11 +120,8 @@ void menuInventory()
     case 3:
         // changeDataInventario
         break;
-    case 4:
+    case 0:
         menuMain();
-        break;
-    default:
-        cout << "Introduzca una opción valida [1-4]" << endl;
         break;
     }
 }
@@ -151,11 +144,8 @@ void menuRecords()
     case 3:
         // doConsultarRegistro
         break;
-    case 4:
+    case 0:
         menuMain();
-        break;
-    default:
-        cout << "Introduzca una opción valida [1-4]" << endl;
         break;
     }
 }

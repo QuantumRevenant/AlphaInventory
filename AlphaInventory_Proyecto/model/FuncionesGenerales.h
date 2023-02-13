@@ -426,6 +426,7 @@ int menu(string title, vector<string> options)
             opc = "-1";
         }
     } while (stoi(opc) < 0);
+    cin.ignore();
     return salida;
 }
 

@@ -62,7 +62,7 @@ bool usuarioController::existeUsuario(string username)
     bool found = false;
     while (i < (int)vectorUsuario.size() && !found)
     {
-        if (vectorUsuario[i].getUsername() == username)
+        if (aMinuscula(vectorUsuario[i].getUsername()) == aMinuscula(username))
             found = true;
         i++;
     }
@@ -74,7 +74,7 @@ bool usuarioController::existeUsuario(string username,int &e)
     bool found = false;
     while (i < (int)vectorUsuario.size() && !found)
     {
-        if (vectorUsuario[i].getUsername() == username)
+        if (aMinuscula(vectorUsuario[i].getUsername()) == aMinuscula(username))
             found = true;
         i++;
     }
