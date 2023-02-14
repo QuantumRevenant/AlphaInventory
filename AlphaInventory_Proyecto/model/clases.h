@@ -13,8 +13,11 @@ class Procesos;
 class Compra;
 class Venta;
 class ProcesosD;
-class DCompra;
-class DVenta;
+class CompraD;
+class VentaD;
+class Terceros;
+class Cliente;
+class Proveedor;
 
 #include "Usuario.h"
 
@@ -120,6 +123,7 @@ private:
 
 public:
     Compra();
+    Compra(int, int, int, double, bool);
     ~Compra();
     int getCodCompra();
     int getCodProveedor();
@@ -135,8 +139,9 @@ private:
 
 public:
     Venta();
+    Venta(int, int, int, double, bool);
     ~Venta();
-    int getcodVenta();
+    int getCodVenta();
     int getCodCliente();
     void setCodVenta(int);
     void setCodCliente(int);
@@ -153,7 +158,7 @@ private:
 
 public:
     ProcesosD();
-    ProcesosD(int, int, double, double, bool);
+    ProcesosD(int, int, double, bool);
     ~ProcesosD();
     int getCodProducto();
     int getCantidad();
@@ -167,28 +172,74 @@ public:
     void setEstado(bool);
 };
 
-class DCompra : public ProcesosD
+class CompraD : public ProcesosD
 {
 private:
     int codCompra;
 
 public:
-    DCompra();
-    ~DCompra();
+    CompraD();
+    CompraD(int, int, int, double, bool);
+    ~CompraD();
     int getCodCompra();
     void setCodCompra(int);
 };
 
-class DVenta : public ProcesosD
+class VentaD : public ProcesosD
 {
 private:
     int codVenta;
 
 public:
-    DVenta();
-    ~DVenta();
+    VentaD();
+    VentaD(int, int, int, double, bool);
+    ~VentaD();
     int getCodVenta();
     void setCodVenta(int);
+};
+
+class Terceros
+{
+private:
+    string nombre;
+    string tipoDocumento;
+    string documento;
+
+public:
+    Terceros();
+    Terceros(string, string, string);
+    ~Terceros();
+    string getNombre();
+    string getTipoDocumento();
+    string getDocumento();
+    void setNombre(string);
+    void setTipoDocumento(string);
+    void setDocumento(string);
+};
+
+class Cliente : public Terceros
+{
+private:
+    int codCliente;
+
+public:
+    Cliente();
+    Cliente(int, string, string);
+    ~Cliente();
+    void setCodCliente(int);
+    int getCodCliente();
+};
+class Proveedor : public Terceros
+{
+private:
+    int codProveedor;
+
+public:
+    Proveedor();
+    Proveedor(int, string, string);
+    ~Proveedor();
+    void setCodProveedor(int);
+    int getCodProveedor();
 };
 
 #endif // CLASES_H

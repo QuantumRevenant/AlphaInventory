@@ -5,6 +5,11 @@
 #include "../model/FuncionesGenerales.h"
 
 Compra::Compra() {}
+Compra::Compra(int _codCompra, int _codProveedor, int _codUsuario, double _monto, bool _estado):Procesos(_codUsuario, _monto, _estado)
+{
+    codCompra = _codCompra;
+    codProveedor = _codProveedor;
+}
 Compra::~Compra() {}
 int     Compra::getCodCompra()
 {
