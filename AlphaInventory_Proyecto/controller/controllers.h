@@ -3,5 +3,7 @@
 
 #include "usuarioController.h"
 #include "programController.h"
+#include "marcaController.h"
+#include "productoController.h"
 
 #endif

@@ -107,23 +107,35 @@ void menuInventory()
 {
     system("cls");
     int opt;
-    vector<string> options = {"Registrar Compra", "Consultar Inventario", "Modificar Datos de producto"}; // Añadir Marca
-    opt = menu("MENU INVENTARIO", options);
-    switch (opt)
+    vector<string> options = {"Registrar Compra", "Consultar Inventario", "Modificar Datos de producto", "Anadir Nuevo Producto", "Anadir Nueva Marca"};
+    do
     {
-    case 1:
-        // doAddInventario
-        break;
-    case 2:
-        // askInventario
-        break;
-    case 3:
-        // changeDataInventario
-        break;
-    case 0:
-        menuMain();
-        break;
-    }
+        opt = menu("MENU INVENTARIO", options);
+        switch (opt)
+        {
+        case 1:
+            doAddInventario();
+            break;
+        case 2:
+            askInventario();
+            break;
+        case 3:
+            changeDataInventario();
+            break;
+        case 4:
+            doAddProducto();
+            break;
+        case 5:
+            doAddMarca();
+            break;
+        case 0:
+            menuMain();
+            break;
+        default:
+            marcaController.saveFile();
+            break;
+        }
+    } while (opt != 0);
 }
 
 void menuRecords()

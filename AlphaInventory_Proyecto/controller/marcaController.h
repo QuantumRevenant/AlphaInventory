@@ -13,47 +13,37 @@ private:
 
 public:
     MarcaController();
-    int     getCorrelativo();
-    void    add(Marca);
-    void    modify(Marca, int);
-    int     size();
-    Marca   get(int);
-    void    saveFile();
-    void    copyFile();
+
+    void add(Marca);
+    Marca get(int);
+    void modify(Marca, int);
+
+    int getNewCodMarca();
+    bool marcaRegistrada(string);
+
+    void saveFile();
+    void getFile();
 };
 
-MarcaController::MarcaController()
+MarcaController::MarcaController() { getFile(); }
+
+void MarcaController::add(Marca obj) { vectorMarca.push_back(obj); }
+Marca MarcaController::get(int pos) { return vectorMarca[pos]; }
+void MarcaController::modify(Marca temp, int obj) { vectorMarca[obj] = temp; }
+
+int MarcaController::getNewCodMarca() { return vectorMarca.size(); }
+bool MarcaController::marcaRegistrada(string _nombre)
 {
-    copyFile();
+    for (Marca x : vectorMarca)
+    {
+        if (aMayuscula(x.getNombreMarca()) == aMayuscula(_nombre))
+            return true;
+        else
+            return false;
+    }
 }
-int     MarcaController::getCorrelativo()
-{
-	if(size()==0)		
-	{
-		return 1;	
-	}
-	else
-	{
-		return vectorMarca[size() - 1].getCodigoMarca() + 1;
-	}
-}
-void    MarcaController::add(Marca obj)
-{
-    vectorMarca.push_back(obj);
-}
-void    MarcaController::modify(Marca temp, int obj)
-{
-    vectorMarca[obj] = temp;
-}
-int     MarcaController::size()
-{
-    return vectorMarca.size();
-}
-Marca MarcaController::get(int pos)
-{
-    return vectorMarca[pos];
-}
-void    MarcaController::saveFile()
+
+void MarcaController::saveFile()
 {
     try
     {
@@ -61,21 +51,19 @@ void    MarcaController::saveFile()
         archivoMarcas.open("../data/marcas.csv", ios::out);
         if (archivoMarcas.is_open())
         {
-            for (Marca obj:vectorMarca)
+            for (Marca obj : vectorMarca)
             {
-                archivoMarcas << obj.getCodigoMarca() << "," << obj.getNombreMarca() << ",";
-                archivoMarcas << endl;
+                archivoMarcas << obj.getCodigoMarca() << "," << obj.getNombreMarca() << ","<<endl;
             }
-            archivoMarcas.close();
         }
+        archivoMarcas.close();
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
-    
 }
-void    MarcaController::copyFile()
+void MarcaController::getFile()
 {
     try
     {
@@ -96,18 +84,15 @@ void    MarcaController::copyFile()
                     linea.erase(0, posi + 1);
                     i++;
                 }
-                Marca obj;
-                obj.setCodigoMarca(stoi(temporal[0]));
-                obj.setNombreMarca(temporal[1]);
+                Marca obj(stoi(temporal[0]),temporal[1]);
                 add(obj);
             }
             archivoMarcas.close();
         }
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al leer el archivo";
     }
-    
 }
 #endif // PRODUCTOCONTROLLER_H

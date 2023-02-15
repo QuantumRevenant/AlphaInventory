@@ -18,7 +18,7 @@ char baseColor[] = "0f";
 
 string aMayuscula(string);
 string aMinuscula(string);
-bool esNumero(string &);
+bool esNumero(string);
 int subCadenaComunMasLarga(string, string);
 float Promediar(float[], int);
 float PromediarMayor0(float[], int);
@@ -57,7 +57,7 @@ std::string aMinuscula(std::string cadena)
     }
     return cadena;
 }
-bool esNumero(std::string &cadena)
+bool esNumero(std::string cadena)
 {
     bool resultado = true, point = false;
     int i = 0;
@@ -76,6 +76,7 @@ bool esNumero(std::string &cadena)
         if (x == '.')
             cantidadPuntos++;
     }
+
     if (cantidadGuiones > 1 || cantidadGuiones > 1)
         return false;
     if (cadena[i] == '-')

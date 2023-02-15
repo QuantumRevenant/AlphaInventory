@@ -24,6 +24,7 @@ public:
     bool validarSesion(string, string); // nos valida si existe una sesión.
     bool existeUsuario(string);
     bool existeUsuario(string, int&);
+    bool existeAdministrador();
 
     int getNewCodUsuario();
     Usuario getUsuario(int);            // nos devuelve el usuario por medio de su key. (censurar la contraseña).
@@ -80,6 +81,15 @@ bool usuarioController::existeUsuario(string username,int &e)
     }
     e=i;
     return found;
+}
+bool usuarioController::existeAdministrador()
+{
+    archRecuperarDatos();
+    for(Usuario x:vectorUsuario)
+        if(x.getTipoUsuario()=="Administrador")
+            return true;
+    
+    return false;
 }
 
 int usuarioController::getNewCodUsuario() { return vectorUsuario.size(); }

@@ -56,41 +56,40 @@ public:
 class Producto
 {
 private:
-    int codigo;
+    int codProducto;
+    int codMarca;
     string nombre;
-    int numMarcas;
-    vector<Marca> vectorMarcas;
-    vector<float> precioUnitario;
-    vector<int> stock;
+    double precioUnitario;
+    int stock;
     int numComponentes;
     vector<Componente> vectorComponentes;
 
 public:
     Producto();
-    Producto(string, vector<Componente> &, int);
+    Producto(int, int, string, double, int, vector<Componente>&);
     ~Producto();
-    void setCodigo(int);
+
+    void setCodProducto(int);
+    void setCodMarca(int);
     void setNombre(string);
+    void setPrecioUnitario(double);
+    void setStock(int);
     void setNumComponentes(int);
-    void setNumMarcas(int);
-    void modifyPrecioUnitario(float, int);
-    void modifyStock(int, int);
-    int getCodigo();
+    void setComponentes(vector<Componente>);
+    void modifyStock(int);
+
+    int getCodProducto();
+    int getCodMarca();
     string getNombre();
+    double getPrecioUnitario();
+    int getStock();
     int getNumComponentes();
-    int getNumMarcas();
-    bool marcaRegistrada(int);
-    int partition(int, int);
-    void quickSort(int, int);
-    void ordenarComponentes();
+    vector<Componente> getVectorComponentes();
+
     void addComponente(Componente);
-    void addMarca(Marca, float);
     void deleteComponente(int);
     void deleteMarca(int);
     Componente getComponente(int);
-    Marca getMarca(int);
-    float getPrecioUnitario(int);
-    int getStock(int);
 };
 
 class Procesos

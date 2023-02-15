@@ -1,5 +1,5 @@
-#ifndef PRODUCTO_H
-#define PRODUCTO_H
+#ifndef MARCA_H
+#define MARCA_H
 #include <iostream>
 #include <string>
 #include "Clases.h"
@@ -28,4 +28,4 @@ void    Marca::setNombreMarca(string _nombreMarca)
 {
     nombreMarca = _nombreMarca;
 }
-#endif // PRODUCTO_H
+#endif // MARCA_H
