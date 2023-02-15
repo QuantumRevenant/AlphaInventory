@@ -46,11 +46,13 @@ void doConsultarRegistro();
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
-    // Usuario objUser(userController.getNewCodUsuario(),"admin",sha256("admin"),"admin","admin","DNI",10000000,"Administrador");
-    // userController.add(objUser);
-    // userController.archGrabarDatos();
-    // Validar si hay administrador en el registro, sino:
-    //  doRegistrarse(true)
+    /*
+    Usuario objUser(userController.getNewCodUsuario(),"admin",sha256("admin"),"admin","admin","DNI",10000000,"Administrador");
+    userController.add(objUser);
+    userController.archGrabarDatos();
+    Validar si hay administrador en el registro, sino:
+     doRegistrarse(true)
+    */
     if (userController.existeAdministrador())
     {
         // progController.openSesion(0, true, true);

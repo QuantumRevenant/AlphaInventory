@@ -4,6 +4,7 @@
 #include "../controller/ventaDController.h"
 #include "../controller/productoController.h"
 #include "../controller/clienteController.h"
+#include "../model/models.h"
 using namespace std;
 
 VentaController ventaController;
@@ -43,7 +44,7 @@ void doVenta()
                 inputs.clear();
                 cin.ignore();
                 menuDatos({"Codigo de Producto"}, inputs, 0, 0, "BUSQUEDA");
-                productoTemp = productoController.get(stoi(inputs[0]) - 1);
+                productoTemp = productoController.get(stoi(inputs[0]));
                 do
                 {
                     inputs.clear();
@@ -56,9 +57,9 @@ void doVenta()
                 if (unidades == 0)
                     break;
                 precio = productoTemp.getPrecioUnitario();
-                VentaD ventaDTemp(codigoVenta, productoTemp.getCodigo(), unidades, precio, true);
+                VentaD ventaDTemp(codigoVenta, productoTemp.getCodProducto(), unidades, precio, true);
                 carrito.push_back(ventaDTemp);
-                listado.push_back(to_string(productoTemp.getCodigo()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(ventaDTemp.getMonto()));
+                listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(ventaDTemp.getMonto()));
             } while (menuConfirmar("Desea agregar otro producto"));
             opt = 1;
             break;
@@ -89,7 +90,7 @@ void doVenta()
                 clienteController.add(clienteTemp);
                 for(VentaD x:carrito)
                     ventaDController.add(x);
-                int codUsuario = 69;
+                int codUsuario = 0;
                 Venta venta(codigoVenta, codCliente, codUsuario, montoTotal, true);
                 ventaController.add(venta);
             }else
