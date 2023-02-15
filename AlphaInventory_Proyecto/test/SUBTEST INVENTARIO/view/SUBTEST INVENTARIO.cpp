@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
             askInventario();
             break;
         case 3:
-            // changeDataInventario();
+            changeDataInventario();
             break;
         case 4:
             doAddProducto();
@@ -41,6 +41,7 @@ int main(int argc, char const *argv[])
             // menuMain();
             break;
         default:
+            marcaController.saveFile();
             break;
         }
     } while (opt != 0);
@@ -79,127 +80,123 @@ void askInventario()
         menuError({"No hay productos registrados, volviendo al menu inventario"});
     }
 }
-// void changeDataInventario()
-// {
-//     int opt;
-//     int optP;
-//     vector<string> inputs;
-//     vector<string> options1 = {"Editar Nombre", "Anadir Marca", "Eliminar Marca", "Editar Precios"};
-//     do
-//     {
-//         vector<string> options0;
-//         for (int i = 0; i < productoController.size(); i++)
-//             options0.push_back(productoController.get(i).getNombre());
-//         vector<string> optionsM;
-//         for (int i = 0; i < marcaController.size(); i++)
-//             optionsM.push_back(marcaController.get(i).getNombreMarca());
-//         if (options0.size() != 0 && optionsM.size() != 0)
-//         {
-//             optP = menu("MODIFICAR PRODUCTO", options0);
-//             if (optP != 0 && optP != -1)
-//             {
-//                 Producto temp;
-//                 temp = productoController.get(optP - 1);
-//                 do
-//                 {
-//                     opt = menu(temp.getNombre(), options1);
-//                     switch (opt)
-//                     {
-//                     case 1:
-//                         do
-//                         {
-//                             inputs.clear();
-//                             cin.ignore();
-//                             menuDatos({"Nuevo Nombre"}, inputs, 0,0, "_CAMBIAR NOMBRE_");
-//                             if (!productoController.nombreRegistrado(inputs[0]))
-//                             {
-//                                 temp.setNombre(inputs[0]);
-//                             }else
-//                             {
-//                                 menuError({"El nombre ingresado ya exite"});
-//                             }
-//                         } while (productoController.nombreRegistrado(inputs[0]));
-//                         opt = 1;
-//                         break;
-//                     case 2:
-//                         do
-//                         {
-//                             opt = menu("AGREGAR MARCAS", optionsM);
-//                             if (opt != 0 && opt != -1)
-//                             {
-//                                 if (!temp.marcaRegistrada(opt - 1))
-//                                 {
-//                                     inputs.clear();
-//                                     cin.ignore();
-//                                     menuDatos({"Precio"}, inputs, 0, 0, marcaController.get(opt - 1).getNombreMarca());
-//                                     if (opt > 0 && opt <= marcaController.size())
-//                                     {
-//                                         temp.addMarca(marcaController.get(opt - 1), stof(inputs[0]));
-//                                         temp.setNumMarcas(temp.getNumMarcas() + 1);
-//                                     }
-//                                 } else
-//                                 {
-//                                     menuError({"Marca ya registrada para este producto"});
-//                                 }
-//                             }
-//                         } while (opt != 0);
-//                         opt = 2;
-//                         break;
-//                     case 3:
-//                         do
-//                         {
-//                             vector<string> optionsM1;
-//                             for (int i = 0; i < temp.getNumMarcas(); i++)
-//                                 optionsM1.push_back(temp.getMarca(i).getNombreMarca() + "\tS/" + to_string(temp.getPrecioUnitario(i)));
-//                             opt = menu("MARCAS", optionsM1);
-//                             if (opt != 0)
-//                             {
-//                                 temp.deleteMarca(opt - 1);
-//                                 temp.setNumMarcas(temp.getNumMarcas() - 1);
-//                             }
-//                         } while (opt != 0);
-//                         opt = 3;
-//                         break;
-//                     case 4:
-//                         do
-//                         {
-//                             vector<string> optionsM1;
-//                             for (int i = 0; i < temp.getNumMarcas(); i++)
-//                                 optionsM1.push_back(temp.getMarca(i).getNombreMarca() + "\tS/" + to_string(temp.getPrecioUnitario(i)));
-//                             opt = menu("MARCAS", optionsM1);
-//                             if (opt != 0)
-//                             {
-//                                 inputs.clear();
-//                                 cin.ignore();
-//                                 menuDatos({"Nuevo Precio"}, inputs, 0, 0, aMayuscula(temp.getMarca(opt - 1).getNombreMarca()));
-//                                 temp.modifyPrecioUnitario(stof(inputs[0]), opt - 1);
-//                             }
-//                         } while (opt != 0);
-//                         opt = 4;
-//                         break;
-//                     case 0:
-//                         productoController.modify(temp, optP - 1);
-//                         productoController.saveFile();
-//                         opt = 0;
-//                         break;
-//                     default:
-//                         break;
-//                     }
-//                 } while (opt != 0);
-//             }
-//         } else
-//         {
-//             if (options0.size() == 0)
-//             {
-//                 menuError({"NO HAY PRODUCTOS REGISTRADOS"});
-//             } else
-//             {
-//                 menuError({"NO HAY MARCAS REGISTRADAS"});
-//             }
-//             optP = 0;
-//         }
-//     } while (optP != 0);
-// }
+void changeDataInventario()
+{
+    int opt;
+    int codigo;
+    vector<string> inputs;
+    string temporal;
+    bool salida;
+    vector<Componente> componentes;
+    do
+    {
+        salida = true;
+        do
+        {
+            menuDatos({"Codigo Producto"}, inputs, 0, 0, "Cambiar Datos Producto -\"Salir\" para Salir");
+
+            if (!esNumero(inputs[0]))
+            {
+                menuError({"Introduce un valor numérico"});
+                inputs[0] = "-1";
+            }
+            else if (stoi(inputs[0]) < 0 || stoi(inputs[0]) >= productoController.getNewCodProducto())
+                menuError({"Codigo Fuera de Rango"});
+
+        } while ((stoi(inputs[0]) < 0 || stoi(inputs[0]) >= productoController.getNewCodProducto()) && aMinuscula(inputs[0]) != "salir");
+
+        if (aMinuscula(inputs[0]) == "salir")
+            return;
+        if (!menuConfirmar("El producto consultado es " + productoController.get(stoi(inputs[0])).getNombre()))
+        {
+            if (!menuConfirmar("Desea continuar con el proceso"))
+                return;
+            else
+            {
+                salida = false;
+                cin.ignore();
+            }
+        }
+    } while (!salida);
+
+    codigo = stoi(inputs[0]);
+    Producto prodTemporal = productoController.get(codigo);
+
+    if (productoController.getNewCodProducto() != 0)
+    {
+        do
+        {
+            vector<string> options = {"Editar Nombre", "Modificar Marca", "Editar Precios", "Editar Componentes"};
+            opt = menu("Selecciona que deseas modificar", options);
+            inputs.clear();
+            componentes.clear();
+            switch (opt)
+            {
+            case 1:
+                menuDatos({"Nuevo nombre de producto"}, inputs);
+                temporal = inputs[0];
+                if (menuConfirmar("Desea que \"" + temporal + "\" sea el nuevo nombre del producto"))
+                    prodTemporal.setNombre(temporal);
+                break;
+            case 2:
+                do
+                {
+                    menuDatos({"Nuevo código de marca"}, inputs);
+                    temporal = inputs[0];
+                    if (!esNumero(temporal))
+                    {
+                        menuError({"Introduce un valor numérico"});
+                        temporal = "-1";
+                    }
+                    else if (stoi(temporal) < 0 || stoi(temporal) >= marcaController.getNewCodMarca())
+                        menuError({"Codigo Fuera de Rango"});
+
+                } while (stoi(temporal) < 0 || stoi(temporal) >= marcaController.getNewCodMarca()||temporal=="");
+
+                if (menuConfirmar("Desea que\"" + marcaController.get(stoi(temporal)).getNombreMarca() + "\"sea la nueva marca"))
+                    prodTemporal.setCodMarca(stoi(temporal));
+                break;
+            case 3:
+                do
+                {
+                    menuDatos({"Nuevo precio Unitario"}, inputs);
+                    temporal = inputs[0];
+                    if (!esNumero(temporal))
+                    {
+                        menuError({"Introduce un valor numérico"});
+                        temporal = "-1";
+                    }
+                } while (stod(temporal) < 0 || temporal=="");
+
+                if (menuConfirmar("Desea que \"" + temporal + "\" sea el nuevo Precio"))
+                    prodTemporal.setPrecioUnitario(stod(temporal));
+                break;
+            case 4:
+                do
+                {
+                    int i = 0;
+                    menuDatos({"Nombre del componente", "Cantidad del componente"}, inputs, 0, 0, "_COMPONENTE [" + to_string(i + 1) + "]_");
+                    Componente temp(inputs[0], inputs[1]);
+                    componentes.push_back(temp);
+                    i++;
+                } while (menuConfirmar("Desea agregar un nuevo componente"));
+
+                if (menuConfirmar("Desea modificar los componentes"))
+                    prodTemporal.setComponentes(componentes);
+                break;
+            case 0:
+                productoController.modify(prodTemporal, codigo);
+                productoController.saveFile();
+                break;
+            }
+        } while (opt != 0);
+    }
+    else
+    {
+        menuError({"NO HAY PRODUCTOS REGISTRADOS"});
+    }
+}
+
 void doAddProducto()
 {
     int codMarca;
@@ -243,7 +240,7 @@ void doAddProducto()
                         menuError({"Introduce un valor numérico"});
                 } while (!esNumero(inputs[0]));
                 double precio = stod(inputs[0]);
-                Producto producto(productoController.getNewCodProducto(), codMarca,nombre,precio,0,componentes);
+                Producto producto(productoController.getNewCodProducto(), codMarca, nombre, precio, 0, componentes);
                 productoController.add(producto);
             }
         }

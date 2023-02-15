@@ -52,9 +52,11 @@ void MarcaController::saveFile()
         if (archivoMarcas.is_open())
         {
             for (Marca obj : vectorMarca)
+            {
                 archivoMarcas << obj.getCodigoMarca() << "," << obj.getNombreMarca() << ","<<endl;
-            archivoMarcas.close();
+            }
         }
+        archivoMarcas.close();
     }
     catch (exception e)
     {

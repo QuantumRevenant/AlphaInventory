@@ -28,8 +28,12 @@ void Producto::setNombre(string nombre) { this->nombre = nombre; }
 void Producto::setPrecioUnitario(double precioUnitario) { this->precioUnitario = precioUnitario; }
 void Producto::setStock(int stock) { this->stock = stock; }
 void Producto::setNumComponentes(int numComponentes) { this->numComponentes = numComponentes; }
-void Producto::setComponentes(vector<Componente> vector) { vectorComponentes = vector; }
-void Producto::modifyStock(int value=1) {stock+=value;}
+void Producto::setComponentes(vector<Componente> vector)
+{
+    vectorComponentes = vector;
+    setNumComponentes(vectorComponentes.size());
+}
+void Producto::modifyStock(int value = 1) { stock += value; }
 
 int Producto::getCodProducto() { return codProducto; }
 int Producto::getCodMarca() { return codMarca; }
@@ -41,6 +45,6 @@ vector<Componente> Producto::getVectorComponentes() { return vectorComponentes; 
 
 void Producto::addComponente(Componente comp) { vectorComponentes.push_back(comp); }
 void Producto::deleteComponente(int pos) { vectorComponentes.erase(vectorComponentes.begin() + pos); }
-Componente Producto::getComponente(int pos){    return vectorComponentes[pos];}
+Componente Producto::getComponente(int pos) { return vectorComponentes[pos]; }
 
 #endif // PRODUCTO_CPP
