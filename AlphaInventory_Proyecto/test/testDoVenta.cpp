@@ -44,22 +44,28 @@ void doVenta()
                 inputs.clear();
                 cin.ignore();
                 menuDatos({"Codigo de Producto"}, inputs, 0, 0, "BUSQUEDA");
-                productoTemp = productoController.get(stoi(inputs[0]));
-                do
+                if (productoController.codigoRegistrado(stoi(inputs[0])))
                 {
-                    inputs.clear();
-                    cin.ignore();
-                    menuDatos({"Unidades por adquirir"}, inputs, 0, 0, aMayuscula(productoTemp.getNombre()));
-                    unidades = stoi(inputs[0]);
-                    if (unidades > productoTemp.getStock())
-                        menuError({"Solo hay " + to_string(productoTemp.getStock()) + " unidades en stock"});
-                } while (unidades > productoTemp.getStock());
-                if (unidades == 0)
-                    break;
-                precio = productoTemp.getPrecioUnitario();
-                VentaD ventaDTemp(codigoVenta, productoTemp.getCodProducto(), unidades, precio, true);
-                carrito.push_back(ventaDTemp);
-                listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(ventaDTemp.getMonto()));
+                    productoTemp = productoController.get(stoi(inputs[0]));
+                    do
+                    {
+                        inputs.clear();
+                        cin.ignore();
+                        menuDatos({"Unidades por adquirir"}, inputs, 0, 0, aMayuscula(productoTemp.getNombre()));
+                        unidades = stoi(inputs[0]);
+                        if (unidades > productoTemp.getStock())
+                            menuError({"Solo hay " + to_string(productoTemp.getStock()) + " unidades en stock"});
+                    } while (unidades > productoTemp.getStock());
+                    if (unidades == 0)
+                        break;
+                    precio = productoTemp.getPrecioUnitario();
+                    VentaD ventaDTemp(codigoVenta, productoTemp.getCodProducto(), unidades, precio);
+                    carrito.push_back(ventaDTemp);
+                    listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(ventaDTemp.getMonto()));
+                } else
+                {
+                    menuError({"Producto no encontrado"});
+                }
             } while (menuConfirmar("Desea agregar otro producto"));
             opt = 1;
             break;
@@ -82,17 +88,32 @@ void doVenta()
             menuListado(listado, 0, "_VENTA_", true);
             if (menuConfirmar("Registrar venta"))
             {
-                inputs.clear();
-                cin.ignore();
-                menuDatos({"Nombre de Cliente", "DNI"}, inputs, 0, 0, "_DATOS DEL CLIENTE_");
+                do
+                {
+                    inputs.clear();
+                    cin.ignore();
+                    menuDatos({"Nombre de Cliente", "DNI"}, inputs, 0, 0, "_DATOS DEL CLIENTE_");
+                    if (inputs[1].size() != 8)
+                        menuError({"El DNI de contener 8 caracteres"});
+                } while (inputs[1].size() != 8);
                 int codCliente = clienteController.getCorrelativo();
                 Cliente clienteTemp(codCliente, inputs[0], inputs[1]);
                 clienteController.add(clienteTemp);
                 for(VentaD x:carrito)
+                {
                     ventaDController.add(x);
+                    Producto productoTemp;
+                    productoTemp = productoController.get(x.getCodProducto());
+                    productoTemp.modifyStock(productoTemp.getStock() - x.getCantidad());
+                    productoController.modify(productoTemp, x.getCodProducto());
+                }
                 int codUsuario = 0;
                 Venta venta(codigoVenta, codCliente, codUsuario, montoTotal, true);
                 ventaController.add(venta);
+                clienteController.saveFile();
+                ventaDController.saveFile();
+                ventaController.saveFile();
+                productoController.saveFile();
             }else
             {
                 montoTotal = 0;

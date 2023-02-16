@@ -5,7 +5,7 @@
 #include "../model/FuncionesGenerales.h"
 
 CompraD::CompraD() {}
-CompraD::CompraD(int codCompra, int _codProducto, int _cantidad, double _precio, bool _estado):ProcesosD(_codProducto, _cantidad, _precio, _estado)
+CompraD::CompraD(int _codCompra, int _codProducto, int _cantidad, double _precio):ProcesosD(_codProducto, _cantidad, _precio)
 {
     codCompra = _codCompra;
 }

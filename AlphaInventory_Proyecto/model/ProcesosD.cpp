@@ -5,13 +5,12 @@
 #include "../model/FuncionesGenerales.h"
 
 ProcesosD::ProcesosD() {}
-ProcesosD::ProcesosD(int _codProducto, int _cantidad, double _precio, bool _estado)
+ProcesosD::ProcesosD(int _codProducto, int _cantidad, double _precio)
 {
     codProducto = _codProducto;
     cantidad = _cantidad;
     precio = _precio;
     monto = precio * cantidad;
-    estado = _estado;
 }
 ProcesosD::~ProcesosD() {}
 int     ProcesosD::getCodProducto()
@@ -30,10 +29,6 @@ double  ProcesosD::getMonto()
 {
     return monto;
 }
-bool    ProcesosD::getEstado()
-{
-    return estado;
-}
 void    ProcesosD::setCodProducto(int _codProducto)
 {
     codProducto = _codProducto;
@@ -49,10 +44,6 @@ void    ProcesosD::setPrecio(double _precio)
 void    ProcesosD::setMonto(double _monto)
 {
     monto = _monto;
-}
-void    ProcesosD::setEstado(bool _estado)
-{
-    estado = _estado;
 }
 
 #endif // PROCESOSD_CPP

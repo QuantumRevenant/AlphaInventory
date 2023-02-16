@@ -19,6 +19,7 @@ public:
 
     int getNewCodProducto();
     bool nombreRegistrado(string);
+    bool codigoRegistrado(int);
 
     void saveFile();
     void getFile();
@@ -35,6 +36,16 @@ bool ProductoController::nombreRegistrado(string _nombre)
     for (Producto x : vectorProducto)
     {
         if (aMayuscula(x.getNombre()) == aMayuscula(_nombre))
+            return true;
+        else
+            return false;
+    }
+}
+bool ProductoController::codigoRegistrado(int _cod)
+{
+    for (Producto x : vectorProducto)
+    {
+        if (_cod == x.getCodProducto())
             return true;
         else
             return false;

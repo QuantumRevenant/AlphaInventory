@@ -5,7 +5,7 @@
 #include "../model/FuncionesGenerales.h"
 
 VentaD::VentaD() {}
-VentaD::VentaD(int _codVenta, int _codProducto, int _cantidad, double _precio, bool _estado):ProcesosD(_codProducto, _cantidad, _precio, _estado)
+VentaD::VentaD(int _codVenta, int _codProducto, int _cantidad, double _precio):ProcesosD(_codProducto, _cantidad, _precio)
 {
     codVenta = _codVenta;
 }

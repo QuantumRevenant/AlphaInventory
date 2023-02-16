@@ -58,7 +58,6 @@ void    VentaDController::saveFile()
                                << obj.getCantidad() << ","
                                << obj.getPrecio() << ","
                                << obj.getMonto() << ","
-                               << obj.getEstado() << ","
                                << endl;
             }
             archivoVentasD.close();
@@ -96,14 +95,6 @@ void    VentaDController::copyFile()
                 obj.setCantidad(stoi(temporal[2]));
                 obj.setPrecio(stod(temporal[3]));
                 obj.setMonto(stod(temporal[4]));
-                if (temporal[5] == "true")
-                {
-                    obj.setEstado(true);
-                }
-                else
-                {
-                    obj.setEstado(false);
-                }
                 add(obj);
             }
             archivoVentasD.close();

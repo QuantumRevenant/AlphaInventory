@@ -153,22 +153,19 @@ private:
     int cantidad;
     double precio;
     double monto;
-    bool estado;
 
 public:
     ProcesosD();
-    ProcesosD(int, int, double, bool);
+    ProcesosD(int, int, double);
     ~ProcesosD();
     int getCodProducto();
     int getCantidad();
     double getPrecio();
     double getMonto();
-    bool getEstado();
     void setCodProducto(int);
     void setCantidad(int);
     void setPrecio(double);
     void setMonto(double);
-    void setEstado(bool);
 };
 
 class CompraD : public ProcesosD
@@ -178,7 +175,7 @@ private:
 
 public:
     CompraD();
-    CompraD(int, int, int, double, bool);
+    CompraD(int, int, int, double);
     ~CompraD();
     int getCodCompra();
     void setCodCompra(int);
@@ -191,7 +188,7 @@ private:
 
 public:
     VentaD();
-    VentaD(int, int, int, double, bool);
+    VentaD(int, int, int, double);
     ~VentaD();
     int getCodVenta();
     void setCodVenta(int);

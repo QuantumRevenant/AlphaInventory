@@ -34,7 +34,7 @@ int     ProveedorController::getCorrelativo()
 	}
 	else
 	{
-		return vectorProveedor[size() - 1].getCodigoProveedor() + 1;
+		return vectorProveedor[size() - 1].getCodProveedor() + 1;
 	}
 }
 void    ProveedorController::add(Proveedor obj)
