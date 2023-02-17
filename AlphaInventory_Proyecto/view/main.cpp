@@ -228,6 +228,7 @@ void doRegistrarse(bool start = false)
     int sizePass;
     do
     {
+        cin.ignore();
         inputs.clear();
         menuDatos({"Contrasena", "Repetir Contrasena"}, inputs, 2, 1);
         contrasena = sha256(inputs[0]);
@@ -673,6 +674,8 @@ void doVenta()
         case 0:
             if (!menuConfirmar("Seguro que desea cancelar la venta"))
                 opt = -1;
+            else
+                menuMain();
             break;
         default:
             break;

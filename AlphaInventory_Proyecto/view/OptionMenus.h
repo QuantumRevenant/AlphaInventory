@@ -143,23 +143,25 @@ void menuRecords()
     system("cls");
     int opt;
     vector<string> options = {"Estado de Caja", "Registros Personales", "Buscar Registros"}; // Carritos de compra, etc
-    opt = menu("MENU REGISTROS", options);
-
-    switch (opt)
+    do
     {
-    case 1:
-        askEstadoCaja();
-        break;
-    case 2:
-        doConsultarRegistro(progController.getSesionKey());
-        break;
-    case 3:
-        doBuscarRegistro();
-        break;
-    case 0:
-        menuMain();
-        break;
-    }
+        opt = menu("MENU REGISTROS", options); 
+        switch (opt)
+        {
+        case 1:
+            askEstadoCaja();
+            break;
+        case 2:
+            doConsultarRegistro(progController.getSesionKey());
+            break;
+        case 3:
+            doBuscarRegistro();
+            break;
+        case 0:
+            menuMain();
+            break;
+        }
+    } while (opt != 0);
 }
 
 #endif
