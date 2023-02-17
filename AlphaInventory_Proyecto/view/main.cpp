@@ -5,6 +5,7 @@
 #include <ctime>
 #include <unistd.h>
 #include "../model/Usuario.cpp"
+#include "../model/models.h"
 #include "../controller/controllers.h"
 #include "OptionMenus.h"
 
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
     */
     if (userController.existeAdministrador())
     {
-        // progController.openSesion(0, true, true);
+        progController.openSesion(0, true, true);
         if (!progController.getActiveSesion())
             menuLogIn();
         else
@@ -470,10 +471,304 @@ void doCerrarSesion()
     progController.closeSesion();
     menuLogIn();
 }
-
-void doAddInventario()
+void doCompra()
 {
+    int opt;
+    double montoTotal = 0;
+    vector<string> inputs;
+    vector<CompraD> carrito;
+    vector<string> listado;
+    do
+    {
+        int codigoCompra = compraController.getCorrelativo();
+        opt = menu("_Compra_", {"Agregar producto", "Eliminar Producto", "Finalizar Compra"});
+        switch (opt)
+        {
+        case 1:
+            do
+            {
+                Producto productoTemp;
+                int unidades;
+                double precio;
+                double monto;
+                inputs.clear();
+                cin.ignore();
+                menuDatos({"Codigo de Producto"}, inputs, 0, 0, "BUSQUEDA");
+                if (productoController.codigoRegistrado(stoi(inputs[0])))
+                {
+                    productoTemp = productoController.get(stoi(inputs[0]));
+                    inputs.clear();
+                    menuDatos({"Unidades por adquirir"}, inputs, 0, 0, aMayuscula(productoTemp.getNombre()));
+                    unidades = stoi(inputs[0]);
+                    if (unidades != 0)
+                    {
+                        precio = productoTemp.getPrecioUnitario();
+                        CompraD compraDTemp(codigoCompra, productoTemp.getCodProducto(), unidades, precio);
+                        carrito.push_back(compraDTemp);
+                        listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(compraDTemp.getMonto()));
+                    }
+                }else
+                {
+                    menuError({"Producto no encontrado"});
+                }
+            } while (menuConfirmar("Desea agregar otro producto"));
+            opt = 1;
+            break;
+        case 2:
+            do
+            {
+                opt = menu("ELIMINAR PRODUCTO", listado);
+                if (opt != 0 && opt != -1)
+                {
+                    carrito.erase(carrito.begin() + opt - 1);
+                    listado.erase(listado.begin() + opt - 1);
+                }
+            } while (opt != 0);
+            opt = 2;
+            break;
+        case 3:
+            for(CompraD x:carrito)
+                montoTotal += x.getMonto();
+            listado.push_back("TOTAL S/" + to_string(montoTotal));
+            menuListado(listado, 0, "_VENTA_", true);
+            if (menuConfirmar("Registrar compra"))
+            {
+                do
+                {
+                    inputs.clear();
+                    cin.ignore();
+                    menuDatos({"Nombre de Proveedor", "RUC"}, inputs, 0, 0, "_DATOS DEL PROVEEDOR_");
+                    if (inputs[1].size() != 11)
+                        menuError({"El RUC debe contener 11 caracteres"});
+                } while (inputs[1].size() != 11);
+                int codProveedor = proveedorController.getCorrelativo();
+                Proveedor proveedorTemp(codProveedor, inputs[0], inputs[1]);
+                proveedorController.add(proveedorTemp);
+                for(CompraD x:carrito)
+                {
+                    compraDController.add(x);
+                    Producto productoTemp;
+                    productoTemp = productoController.get(x.getCodProducto());
+                    productoTemp.modifyStock(productoTemp.getStock() + x.getCantidad());
+                    productoController.modify(productoTemp, x.getCodProducto());
+                }
+                int codUsuario = progController.getSesionKey();
+                Compra compra(codigoCompra, codProveedor, codUsuario, montoTotal, true);
+                compraController.add(compra);
+                proveedorController.saveFile();
+                compraController.saveFile();
+                compraDController.saveFile();
+                productoController.saveFile();
+            }else
+            {
+                montoTotal = 0;
+                listado.erase(listado.begin() + listado.size() - 1);
+            }
+            break;
+        case 0:
+            if (!menuConfirmar("Seguro que desea cancelar la compra"))
+                opt = -1;
+            break;
+        default:
+            break;
+        }
+    } while (opt != 0);
 }
+void doVenta()
+{
+    int opt;
+    string busqueda;
+    double montoTotal = 0;
+    vector<string> inputs;
+    vector<VentaD> carrito;
+    vector<string> listado;
+    do
+    {
+        int codigoVenta = ventaController.getCorrelativo();
+        opt = menu("_Venta_", {"Agregar producto", "Eliminar Producto", "Finalizar Venta"});
+        switch (opt)
+        {
+        case 1:
+            do
+            {
+                Producto productoTemp;
+                int unidades;
+                double precio;
+                double monto;
+                inputs.clear();
+                cin.ignore();
+                menuDatos({"Codigo de Producto"}, inputs, 0, 0, "BUSQUEDA");
+                if (productoController.codigoRegistrado(stoi(inputs[0])))
+                {
+                    productoTemp = productoController.get(stoi(inputs[0]));
+                    do
+                    {
+                        inputs.clear();
+                        cin.ignore();
+                        menuDatos({"Unidades por adquirir"}, inputs, 0, 0, aMayuscula(productoTemp.getNombre()));
+                        unidades = stoi(inputs[0]);
+                        if (unidades > productoTemp.getStock())
+                            menuError({"Solo hay " + to_string(productoTemp.getStock()) + " unidades en stock"});
+                    } while (unidades > productoTemp.getStock());
+                    if (unidades == 0)
+                        break;
+                    precio = productoTemp.getPrecioUnitario();
+                    VentaD ventaDTemp(codigoVenta, productoTemp.getCodProducto(), unidades, precio);
+                    carrito.push_back(ventaDTemp);
+                    listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(ventaDTemp.getMonto()));
+                } else
+                {
+                    menuError({"Producto no encontrado"});
+                }
+            } while (menuConfirmar("Desea agregar otro producto"));
+            opt = 1;
+            break;
+        case 2:
+            do
+            {
+                opt = menu("ELIMINAR PRODUCTO", listado);
+                if (opt != 0 && opt != -1)
+                {
+                    carrito.erase(carrito.begin() + opt - 1);
+                    listado.erase(listado.begin() + opt - 1);
+                }
+            } while (opt != 0);
+            opt = 2;
+            break;
+        case 3:
+            for(VentaD x:carrito)
+                montoTotal += x.getMonto();
+            listado.push_back("TOTAL S/" + to_string(montoTotal));
+            menuListado(listado, 0, "_VENTA_", true);
+            if (menuConfirmar("Registrar venta"))
+            {
+                do
+                {
+                    inputs.clear();
+                    cin.ignore();
+                    menuDatos({"Nombre de Cliente", "DNI"}, inputs, 0, 0, "_DATOS DEL CLIENTE_");
+                    if (inputs[1].size() != 8)
+                        menuError({"El DNI de contener 8 caracteres"});
+                } while (inputs[1].size() != 8);
+                int codCliente = clienteController.getCorrelativo();
+                Cliente clienteTemp(codCliente, inputs[0], inputs[1]);
+                clienteController.add(clienteTemp);
+                for(VentaD x:carrito)
+                {
+                    ventaDController.add(x);
+                    Producto productoTemp;
+                    productoTemp = productoController.get(x.getCodProducto());
+                    productoTemp.modifyStock(productoTemp.getStock() - x.getCantidad());
+                    productoController.modify(productoTemp, x.getCodProducto());
+                }
+                int codUsuario = progController.getSesionKey();
+                cajaController.modifySaldo(montoTotal, true);
+                Venta venta(codigoVenta, codCliente, codUsuario, montoTotal, true);
+                ventaController.add(venta);
+                clienteController.saveFile();
+                ventaDController.saveFile();
+                ventaController.saveFile();
+                productoController.saveFile();
+            }else
+            {
+                montoTotal = 0;
+                listado.erase(listado.begin() + listado.size() - 1);
+            }
+            break;
+        case 0:
+            if (!menuConfirmar("Seguro que desea cancelar la venta"))
+                opt = -1;
+            break;
+        default:
+            break;
+        }
+    } while (opt != 0);
+}
+
+void askEstadoCaja()
+{
+    menuListado({"S/" + to_string(cajaController.getSaldo())}, 0, "_SALDO ACTUAL_", true);
+}
+void doConsultarRegistro(int cod)
+{
+    int opt;
+    int codUsuario = cod;
+    vector<Venta> registro;
+    vector<string> listaRegistro;
+    for (int i = 0; i < ventaController.size(); i++)
+    {
+        Venta vTemp = ventaController.get(i);
+        if (vTemp.getCodUsuario() == codUsuario)
+            registro.push_back(vTemp);
+    }
+    if (registro.size() == 0)
+    {
+        menuError({"Aun no se hicieron ventas"});
+    } else
+    {
+        for(Venta x:registro)
+            listaRegistro.push_back(to_string(x.getCodVenta()) + "\tS/" + to_string(x.getMonto()));
+        do
+        {
+            vector<string> listaVenta;
+            opt = menu("_REGISTRO DE VENTAS_", listaRegistro);
+            switch (opt)
+            {
+            case -1:
+                break;
+            case 0:
+                break;
+            default:
+                Venta vTemp;
+                Cliente cTemp;
+                vector<VentaD> registroVentaD;
+                vTemp = ventaController.get(opt - 1);
+                cTemp = clienteController.get(vTemp.getCodCliente() - 1);
+                listaVenta.push_back("Nombre del Cliente: " + cTemp.getNombre());
+                listaVenta.push_back("DNI del Cliente: " + cTemp.getDocumento());
+                listaVenta.push_back("Productos:");
+                for (int i = 0; i < ventaDController.size(); i++)
+                {
+                    VentaD vDTemp = ventaDController.get(i);
+                    if (vDTemp.getCodVenta() == opt)
+                    {
+                        Producto pTemp;
+                        pTemp = productoController.get(vDTemp.getCodProducto() - 1);
+                        listaVenta.push_back("\t" + pTemp.getNombre() + "\tS/" + to_string(vDTemp.getPrecio()) + "\t" + to_string(vDTemp.getCantidad()) + "u\tS/" + to_string(vDTemp.getMonto()));
+                    }
+                }
+                listaVenta.push_back("Monto total: S/" + to_string(vTemp.getMonto()));
+                menuListado(listaVenta);
+                break;
+            }
+        } while (opt != 0);
+    }
+}
+void doBuscarRegistro()
+{
+    int opt;
+    vector<string> usuarios;
+    for (int i = 0; i < userController.size(); i++)
+    {
+        Usuario uTemp = userController.get(i);
+        usuarios.push_back(uTemp.getUsername() + "\t" + uTemp.getNombre() + " " + uTemp.getApellidos());
+    }
+    do
+    {
+        opt = menu("_USUARIOS_", usuarios);
+        switch (opt)
+        {
+        case -1:
+            break;
+        case 0:
+            break;
+        default:
+            doConsultarRegistro(opt - 1);
+            break;
+        }
+    } while (opt != 0);
+}
+
 void askInventario()
 {
     int opt;

@@ -16,6 +16,7 @@ VentaDController ventaDController;
 ProductoController productoController;
 ClienteController clienteController;
 
+
 void doVenta();
 
 int main(int argc, char const *argv[])

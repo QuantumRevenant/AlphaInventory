@@ -27,7 +27,7 @@ void menuLogIn()
     switch (opt)
     {
     case 1:
-        if(!doIniciarSesion(true, type))
+        if (!doIniciarSesion(true, type))
             menuLogIn();
         break;
     case 2:
@@ -35,13 +35,13 @@ void menuLogIn()
         menuLogIn();
         break;
     case 0:
-        esquinarTexto("Cerrando Programa",1);
+        esquinarTexto("Cerrando Programa", 1);
         for (int i = 0; i < 3; i++)
-            {
-                cout << ".";
-                cout.flush();
-                sleep(1);
-            }
+        {
+            cout << ".";
+            cout.flush();
+            sleep(1);
+        }
         Sleep(1000);
         break;
     }
@@ -55,7 +55,7 @@ void menuMain()
     switch (opt)
     {
     case 1:
-        // doVenta
+        doVenta();
         break;
     case 2:
         menuUser();
@@ -92,7 +92,7 @@ void menuUser()
         menuUser();
         break;
     case 4:
-        // askEstadoCaja
+        askEstadoCaja();
         break;
     case 5:
         doCerrarSesion();
@@ -114,7 +114,7 @@ void menuInventory()
         switch (opt)
         {
         case 1:
-            doAddInventario();
+            doCompra();
             break;
         case 2:
             askInventario();
@@ -148,13 +148,13 @@ void menuRecords()
     switch (opt)
     {
     case 1:
-        // askEstadoCaja
+        askEstadoCaja();
         break;
     case 2:
-        // doConsultarRegistro
+        doConsultarRegistro(progController.getSesionKey());
         break;
     case 3:
-        // doConsultarRegistro
+        doBuscarRegistro();
         break;
     case 0:
         menuMain();

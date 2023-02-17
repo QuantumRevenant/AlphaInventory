@@ -37,9 +37,8 @@ bool ProductoController::nombreRegistrado(string _nombre)
     {
         if (aMayuscula(x.getNombre()) == aMayuscula(_nombre))
             return true;
-        else
-            return false;
     }
+    return false;
 }
 bool ProductoController::codigoRegistrado(int _cod)
 {
@@ -47,9 +46,8 @@ bool ProductoController::codigoRegistrado(int _cod)
     {
         if (_cod == x.getCodProducto())
             return true;
-        else
-            return false;
     }
+    return false;
 }
 void ProductoController::saveFile()
 {
@@ -61,15 +59,15 @@ void ProductoController::saveFile()
         {
             for (Producto obj : vectorProducto)
             {
-                archivoProductos    << obj.getCodProducto()<<","
-                                    << obj.getCodMarca()<<","
-                                    << obj.getNombre()<<","
-                                    << obj.getPrecioUnitario()<<","
-                                    << obj.getStock()<<","
-                                    << obj.getNumComponentes()<<",";
-                for(Componente x:obj.getVectorComponentes())
-                archivoProductos    << x.getNombre()<<","
-                                    << x.getCantidad()<<",";
+                archivoProductos << obj.getCodProducto() << ","
+                                 << obj.getCodMarca() << ","
+                                 << obj.getNombre() << ","
+                                 << obj.getPrecioUnitario() << ","
+                                 << obj.getStock() << ","
+                                 << obj.getNumComponentes() << ",";
+                for (Componente x : obj.getVectorComponentes())
+                    archivoProductos << x.getNombre() << ","
+                                     << x.getCantidad() << ",";
                 archivoProductos << endl;
             }
             archivoProductos.close();
@@ -94,8 +92,8 @@ void ProductoController::getFile()
         {
             while (!archivoProductos.eof() && getline(archivoProductos, linea))
             {
-                vector<string> temporal={};
-                vector<Componente> temporalComponentes={};
+                vector<string> temporal = {};
+                vector<Componente> temporalComponentes = {};
                 i = 0;
                 while ((posi = linea.find(",")) != string::npos)
                 {
@@ -103,12 +101,12 @@ void ProductoController::getFile()
                     linea.erase(0, posi + 1);
                     i++;
                 }
-                for(int i=5;i<temporal.size();i+=2)
+                for (int i = 5; i < temporal.size(); i += 2)
                 {
-                    Componente objComponente(temporal[i],temporal[i+1]);
+                    Componente objComponente(temporal[i], temporal[i + 1]);
                     temporalComponentes.push_back(objComponente);
                 }
-                Producto obj(stoi(temporal[0]),stoi(temporal[1]),temporal[2],stod(temporal[3]),stoi(temporal[4]),temporalComponentes);
+                Producto obj(stoi(temporal[0]), stoi(temporal[1]), temporal[2], stod(temporal[3]), stoi(temporal[4]), temporalComponentes);
                 add(obj);
             }
             archivoProductos.close();

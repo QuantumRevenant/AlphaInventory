@@ -37,10 +37,9 @@ bool MarcaController::marcaRegistrada(string _nombre)
     for (Marca x : vectorMarca)
     {
         if (aMayuscula(x.getNombreMarca()) == aMayuscula(_nombre))
-            return true;
-        else
-            return false;
+            return true;           
     }
+     return false;
 }
 
 void MarcaController::saveFile()
