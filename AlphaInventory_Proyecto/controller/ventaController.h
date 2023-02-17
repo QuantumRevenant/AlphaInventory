@@ -15,73 +15,72 @@ private:
 
 public:
     VentaController();
-    void        add(Venta);
-    int         getCorrelativo();
-    void        modify(Venta, int);
-    int         size();
-    Venta       get(int);
-    void        saveFile();
-    void        copyFile();
+    void add(Venta);
+    int getCorrelativo();
+    void modify(Venta, int);
+    int size();
+    Venta get(int);
+    void saveFile();
+    void copyFile();
 };
 
 VentaController::VentaController()
 {
     copyFile();
 }
-void    VentaController::add(Venta obj)
+void VentaController::add(Venta obj)
 {
     vectorVenta.push_back(obj);
 }
-int     VentaController::getCorrelativo()
+int VentaController::getCorrelativo()
 {
-    if(size() == 0)
-	{
-		return 1;
-	}
-	else
-	{
-		return vectorVenta[size() - 1].getCodVenta() + 1;
-	}
+    if (size() == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return vectorVenta[size() - 1].getCodVenta() + 1;
+    }
 }
-void    VentaController::modify(Venta temp, int obj)
+void VentaController::modify(Venta temp, int obj)
 {
     vectorVenta[obj] = temp;
 }
-int     VentaController::size()
+int VentaController::size()
 {
     return vectorVenta.size();
 }
-Venta  VentaController::get(int pos)
+Venta VentaController::get(int pos)
 {
     return vectorVenta[pos];
 }
-void    VentaController::saveFile()
+void VentaController::saveFile()
 {
     try
     {
         fstream archivoVentas;
-        archivoVentas.open("../data/ventas.csv", ios::out);
+        archivoVentas.open("../data/ventas.csv", ios::app);
         if (archivoVentas.is_open())
         {
-            for (Venta obj:vectorVenta)
-            {
-                archivoVentas << obj.getCodVenta() << ","
-                              << obj.getCodCliente() << ","
-                              << obj.getCodUsuario() << ","
-                              << obj.getFecha() << ","
-                              << obj.getMonto() << ","
-                              << obj.getEstado() << ","
-                              << endl;
-            }
+            Venta obj = vectorVenta.back();
+            archivoVentas << obj.getCodVenta() << ","
+                          << obj.getCodCliente() << ","
+                          << obj.getCodUsuario() << ","
+                          << obj.getFecha() << ","
+                          << obj.getMonto() << ","
+                          << obj.getEstado() << ","
+                          << endl;
+
             archivoVentas.close();
         }
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
-void    VentaController::copyFile()
+void VentaController::copyFile()
 {
     try
     {
@@ -121,7 +120,7 @@ void    VentaController::copyFile()
             archivoVentas.close();
         }
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al leer el archivo";
         system("pause");

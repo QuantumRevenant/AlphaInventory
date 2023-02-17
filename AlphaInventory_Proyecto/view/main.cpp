@@ -39,11 +39,6 @@ using namespace std;
     >CONSULTAR OTROS
 */
 
-// Ventas y Registros
-void doVenta();
-void askEstadoCaja();
-void doConsultarRegistro();
-
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
@@ -684,7 +679,6 @@ void doVenta()
         }
     } while (opt != 0);
 }
-
 void askEstadoCaja()
 {
     menuListado({"S/" + to_string(cajaController.getSaldo())}, 0, "_SALDO ACTUAL_", true);

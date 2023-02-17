@@ -61,14 +61,13 @@ void    ProveedorController::saveFile()
         archivoProveedores.open("../data/proveedor.csv", ios::out);
         if (archivoProveedores.is_open())
         {
-            for (Proveedor obj:vectorProveedor)
-            {
+            Proveedor obj = vectorProveedor.back();
                 archivoProveedores << obj.getCodProveedor() << ","
                                    << obj.getNombre() << ","
                                    << obj.getTipoDocumento() << ","
                                    << obj.getDocumento() << ",";
                 archivoProveedores << endl;
-            }
+            
             archivoProveedores.close();
         }
     }

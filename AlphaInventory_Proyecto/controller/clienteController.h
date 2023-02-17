@@ -58,17 +58,17 @@ void    ClienteController::saveFile()
     try
     {
         fstream archivoClientes;
-        archivoClientes.open("../data/clientes.csv", ios::out);
+        archivoClientes.open("../data/clientes.csv", ios::app);
         if (archivoClientes.is_open())
         {
-            for (Cliente obj:vectorCliente)
-            {
+            
+            Cliente obj = vectorCliente.back();
                 archivoClientes << obj.getCodCliente() << ","
                                 << obj.getNombre() << ","
                                 << obj.getTipoDocumento() << ","
                                 << obj.getDocumento() << ",";
                 archivoClientes << endl;
-            }
+            
             archivoClientes.close();
         }
     }

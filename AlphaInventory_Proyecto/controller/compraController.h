@@ -60,11 +60,10 @@ void    CompraController::saveFile()
     try
     {
         fstream archivoCompras;
-        archivoCompras.open("../data/compras.csv", ios::out);
+        archivoCompras.open("../data/compras.csv", ios::app);
         if (archivoCompras.is_open())
         {
-            for (Compra obj:vectorCompra)
-            {
+            Compra obj = vectorCompra.back();
                 archivoCompras << obj.getCodCompra() << ","
                                << obj.getCodProveedor() << ","
                                << obj.getCodUsuario() << ","
@@ -72,7 +71,6 @@ void    CompraController::saveFile()
                                << obj.getFecha() << ","
                                << obj.getMonto() << ","
                                << endl;
-            }
             archivoCompras.close();
         }
     }

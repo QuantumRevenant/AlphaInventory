@@ -51,15 +51,14 @@ void    CompraDController::saveFile()
         archivoComprasD.open("../data/comprasD.csv", ios::out);
         if (archivoComprasD.is_open())
         {
-            for (CompraD obj:vectorCompraD)
-            {
+            
+            CompraD obj = vectorCompraD.back();
                 archivoComprasD << obj.getCodCompra() << ","
                                 << obj.getCodProducto() << ","
                                 << obj.getCantidad() << ","
                                 << obj.getPrecio() << ","
                                 << obj.getMonto() << ","
                                 << endl;
-            }
             archivoComprasD.close();
         }
     }

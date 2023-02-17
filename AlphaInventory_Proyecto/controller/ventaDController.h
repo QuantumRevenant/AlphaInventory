@@ -15,60 +15,59 @@ private:
 
 public:
     VentaDController();
-    void        add(VentaD);
-    void        modify(VentaD, int);
-    int         size();
-    VentaD      get(int);
-    void        saveFile();
-    void        copyFile();
+    void add(VentaD);
+    void modify(VentaD, int);
+    int size();
+    VentaD get(int);
+    void saveFile();
+    void copyFile();
 };
 
 VentaDController::VentaDController()
 {
     copyFile();
 }
-void    VentaDController::add(VentaD obj)
+void VentaDController::add(VentaD obj)
 {
     vectorVentaD.push_back(obj);
 }
-void    VentaDController::modify(VentaD temp, int obj)
+void VentaDController::modify(VentaD temp, int obj)
 {
     vectorVentaD[obj] = temp;
 }
-int     VentaDController::size()
+int VentaDController::size()
 {
     return vectorVentaD.size();
 }
-VentaD  VentaDController::get(int pos)
+VentaD VentaDController::get(int pos)
 {
     return vectorVentaD[pos];
 }
-void    VentaDController::saveFile()
+void VentaDController::saveFile()
 {
     try
     {
         fstream archivoVentasD;
-        archivoVentasD.open("../data/comprasD.csv", ios::out);
+        archivoVentasD.open("../data/ventasD.csv", ios::app);
         if (archivoVentasD.is_open())
         {
-            for (VentaD obj:vectorVentaD)
-            {
-                archivoVentasD << obj.getCodVenta() << ","
-                               << obj.getCodProducto() << ","
-                               << obj.getCantidad() << ","
-                               << obj.getPrecio() << ","
-                               << obj.getMonto() << ","
-                               << endl;
-            }
+            VentaD obj = vectorVentaD.back();
+            archivoVentasD << obj.getCodVenta() << ","
+                           << obj.getCodProducto() << ","
+                           << obj.getCantidad() << ","
+                           << obj.getPrecio() << ","
+                           << obj.getMonto() << ","
+                           << endl;
+
             archivoVentasD.close();
         }
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
-void    VentaDController::copyFile()
+void VentaDController::copyFile()
 {
     try
     {
@@ -100,7 +99,7 @@ void    VentaDController::copyFile()
             archivoVentasD.close();
         }
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al leer el archivo";
         system("pause");
