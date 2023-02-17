@@ -1,4 +1,6 @@
 #include <iostream>
+#include "../controller/programController.h"
+#include "../controller/cajaController.h"
 #include "../model/FuncionesGenerales.h"
 #include "../controller/ventaController.h"
 #include "../controller/ventaDController.h"
@@ -7,6 +9,8 @@
 #include "../model/models.h"
 using namespace std;
 
+programController progController;
+CajaController cajaController;
 VentaController ventaController;
 VentaDController ventaDController;
 ProductoController productoController;
@@ -107,7 +111,8 @@ void doVenta()
                     productoTemp.modifyStock(productoTemp.getStock() - x.getCantidad());
                     productoController.modify(productoTemp, x.getCodProducto());
                 }
-                int codUsuario = 0;
+                int codUsuario = progController.getSesionKey();
+                cajaController.modifySaldo(montoTotal, true);
                 Venta venta(codigoVenta, codCliente, codUsuario, montoTotal, true);
                 ventaController.add(venta);
                 clienteController.saveFile();

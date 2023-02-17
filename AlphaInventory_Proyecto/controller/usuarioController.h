@@ -18,6 +18,7 @@ public:
     ~usuarioController();
 
     void add(Usuario);
+    int size();
     Usuario get(int);
     void modify(Usuario, int);
 
@@ -38,6 +39,7 @@ usuarioController::usuarioController() { archRecuperarDatos(); }
 usuarioController::~usuarioController() {}
 
 void usuarioController::add(Usuario obj) { vectorUsuario.push_back(obj); }
+int usuarioController::size() { return vectorUsuario.size(); }
 Usuario usuarioController::get(int pos) { return vectorUsuario[pos]; }
 void usuarioController::modify(Usuario obj, int pos) { vectorUsuario[pos] = obj; }
 
