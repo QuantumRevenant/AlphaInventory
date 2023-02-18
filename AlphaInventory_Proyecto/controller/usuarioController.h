@@ -161,7 +161,7 @@ void usuarioController::archRecuperarDatos()
     int i;
     size_t posi; // Cantidad maxima
     string linea;
-    string temporal[8]; // Cantidad de columnas
+    vector<string> temporal; // Cantidad de columnas
     fstream archivoUsuarios;
     archivoUsuarios.open("../data/usuarios.csv", ios::in);
     if (archivoUsuarios.is_open())
@@ -171,7 +171,7 @@ void usuarioController::archRecuperarDatos()
             i = 0;
             while ((posi = linea.find(",")) != string::npos)
             {                                        /*string::npos es -1, termina cuando llega a este punto*/
-                temporal[i] = linea.substr(0, posi); /*posi = Es la cantidad de caracteres antes del ;*/
+                temporal.push_back(linea.substr(0, posi)); /*posi = Es la cantidad de caracteres antes del ;*/
                 linea.erase(0, posi + 1);            // borra la palabra de la primera posici�n encontrada   y con el +1 incluye hasta el ; y luego borra ese elemento, para que en la siguiente iteracion iniciar con la siguiente palabra y de ese modo seguir el proceso ,
                 i++;
             }

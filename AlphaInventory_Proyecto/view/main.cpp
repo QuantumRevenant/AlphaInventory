@@ -9,9 +9,6 @@
 #include "../controller/controllers.h"
 #include "OptionMenus.h"
 
-#define VOFFSET 5
-#define HOFFSET 5
-
 using namespace std;
 
 /*
@@ -51,7 +48,7 @@ int main(int argc, char *argv[])
     */
     if (userController.existeAdministrador())
     {
-        progController.openSesion(0, true, true);
+        // progController.openSesion(0, true, true);
         if (!progController.getActiveSesion())
             menuLogIn();
         else
@@ -280,14 +277,14 @@ void doModificarPerfil(int key)
             break;
         case 2:
             menuDatos({"Nombre"}, inputs);
-            temporal = inputs[0].substr(0, inputs[0].find(' '));
+            temporal = inputs[0];
             if (menuConfirmar("Desea que\"" + temporal + "\"sea su nuevo nombre"))
                 objUser.setNombre(temporal);
             break;
         case 3:
             menuDatos({"Apellidos"}, inputs);
-            temporal = inputs[0].substr(0, inputs[0].find(' '));
-            if (menuConfirmar("Desea que\"" + temporal + "\"sea sus nuevos apelidos"))
+            temporal = inputs[0];
+            if (menuConfirmar("Desea que\"" + temporal + "\"sea sus nuevos apellidos"))
                 objUser.setApellidos(temporal);
             break;
         case 4:
@@ -580,6 +577,11 @@ void doVenta()
     vector<string> inputs;
     vector<VentaD> carrito;
     vector<string> listado;
+    if (productoController.getNewCodProducto())
+    {
+        menuError({"~NO TENEMOS PRODUCTOS REGISTRADOS~"});
+        return;
+    }
     do
     {
         int codigoVenta = ventaController.getCorrelativo();
@@ -964,7 +966,6 @@ void doAddProducto()
             componentes.push_back(temp);
             i++;
         } while (menuConfirmar("Desea agregar un nuevo componente"));
-
         if (marcaController.getNewCodMarca() != 0)
         {
             opt = menu("AGREGAR MARCAS", optionsM);

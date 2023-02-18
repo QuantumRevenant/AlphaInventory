@@ -142,7 +142,7 @@ string currentDateTime()
     tm *now = localtime(&t);
 
     char buffer[128];
-    strftime(buffer, sizeof(buffer), "%m-%d-%Y %X", now);
+    strftime(buffer, sizeof(buffer), "%d/%m/%Y %X", now);
     return buffer;
 }
 void getValue(string mensaje, string *dato)

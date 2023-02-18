@@ -58,7 +58,7 @@ void    ProveedorController::saveFile()
     try
     {
         fstream archivoProveedores;
-        archivoProveedores.open("../data/proveedor.csv", ios::out);
+        archivoProveedores.open("../data/proveedor.csv", ios::app);
         if (archivoProveedores.is_open())
         {
             Proveedor obj = vectorProveedor.back();
