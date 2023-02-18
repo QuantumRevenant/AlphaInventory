@@ -41,7 +41,7 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
         }
         centrarTexto("[0] Salir          ", 0, true, true, 0, (-sizeY + e));
         e += 1 + separation;
-        gotoxy(150 + busqueda.size(), 13);
+        gotoxy(61 + (busqueda.size() / 2), 15);
         opt = getch();
         switch (opt)
         {
