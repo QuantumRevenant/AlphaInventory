@@ -85,6 +85,7 @@ void    ClienteController::copyFile()
         size_t posi;
         string linea;
         fstream archivoClientes;
+        vectorCliente.clear();
         archivoClientes.open("../data/clientes.csv", ios::in);
         if (archivoClientes.is_open())
         {

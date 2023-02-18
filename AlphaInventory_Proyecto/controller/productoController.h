@@ -6,6 +6,8 @@
 #include <fstream>
 #include "../model/Producto.cpp"
 
+using namespace std;
+
 class ProductoController
 {
 private:
@@ -75,18 +77,20 @@ void ProductoController::saveFile()
     }
     catch (exception e)
     {
+
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
 void ProductoController::getFile()
 {
-    try
-    {
+    // try
+    // {
         int i;
         int j;
         size_t posi;
         string linea;
         fstream archivoProductos;
+        vectorProducto.clear();
         archivoProductos.open("../data/productos.csv", ios::in);
         if (archivoProductos.is_open())
         {
@@ -101,20 +105,27 @@ void ProductoController::getFile()
                     linea.erase(0, posi + 1);
                     i++;
                 }
-                for (int i = 5; i < temporal.size(); i += 2)
+                for (int i = 6; i < temporal.size(); i += 2)
                 {
                     Componente objComponente(temporal[i], temporal[i + 1]);
                     temporalComponentes.push_back(objComponente);
                 }
-                Producto obj(stoi(temporal[0]), stoi(temporal[1]), temporal[2], stod(temporal[3]), stoi(temporal[4]), temporalComponentes);
+                Producto obj;
+                obj.setCodProducto(stoi(temporal[0]));
+                obj.setCodMarca(stoi(temporal[1]));
+                obj.setNombre(temporal[2]);
+                obj.setPrecioUnitario(stod(temporal[3]));
+                obj.setStock(stoi(temporal[4]));
+                obj.setComponentes(temporalComponentes);
+                cout << "Loading Producto " << temporal[2] << " - " << obj.getNombre() << endl;
                 add(obj);
             }
             archivoProductos.close();
         }
-    }
-    catch (exception e)
-    {
-        cout << "Ocurrio un error al leer el archivo";
-    }
+    // }
+    // catch (exception e)
+    // {
+    //     cout << "Ocurrio un error al leer el archivo";
+    // }
 }
 #endif // PRODUCTOCONTROLLER_H

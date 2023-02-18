@@ -87,6 +87,7 @@ void    CompraController::copyFile()
         size_t posi;
         string linea;
         fstream archivoCompras;
+        vectorCompra.clear();
         archivoCompras.open("../data/compras.csv", ios::in);
         if (archivoCompras.is_open())
         {

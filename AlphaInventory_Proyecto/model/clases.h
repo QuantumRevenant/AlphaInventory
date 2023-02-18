@@ -66,7 +66,7 @@ private:
 
 public:
     Producto();
-    Producto(int, int, string, double, int, vector<Componente>&);
+    Producto(int, int, string, double, int, vector<Componente>);
     ~Producto();
 
     void setCodProducto(int);

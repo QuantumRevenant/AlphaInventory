@@ -502,7 +502,8 @@ void doCompra()
                         carrito.push_back(compraDTemp);
                         listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(compraDTemp.getMonto()));
                     }
-                }else
+                }
+                else
                 {
                     menuError({"Producto no encontrado"});
                 }
@@ -522,7 +523,7 @@ void doCompra()
             opt = 2;
             break;
         case 3:
-            for(CompraD x:carrito)
+            for (CompraD x : carrito)
                 montoTotal += x.getMonto();
             listado.push_back("TOTAL S/" + to_string(montoTotal));
             menuListado(listado, 0, "_VENTA_", true);
@@ -539,7 +540,7 @@ void doCompra()
                 int codProveedor = proveedorController.getCorrelativo();
                 Proveedor proveedorTemp(codProveedor, inputs[0], inputs[1]);
                 proveedorController.add(proveedorTemp);
-                for(CompraD x:carrito)
+                for (CompraD x : carrito)
                 {
                     compraDController.add(x);
                     Producto productoTemp;
@@ -554,7 +555,8 @@ void doCompra()
                 compraController.saveFile();
                 compraDController.saveFile();
                 productoController.saveFile();
-            }else
+            }
+            else
             {
                 montoTotal = 0;
                 listado.erase(listado.begin() + listado.size() - 1);
@@ -611,7 +613,8 @@ void doVenta()
                     VentaD ventaDTemp(codigoVenta, productoTemp.getCodProducto(), unidades, precio);
                     carrito.push_back(ventaDTemp);
                     listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(ventaDTemp.getMonto()));
-                } else
+                }
+                else
                 {
                     menuError({"Producto no encontrado"});
                 }
@@ -631,7 +634,7 @@ void doVenta()
             opt = 2;
             break;
         case 3:
-            for(VentaD x:carrito)
+            for (VentaD x : carrito)
                 montoTotal += x.getMonto();
             listado.push_back("TOTAL S/" + to_string(montoTotal));
             menuListado(listado, 0, "_VENTA_", true);
@@ -648,7 +651,7 @@ void doVenta()
                 int codCliente = clienteController.getCorrelativo();
                 Cliente clienteTemp(codCliente, inputs[0], inputs[1]);
                 clienteController.add(clienteTemp);
-                for(VentaD x:carrito)
+                for (VentaD x : carrito)
                 {
                     ventaDController.add(x);
                     Producto productoTemp;
@@ -664,7 +667,8 @@ void doVenta()
                 ventaDController.saveFile();
                 ventaController.saveFile();
                 productoController.saveFile();
-            }else
+            }
+            else
             {
                 montoTotal = 0;
                 listado.erase(listado.begin() + listado.size() - 1);
@@ -698,9 +702,10 @@ void doConsultarRegistro(int cod)
     if (registro.size() == 0)
     {
         menuError({"Aun no se hicieron ventas"});
-    } else
+    }
+    else
     {
-        for(Venta x:registro)
+        for (Venta x : registro)
             listaRegistro.push_back(to_string(x.getCodVenta()) + "\tS/" + to_string(x.getMonto()));
         do
         {
@@ -956,6 +961,7 @@ void doAddProducto()
             componentes.push_back(temp);
             i++;
         } while (menuConfirmar("Desea agregar un nuevo componente"));
+
         if (marcaController.getNewCodMarca() != 0)
         {
             opt = menu("AGREGAR MARCAS", optionsM);

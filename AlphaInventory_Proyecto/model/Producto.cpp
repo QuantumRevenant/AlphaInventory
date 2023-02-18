@@ -10,7 +10,7 @@
 #include "Marca.cpp"
 
 Producto::Producto() {}
-Producto::Producto(int codProducto, int codMarca, string nombre, double precioUnitario, int stock, vector<Componente> &VectorComponentes)
+Producto::Producto(int codProducto, int codMarca, string nombre, double precioUnitario, int stock, vector<Componente> vectorComponentes)
 {
     this->codProducto = codProducto;
     this->codMarca = codMarca;

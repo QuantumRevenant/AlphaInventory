@@ -70,6 +70,7 @@ void MarcaController::getFile()
         size_t posi;
         string linea;
         fstream archivoMarcas;
+        vectorMarca.clear();
         archivoMarcas.open("../data/marcas.csv", ios::in);
         if (archivoMarcas.is_open())
         {
