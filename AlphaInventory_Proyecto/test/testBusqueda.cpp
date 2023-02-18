@@ -10,8 +10,8 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
     vector<string> lista = _lista;
     vector<string> similares;
     vector<string> similares2;
-    string busqueda;
-    string busquedaString = "";
+    string busqueda = "";
+    string busquedaString;
     string busquedaLista;
     do
     {
@@ -26,50 +26,36 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
             centrarTexto(title, 0, true, true, 0, (-sizeY + e));
             e += 2 + separation;
         }
-        centrarTexto(">_" + busquedaString, 0, true, true, 0, (-sizeY + e));
+        centrarTexto(">_" + busqueda, 0, true, true, 0, (-sizeY + e));
         e += 2 + separation;
+        if (similares.size() == lista.size())
+            similares.clear();
         for (string x:similares)
         {
             centrarTexto("[" + to_string(j) + "] " + x, 0, true, true, 0, (-sizeY + e));
             j++;
             e += 1 + separation;
         }
-        gotoxy(150 + busquedaString.size(), 13);
+        gotoxy(150 + busqueda.size(), 13);
         opt = getch();
         switch (opt)
         {
             case '\b':
-                if (busquedaString.size() != 0)
+                if (busqueda.size() != 0)
                 {
                     busqueda.erase(busqueda.begin() + busqueda.size() - 1);
-                    busquedaString.erase(busquedaString.begin() + busquedaString.size() - 1);
-                    if (similares.size() == 0)
-                        for(int i = 0; i < lista.size(); i++)
-                        {
-                            busquedaLista = "";
-                            for (int k = 0; k < busqueda.size(); k++)
-                            {
-                                string h = aMinuscula(lista[i]);
-                                busquedaLista.push_back(h[k]);
-                            }
-                            if (busqueda == busquedaLista)
-                                similares.push_back(lista[i]);
-                        }
-                    else
+                    similares.clear();
+                    for(int i = 0; i < lista.size(); i++)
                     {
-                        for(int i = 0; i < similares.size(); i++)
+                        busquedaLista = "";
+                        busquedaString = aMinuscula(busqueda);
+                        for (int k = 0; k < busqueda.size(); k++)
                         {
-                            busquedaLista = "";
-                            for (int k = 0; k < busqueda.size(); k++)
-                            {
-                                string h = aMinuscula(similares[i]);
-                                busquedaLista.push_back(h[k]);
-                            }
-                            if (busqueda == busquedaLista)
-                                similares2.push_back(similares[i]);
+                            string h = aMinuscula(lista[i]);
+                            busquedaLista.push_back(h[k]);
                         }
-                        similares = similares2;
-                        similares2.clear();
+                        if (busquedaString == busquedaLista)
+                            similares.push_back(lista[i]);
                     }
                 }
                 break;
@@ -77,17 +63,17 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
                 if (isdigit(opt))
                     break;            
                 busqueda.push_back(opt);
-                busquedaString.push_back(opt);
                 if (similares.size() == 0)
                     for(int i = 0; i < lista.size(); i++)
                     {
                         busquedaLista = "";
+                        busquedaString = aMinuscula(busqueda);
                         for (int k = 0; k < busqueda.size(); k++)
                         {
                             string h = aMinuscula(lista[i]);
                             busquedaLista.push_back(h[k]);
                         }
-                        if (busqueda == busquedaLista)
+                        if (busquedaString == busquedaLista)
                             similares.push_back(lista[i]);
                     }
                 else
@@ -95,12 +81,13 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
                     for(int i = 0; i < similares.size(); i++)
                     {
                         busquedaLista = "";
+                        busquedaString = aMinuscula(busqueda);
                         for (int k = 0; k < busqueda.size(); k++)
                         {
                             string h = aMinuscula(similares[i]);
                             busquedaLista.push_back(h[k]);
                         }
-                        if (busqueda == busquedaLista)
+                        if (busquedaString == busquedaLista)
                             similares2.push_back(similares[i]);
                     }
                     similares = similares2;
