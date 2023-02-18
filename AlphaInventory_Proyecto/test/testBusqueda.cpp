@@ -28,14 +28,19 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
         }
         centrarTexto(">_" + busqueda, 0, true, true, 0, (-sizeY + e));
         e += 2 + separation;
-        if (similares.size() == lista.size())
-            similares.clear();
         for (string x:similares)
         {
-            centrarTexto("[" + to_string(j) + "] " + x, 0, true, true, 0, (-sizeY + e));
-            j++;
-            e += 1 + separation;
+            if (j <= 9)
+            {
+                while (x.size() < 15)
+                    x.push_back(' ');
+                centrarTexto("[" + to_string(j) + "] " + x, 0, true, true, 0, (-sizeY + e));
+                j++;
+                e += 1 + separation;
+            }
         }
+        centrarTexto("[0] Salir          ", 0, true, true, 0, (-sizeY + e));
+        e += 1 + separation;
         gotoxy(150 + busqueda.size(), 13);
         opt = getch();
         switch (opt)
@@ -60,8 +65,15 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
                 }
                 break;
             default:
+                if (opt == '0')
+                    break;
                 if (isdigit(opt))
-                    break;            
+                {
+                    if (similares.size() != 0)
+                        return similares[int(opt) - 49];
+                    else
+                        break;
+                }
                 busqueda.push_back(opt);
                 if (similares.size() == 0)
                     for(int i = 0; i < lista.size(); i++)
@@ -95,9 +107,8 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
                 }
                 break;
         }
-    } while(!isdigit(opt));
-
-    return similares[int(opt) - 49];
+    } while(opt != '0');
+    return "salir";
 }
 
 int main()
