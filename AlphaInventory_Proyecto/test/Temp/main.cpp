@@ -401,7 +401,7 @@ void registrarse(bool start)
     string nombre;
     string apellidos;
     string strInput;
-    int numDocumento;
+    long int numDocumento;
     string tipoUsuario;
     string tipoDocumento;
     string contrasena;

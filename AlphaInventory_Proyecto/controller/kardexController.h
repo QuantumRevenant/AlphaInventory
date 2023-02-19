@@ -13,13 +13,13 @@ using namespace std;
 
 */
 
-class kardexController
+class KardexController
 {
 private:
     vector<kardex> vectorKardex;
 
 public:
-    kardexController();
+    KardexController();
 
     void add(kardex);
     void modify(kardex, int);
@@ -33,18 +33,19 @@ public:
     bool validarFormatoFecha(string);
     vector<kardex> getMovimientosProducto(int);
     vector<kardex> getMovimientosComprobante(bool);
+    int getCantidadComprobanteVenta(bool);
     int getCantidadComprobante(bool);
     int getCantidadProducto(int);
 };
 
-kardexController::kardexController() { getFile(); }
+KardexController::KardexController() { getFile(); }
 
-void kardexController::add(kardex obj) { vectorKardex.push_back(obj); }
-void kardexController::modify(kardex obj, int pos) { vectorKardex[pos] = obj; }
-kardex kardexController::get(int pos) { return vectorKardex[pos]; }
-vector<kardex> kardexController::getVector() { return vectorKardex; }
+void KardexController::add(kardex obj) { vectorKardex.push_back(obj); }
+void KardexController::modify(kardex obj, int pos) { vectorKardex[pos] = obj; }
+kardex KardexController::get(int pos) { return vectorKardex[pos]; }
+vector<kardex> KardexController::getVector() { return vectorKardex; }
 
-void kardexController::saveFile()
+void KardexController::saveFile()
 {
     try
     {
@@ -61,7 +62,8 @@ void kardexController::saveFile()
                           << obj.getComprobante() << ","
                           << isSalida << ","
                           << obj.getMotivo() << ","
-                          << obj.getObservacion() << ",";
+                          << obj.getObservacion() << ","
+                          << obj.getMontoUnitario() << ",";
             archivoKardex << endl;
         }
         archivoKardex.close();
@@ -71,7 +73,7 @@ void kardexController::saveFile()
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
-void kardexController::saveFileAll()
+void KardexController::saveFileAll()
 {
     try
     {
@@ -89,7 +91,8 @@ void kardexController::saveFileAll()
                               << obj.getComprobante() << ","
                               << isSalida << ","
                               << obj.getMotivo() << ","
-                              << obj.getObservacion() << ",";
+                              << obj.getObservacion() << ","
+                              << obj.getMontoUnitario() << ",";
                 archivoKardex << endl;
             }
         }
@@ -100,7 +103,7 @@ void kardexController::saveFileAll()
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
-void kardexController::getFile()
+void KardexController::getFile()
 {
     int i;
     size_t posi; // Cantidad maxima
@@ -111,18 +114,19 @@ void kardexController::getFile()
     if (archivoKardex.is_open())
     {
         while (!archivoKardex.eof() && getline(archivoKardex, linea))
-        {
+        {   
+            temporal.clear();
             i = 0;
             while ((posi = linea.find(",")) != string::npos)
-            {                                              /*string::npos es -1, termina cuando llega a este punto*/
+            {                                        /*string::npos es -1, termina cuando llega a este punto*/
                 temporal.push_back(linea.substr(0, posi)); /*posi = Es la cantidad de caracteres antes del ;*/
-                linea.erase(0, posi + 1);                  // borra la palabra de la primera posici�n encontrada   y con el +1 incluye hasta el ; y luego borra ese elemento, para que en la siguiente iteracion iniciar con la siguiente palabra y de ese modo seguir el proceso ,
+                linea.erase(0, posi + 1);            // borra la palabra de la primera posici�n encontrada   y con el +1 incluye hasta el ; y luego borra ese elemento, para que en la siguiente iteracion iniciar con la siguiente palabra y de ese modo seguir el proceso ,
                 i++;
             }
             // Asignando los valores al vector
 
             bool isSalida = (temporal[5] == "true");
-            kardex objKardex(temporal[0], stoi(temporal[1]), stoi(temporal[2]), temporal[3], temporal[4], isSalida, temporal[6], temporal[7]);
+            kardex objKardex(temporal[0], stoi(temporal[1]), stoi(temporal[2]),stoi(temporal[8]), temporal[3], temporal[4], isSalida, temporal[6], temporal[7]);
             cout << "Movimiento " << temporal[0] << " cargado..." << endl;
             Sleep(1);
             add(objKardex);
@@ -131,7 +135,7 @@ void kardexController::getFile()
     archivoKardex.close();
 }
 
-bool kardexController::validarFormatoFecha(string entrada)
+bool KardexController::validarFormatoFecha(string entrada)
 {
     size_t posi;
     int i = 0;
@@ -141,7 +145,7 @@ bool kardexController::validarFormatoFecha(string entrada)
 
     entrada.push_back('/');
     while ((posi = entrada.find("/")) != string::npos)
-    {                                              /*string::npos es -1, termina cuando llega a este punto*/
+    {                                                /*string::npos es -1, termina cuando llega a este punto*/
         temporal.push_back(entrada.substr(0, posi)); /*posi = Es la cantidad de caracteres antes del ;*/
         entrada.erase(0, posi + 1);                  // borra la palabra de la primera posici�n encontrada   y con el +1 incluye hasta el ; y luego borra ese elemento, para que en la siguiente iteracion iniciar con la siguiente palabra y de ese modo seguir el proceso ,
         i++;
@@ -169,52 +173,73 @@ bool kardexController::validarFormatoFecha(string entrada)
     }
     return true;
 }
-vector<kardex> kardexController::getMovimientosProducto(int cod)
+vector<kardex> KardexController::getMovimientosProducto(int cod)
 {
     vector<kardex> salida;
-    for(kardex x:vectorKardex)
+    for (kardex x : vectorKardex)
     {
-        if(x.getCodProducto()==cod)
+        cout<<x.getCantidad()<<endl;
+        if (x.getCodProducto() == cod)
+            salida.push_back(x);
+    }
+    system("pause");
+    return salida;
+}
+vector<kardex> KardexController::getMovimientosComprobante(bool isVenta)
+{
+    vector<kardex> salida;
+    string iniciales = isVenta ? "VT" : "CP";
+    for (kardex x : vectorKardex)
+    {
+        if (x.getCodProceso().substr(0, 2) == iniciales)
             salida.push_back(x);
     }
     return salida;
 }
-vector<kardex> kardexController::getMovimientosComprobante(bool isVenta)
+int KardexController::getCantidadComprobanteVenta(bool isBoleta)
 {
-    vector<kardex> salida;
-    string iniciales=isVenta?"VT":"CP";
-    for(kardex x:vectorKardex)
+    vector<kardex> salida,entrada;
+    string iniciales = isBoleta ? "BV" : "FV";
+    entrada=getMovimientosComprobante(true);
+    for (kardex x : entrada)
     {
-        if(x.getCodProceso().substr(0,2)==iniciales)
+        if (x.getComprobante().substr(0, 2) == iniciales)
             salida.push_back(x);
     }
-    return salida;
+    return salida.size();
 }
-int kardexController::getCantidadComprobante(bool isVenta)
+int KardexController::getCantidadComprobante(bool isVenta)
 {
     vector<kardex> comprobantes;
-    comprobantes=getMovimientosComprobante(isVenta);
+    comprobantes = getMovimientosComprobante(isVenta);
     return comprobantes.size();
 }
-int kardexController::getCantidadProducto(int cod)
+int KardexController::getCantidadProducto(int cod)
 {
     int salida;
-    vector<int> aSumar,aRestar;
+    vector<int> aSumar, aRestar;
     vector<kardex> movimientos;
-    movimientos=getMovimientosProducto(cod);
-    for(kardex x:movimientos)
+    movimientos = getMovimientosProducto(cod);
+    for (kardex x : movimientos)
     {
-        if(x.getIsSalida())
+        if (x.getIsSalida())
             aRestar.push_back(x.getCantidad());
         else
             aSumar.push_back(x.getCantidad());
     }
 
-    for(int x:aSumar)
-        salida+=x;
-    for(int x:aRestar)
-        salida-=x;
-    
+    for (int x : aSumar)
+    {
+        cout<<x<<endl;
+        salida += x;
+    }
+    for (int x : aRestar)
+    {
+        cout<<x<<endl;
+        salida -= x;
+    }
+    cout<<salida<<endl;
+    system("pause");
     return salida;
 }
 

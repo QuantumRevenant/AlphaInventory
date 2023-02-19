@@ -83,8 +83,8 @@ void ProductoController::saveFile()
 }
 void ProductoController::getFile()
 {
-    // try
-    // {
+    try
+    {
         int i;
         int j;
         size_t posi;
@@ -122,10 +122,10 @@ void ProductoController::getFile()
             }
             archivoProductos.close();
         }
-    // }
-    // catch (exception e)
-    // {
-    //     cout << "Ocurrio un error al leer el archivo";
-    // }
+    }
+    catch (exception e)
+    {
+        cout << "Ocurrio un error al leer el archivo";
+    }
 }
 #endif // PRODUCTOCONTROLLER_H

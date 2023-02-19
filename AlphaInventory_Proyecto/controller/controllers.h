@@ -14,5 +14,6 @@
 #include "proveedorController.h"
 #include "compraDController.h"
 #include "compraDController.h"
+#include "KardexController.h"
 
 #endif

@@ -19,7 +19,7 @@ private:
     string nombre;
     string apellidos;
     string tipoDocumento;
-    int numDocumento;
+    long int numDocumento;
     string contrasena;
     string tipoUsuario;
 

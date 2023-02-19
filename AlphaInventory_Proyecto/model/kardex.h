@@ -15,6 +15,7 @@ class kardex
 private:
     string fechaDeEmision;
     int cantidad;
+    double montoUnitario;
     int codProducto;
     string codProceso;
     string comprobante;
@@ -25,11 +26,12 @@ private:
 
 public:
     kardex();
-    kardex(string, int, int, string, string, bool, string, string);
+    kardex(string, int, int,double, string, string, bool, string, string);
     ~kardex();
 
     string  getFechaDeEmision();
     int     getCantidad();
+    double     getMontoUnitario();
     int     getCodProducto();
     string  getCodProceso();
     string  getComprobante();
@@ -39,6 +41,7 @@ public:
 
     void    setFechaDeEmision(string);
     void    setCantidad(int);
+    void    setMontoUnitario(double);
     void    setCodProducto(int);
     void    setCodProceso(string);
     void    setComprobante(string);

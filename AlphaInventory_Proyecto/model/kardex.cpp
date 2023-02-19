@@ -13,10 +13,11 @@ kardex::kardex()
 {
 }
 
-kardex::kardex(string _fechaDeEmision, int _cantidad, int _codProducto, string _codProceso, string _comprobante, bool _isSalida, string _motivo, string _observacion)
+kardex::kardex(string _fechaDeEmision, int _cantidad, int _codProducto, double _montoUnitario, string _codProceso, string _comprobante, bool _isSalida, string _motivo, string _observacion)
 {
     fechaDeEmision = _fechaDeEmision;
     cantidad = _cantidad;
+    montoUnitario=_montoUnitario;
     codProducto = _codProducto;
     codProceso = _codProceso;
     comprobante = _comprobante;
@@ -31,6 +32,7 @@ kardex::~kardex()
 
 string kardex::getFechaDeEmision() { return fechaDeEmision; }
 int kardex::getCantidad() { return cantidad; }
+double kardex::getMontoUnitario() { return montoUnitario; }
 int kardex::getCodProducto() { return codProducto; }
 string kardex::getCodProceso() { return codProceso; }
 string kardex::getComprobante() { return comprobante; }
@@ -40,6 +42,7 @@ string kardex::getObservacion() { return observacion; }
 
 void kardex::setFechaDeEmision(string _fechaDeEmision) { fechaDeEmision = _fechaDeEmision; }
 void kardex::setCantidad(int _cantidad) { cantidad = _cantidad; }
+void kardex::setMontoUnitario(double _montoUnitario){montoUnitario=_montoUnitario;}
 void kardex::setCodProducto(int _codProducto) { codProducto = _codProducto; }
 void kardex::setCodProceso(string _codProceso) { codProceso = _codProceso; }
 void kardex::setComprobante(string _comprobante) { comprobante = _comprobante; }

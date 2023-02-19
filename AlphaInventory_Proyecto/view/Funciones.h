@@ -23,6 +23,7 @@ VentaController     ventaController;
 VentaDController    ventaDController;
 
 CajaController      cajaController;
+KardexController    kardexController;
 
 ClienteController   clienteController;
 ProveedorController proveedorController;
