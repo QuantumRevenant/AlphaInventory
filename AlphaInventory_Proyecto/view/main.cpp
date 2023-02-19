@@ -698,62 +698,154 @@ void doCompra()
 void doVenta()
 {
     int opt;
-    string busqueda;
-    double montoTotal = 0;
     vector<string> inputs;
-    vector<VentaD> carrito;
     vector<string> listado;
-    if (productoController.getNewCodProducto())
+
+    long long int clienteDNI;
+    int codProducto;
+    int cantProducto;
+    double montoProducto;
+    string comprobante;
+    string fecha;
+    string observacion = "-";
+
+    int cantComprobantes = kardexController.getCantidadComprobante(true);
+
+    vector<CompraD> carrito;
+    vector<kardex> kardexCarrito;
+    CompraD tempCompraD;
+    kardex tempKardex;
+
+    menuListado({"Inicializando Venta..."}, 0, "Venta #" + to_string(ventaController.size() + 1), false);
+    Sleep(1000);
+
+    cout << "here" << endl;
+    // FECHA
+    if (menuConfirmar("Desea usar la fecha de hoy para registrar la Venta"))
     {
-        menuError({"~NO TENEMOS PRODUCTOS REGISTRADOS~"});
-        return;
+        cin.ignore();
+        fecha = currentDateTime().substr(0, currentDateTime().find(' '));
     }
+    else
+    {
+        cin.ignore();
+        do
+        {
+            cout << kardexController.validarFormatoFecha(inputs[0]);
+            system("pause");
+            inputs.clear();
+            menuDatos({"Fecha"}, inputs, 0, 0, "'Salir' para cancelar");
+        } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
+        if (aMinuscula(inputs[0]) == "salir")
+            return;
+        fecha = inputs[0];
+    }
+
+    inputs.clear();
+    // DNI
     do
     {
-        int codigoVenta = ventaController.getCorrelativo();
-        opt = menu("_Venta_", {"Agregar producto", "Eliminar Producto", "Finalizar Venta"});
+        inputs.clear();
+        menuDatos({"DNI"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
+        if (!esNumero(inputs[0]))
+            menuError({"Introduzca un valor numerico"});
+        if (inputs[0].size() != 8)
+            menuError({"El DNI tiene 8 Dígitos"});
+    } while (!esNumero(inputs[0]) || inputs[0].size() != 8 || aMinuscula(inputs[0]) == "salir");
+
+    if (aMinuscula(inputs[0]) == "salir")
+        return;
+
+    clienteDNI = stoll(inputs[0]);
+    inputs.clear();
+    // COMPROBANTE VENTA PRODUCTO
+
+    cin.ignore();
+    inputs.clear();
+    opt = menu("Comprobante Venta #" + to_string(ventaController.size() + 1), {"Boleta", "Factura"});
+    switch (opt)
+    {
+    case 1:
+        comprobante = createCode("BV", kardexController.getCantidadComprobanteVenta(true));
+        break;
+    case 2:
+        comprobante = createCode("FV", kardexController.getCantidadComprobanteVenta(false));
+        break;
+    default:
+        return;
+        break;
+    }
+
+    do
+    {
+        opt = menu("_Carrito de Venta_ #" + to_string(ventaController.size() + 1), {"Agregar producto", "Eliminar Producto", "Mirar Carrito de Compra", "Finalizar Compra"});
         switch (opt)
         {
         case 1:
+            // CODIGO PRODUCTO
             do
             {
-                Producto productoTemp;
-                int unidades;
-                double precio;
-                double monto;
                 inputs.clear();
-                cin.ignore();
-                menuDatos({"Codigo de Producto"}, inputs, 0, 0, "BUSQUEDA");
-                if (productoController.codigoRegistrado(stoi(inputs[0])))
-                {
-                    productoTemp = productoController.get(stoi(inputs[0]));
-                    do
-                    {
-                        inputs.clear();
-                        cin.ignore();
-                        menuDatos({"Unidades por adquirir"}, inputs, 0, 0, aMayuscula(productoTemp.getNombre()));
-                        unidades = stoi(inputs[0]);
-                        if (unidades > productoTemp.getStock())
-                            menuError({"Solo hay " + to_string(productoTemp.getStock()) + " unidades en stock"});
-                    } while (unidades > productoTemp.getStock());
-                    if (unidades == 0)
-                        break;
-                    precio = productoTemp.getPrecioUnitario();
-                    VentaD ventaDTemp(codigoVenta, productoTemp.getCodProducto(), unidades, precio);
-                    carrito.push_back(ventaDTemp);
-                    listado.push_back(to_string(productoTemp.getCodProducto()) + "|" + productoTemp.getNombre() + "|" + to_string(precio) + "|" + to_string(unidades) + "|" + to_string(ventaDTemp.getMonto()));
-                }
-                else
-                {
-                    menuError({"Producto no encontrado"});
-                }
-            } while (menuConfirmar("Desea agregar otro producto"));
-            opt = 1;
+                menuDatos({"Producto"}, inputs, 0, 0, "Producto Venta #" + to_string(ventaController.size() + 1)); // Producto
+                if (!esNumero(inputs[0]))
+                    menuError({"Introduzca un valor numerico"});
+                if (stoi(inputs[0]) >= productoController.getNewCodProducto())
+                    menuError({"Producto no registrado"});
+            } while (!esNumero(inputs[0]) || stoi(inputs[0]) >= productoController.getNewCodProducto() || aMinuscula(inputs[0]) == "salir");
+
+            if (aMinuscula(inputs[0]) == "salir")
+                break;
+
+            codProducto = stoi(inputs[0]);
+            inputs.clear();
+
+            // CANTIDAD PRODUCTO
+            do
+            {
+                inputs.clear();
+                menuDatos({"Cantidad"}, inputs, 0, 0, "Producto Venta #" + to_string(ventaController.size() + 1)); // Producto
+                if (!esNumero(inputs[0]))
+                    menuError({"Introduzca un valor numerico"});
+                if (inputs[0].size() < 0)
+                    menuError({"Cantidad Invalida"});
+            } while (!esNumero(inputs[0]) || inputs[0].size() < 0 || aMinuscula(inputs[0]) == "salir");
+
+            if (aMinuscula(inputs[0]) == "salir")
+                return;
+
+            cantProducto = stoi(inputs[0]);
+            inputs.clear();
+
+            // // PRECIO COMPRA PRODUCTO
+            // do
+            // {
+            //     inputs.clear();
+            //     menuDatos({"Costo Unitario"}, inputs, 0, 0, "Producto Compra #" + to_string(compraController.size() + 1)); // Producto
+            //     if (!esNumero(inputs[0]))
+            //         menuError({"Introduzca un valor numerico"});
+            //     if (inputs[0].size() < 0)
+            //         menuError({"Cantidad Invalida"});
+            // } while (!esNumero(inputs[0]) || inputs[0].size() < 0 || aMinuscula(inputs[0]) == "salir");
+
+            // if (aMinuscula(inputs[0]) == "salir")
+            //     return;
+
+            // montoProducto = stoi(inputs[0]);
+            // inputs.clear();
+
+            tempCompraD.setCodCompra(compraController.size());
+            tempCompraD.setCodProducto(codProducto);
+            tempCompraD.setCantidad(cantProducto);
+            tempCompraD.setPrecio(productoController.get(codProducto).getPrecioUnitario());
+            carrito.push_back(tempCompraD);
             break;
         case 2:
             do
             {
-                opt = menu("ELIMINAR PRODUCTO", listado);
+                listado.clear();
+                for (CompraD x : carrito)
+                    listado.push_back(productoController.get(x.getCodProducto()).getNombre());
+                opt = menu("Suprimir Productos Venta #" + to_string(ventaController.size() + 1), listado);
                 if (opt != 0 && opt != -1)
                 {
                     carrito.erase(carrito.begin() + opt - 1);
@@ -762,52 +854,46 @@ void doVenta()
             } while (opt != 0);
             opt = 2;
             break;
+
         case 3:
-            for (VentaD x : carrito)
-                montoTotal += x.getMonto();
-            listado.push_back("TOTAL S/" + to_string(montoTotal));
-            menuListado(listado, 0, "_VENTA_", true);
-            if (menuConfirmar("Registrar venta"))
+            listado.clear();
+            for (CompraD x : carrito)
+                listado.push_back(productoController.get(x.getCodProducto()).getNombre());
+            menuListado(listado, 0, "Venta #" + to_string(ventaController.size() + 1));
+            break;
+
+        case 4:
+            listado.clear();
+            for (CompraD x : carrito)
+                listado.push_back(productoController.get(x.getCodProducto()).getNombre());
+            menuListado(listado, 0, "Venta #" + to_string(ventaController.size() + 1));
+            if (menuConfirmar("Desea agregar una observacion a esta Venta"))
             {
-                do
-                {
-                    inputs.clear();
-                    cin.ignore();
-                    menuDatos({"Nombre de Cliente", "DNI"}, inputs, 0, 0, "_DATOS DEL CLIENTE_");
-                    if (inputs[1].size() != 8)
-                        menuError({"El DNI de contener 8 caracteres"});
-                } while (inputs[1].size() != 8);
-                int codCliente = clienteController.getCorrelativo();
-                Cliente clienteTemp(codCliente, inputs[0], inputs[1]);
-                clienteController.add(clienteTemp);
-                for (VentaD x : carrito)
-                {
-                    ventaDController.add(x);
-                    Producto productoTemp;
-                    productoTemp = productoController.get(x.getCodProducto());
-                    productoTemp.modifyStock(productoTemp.getStock() - x.getCantidad());
-                    productoController.modify(productoTemp, x.getCodProducto());
-                }
-                int codUsuario = progController.getSesionKey();
-                cajaController.modifySaldo(montoTotal, true);
-                Venta venta(codigoVenta, codCliente, codUsuario, montoTotal, true);
-                ventaController.add(venta);
-                clienteController.saveFile();
-                ventaDController.saveFile();
-                ventaController.saveFile();
-                productoController.saveFile();
+                cin.ignore();
+                menuDatos({""}, inputs, 0, 0, "Observacion Venta #" + to_string(ventaController.size() + 1));
+                observacion = inputs[0];
             }
-            else
+
+            for (CompraD x : carrito)
             {
-                montoTotal = 0;
-                listado.erase(listado.begin() + listado.size() - 1);
+                tempKardex.setCantidad(x.getCantidad());
+                tempKardex.setMontoUnitario(x.getPrecio());
+                tempKardex.setCodProducto(x.getCodProducto());
+                tempKardex.setCodProceso(createCode("VT", compraController.size(), 5));
+                tempKardex.setComprobante(comprobante);
+                tempKardex.setFechaDeEmision(fecha);
+                tempKardex.setIsSalida(true);
+                tempKardex.setMontoUnitario(x.getPrecio());
+                tempKardex.setMotivo("~~Venta " + to_string(cantComprobantes) + "~~");
+                tempKardex.setObservacion(observacion);
+                kardexController.add(tempKardex);
+                kardexController.saveFile();
             }
+            opt = 0;
             break;
         case 0:
-            if (!menuConfirmar("Seguro que desea cancelar la venta"))
+            if (!menuConfirmar("Seguro que desea cancelar la Venta"))
                 opt = -1;
-            else
-                menuMain();
             break;
         default:
             break;
