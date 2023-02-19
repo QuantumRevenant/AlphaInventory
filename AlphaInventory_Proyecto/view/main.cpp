@@ -678,10 +678,10 @@ void doCompra()
                 tempKardex.setMotivo("~~Compra " + to_string(cantComprobantes) + "~~");
                 tempKardex.setObservacion(observacion);
                 kardexController.add(tempKardex);
-                kardexController.saveFile();
                 compraDController.add(x);
-                compraController.saveFile();
             }
+            kardexController.saveFile();
+            compraDController.saveFile();
             opt = 0;
             break;
         case 0:
@@ -913,10 +913,10 @@ void doVenta()
                 tempKardex.setMotivo("~~Venta " + to_string(cantComprobantes) + "~~");
                 tempKardex.setObservacion(observacion);
                 kardexController.add(tempKardex);
-                kardexController.saveFile();
                 ventaDController.add(x);
-                ventaDController.saveFile();
             }
+            kardexController.saveFile();
+            ventaDController.saveFile();
             opt = 0;
             break;
         case 0:
@@ -1239,26 +1239,38 @@ void doBuscarRegistro()
 
 void askInventario()
 {
-    int opt;
-    vector<string> productos;
-    for (int i = 0; i < productoController.getNewCodProducto(); i++)
-        productos.push_back(productoController.get(i).getNombre() + "\t\t" + to_string(productoController.get(i).getStock()));
-    if (productos.size() != 0)
+    int cod;
+    string producto;
+    vector<string> listaProductos;
+    for (int i = 0; i < productoController.size(); i++)
+        listaProductos.push_back(productoController.get(i).getNombre());
+
+    if (listaProductos.size() != 0)
     {
         do
         {
-            opt = menu("PRODUCTOS", productos);
-            if (opt != 0)
+            producto = menuBusqueda(listaProductos, 0, "_Buscar productos_");
+            if (producto != "salir")
             {
+                for (int i = 0; i < productoController.size(); i++)
+                    if (productoController.get(i).getNombre() == producto)
+                        cod = productoController.get(i).getCodProducto();
+                int j = 1;
                 Producto temp;
-                temp = productoController.get(opt - 1);
-                vector<string> listado{to_string(temp.getCodProducto()), marcaController.get(temp.getCodMarca()).getNombreMarca(),
-                                       temp.getNombre(), to_string(temp.getPrecioUnitario()), to_string(temp.getStock())};
+                temp = productoController.get(cod);
+                vector<string> listado{ "Codigo de producto: " + to_string(temp.getCodProducto()),
+                                        "Marca: " + marcaController.get(temp.getCodMarca()).getNombreMarca(),
+                                        "Nombre: " + temp.getNombre(),
+                                        "Precio unitario: S/" + to_string(temp.getPrecioUnitario()),
+                                        "Unidades disponibles: " + to_string(temp.getStock())};
                 for (Componente x : temp.getVectorComponentes())
-                    listado.push_back(x.getNombre() + "\t" + x.getCantidad());
+                {
+                    listado.push_back("Componente[" + to_string(j) + "]: " +x.getNombre() + "\t" + x.getCantidad());
+                    j++;
+                }
                 menuListado(listado, 0, aMayuscula(temp.getNombre()), true);
             }
-        } while (opt != 0);
+        } while (producto != "salir");
     }
     else
     {
@@ -1282,40 +1294,68 @@ void changeDataInventario()
             return;
     }
 
+    string producto;
+    vector<string> listaProductos;
+    for (int i = 0; i < productoController.size(); i++)
+        listaProductos.push_back(productoController.get(i).getNombre());
     do
     {
-        salida = true;
-        do
+        opt = menu("_Busqueda de Producto_", {"Por codigo", "Por nombre"});
+        switch (opt)
         {
-            menuDatos({"Codigo Producto"}, inputs, 0, 0, "Cambiar Datos Producto -\"Salir\" para Salir");
-
-            if (aMinuscula(inputs[0]) == "salir")
-                break;
-            if (!esNumero(inputs[0]))
+        case 1:
+            do
             {
-                menuError({"Introduce un valor numérico"});
-                inputs[0] = "-1";
-            }
-            else if (stoi(inputs[0]) < 0 || stoi(inputs[0]) >= productoController.getNewCodProducto())
-                menuError({"Codigo Fuera de Rango"});
+                salida = true;
+                do
+                {
+                    menuDatos({"Codigo Producto"}, inputs, 0, 0, "Cambiar Datos Producto -\"Salir\" para Salir");
 
-        } while ((stoi(inputs[0]) < 0 || stoi(inputs[0]) >= productoController.getNewCodProducto()) && aMinuscula(inputs[0]) != "salir");
+                    if (aMinuscula(inputs[0]) == "salir")
+                        break;
+                    if (!esNumero(inputs[0]))
+                    {
+                        menuError({"Introduce un valor numérico"});
+                        inputs[0] = "-1";
+                    }
+                    else if (stoi(inputs[0]) < 0 || stoi(inputs[0]) >= productoController.getNewCodProducto())
+                        menuError({"Codigo Fuera de Rango"});
 
-        if (aMinuscula(inputs[0]) == "salir")
-            return;
-        if (!menuConfirmar("El producto consultado es " + productoController.get(stoi(inputs[0])).getNombre()))
-        {
-            if (!menuConfirmar("Desea continuar con el proceso"))
-                return;
-            else
+                } while ((stoi(inputs[0]) < 0 || stoi(inputs[0]) >= productoController.getNewCodProducto()) && aMinuscula(inputs[0]) != "salir");
+
+                if (aMinuscula(inputs[0]) == "salir")
+                    return;
+                if (!menuConfirmar("El producto consultado es " + productoController.get(stoi(inputs[0])).getNombre()))
+                {
+                    if (!menuConfirmar("Desea continuar con el proceso"))
+                        return;
+                    else
+                    {
+                        salida = false;
+                    }
+                }
+            } while (!salida);
+            codigo = stoi(inputs[0]);
+            break;
+        case 2:
+            producto = menuBusqueda(listaProductos, 0, "_Buscar productos_");
+            if (producto != "salir")
             {
-                salida = false;
-                ;
+                for (int i = 0; i < productoController.size(); i++)
+                    if (productoController.get(i).getNombre() == producto)
+                    {
+                        codigo = productoController.get(i).getCodProducto();
+                        break;
+                    }
             }
+            break;
+        default:
+            break;
         }
-    } while (!salida);
+    } while (opt != 1 && opt != 2 && opt != 0);
+    if (opt == 0)
+        return;
 
-    codigo = stoi(inputs[0]);
     Producto prodTemporal = productoController.get(codigo);
 
     if (productoController.getNewCodProducto() != 0)
