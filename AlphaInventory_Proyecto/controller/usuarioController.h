@@ -137,7 +137,7 @@ void usuarioController::archGrabarDatos()
     try
     {
         fstream archivoUsuarios;
-        archivoUsuarios.open("../data/usuarios.csv", ios::out);
+        archivoUsuarios.open("../data/usuarios.bin", ios::out|ios::binary);
         if (archivoUsuarios.is_open())
         {
             for (Usuario obj : vectorUsuario)
@@ -158,16 +158,18 @@ void usuarioController::archGrabarDatos()
 
 void usuarioController::archRecuperarDatos()
 {
+    vectorUsuario.clear();
     int i;
     size_t posi; // Cantidad maxima
     string linea;
     vector<string> temporal; // Cantidad de columnas
     fstream archivoUsuarios;
-    archivoUsuarios.open("../data/usuarios.csv", ios::in);
+    archivoUsuarios.open("../data/usuarios.bin", ios::in|ios::binary);
     if (archivoUsuarios.is_open())
     {
         while (!archivoUsuarios.eof() && getline(archivoUsuarios, linea))
         {
+            temporal.clear();
             i = 0;
             while ((posi = linea.find(",")) != string::npos)
             {                                        /*string::npos es -1, termina cuando llega a este punto*/

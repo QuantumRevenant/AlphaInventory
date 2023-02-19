@@ -33,8 +33,11 @@ public:
     bool validarFormatoFecha(string);
     vector<kardex> getMovimientosProducto(int);
     vector<kardex> getMovimientosComprobante(bool, bool);
+
+    vector<kardex> getMovimientosProducto(int, bool);
+
     int getCantidadComprobanteVenta(bool);
-    int getCantidadComprobante(bool,bool);
+    int getCantidadComprobante(bool, bool);
     int getCantidadProducto(int);
 };
 
@@ -185,10 +188,24 @@ vector<kardex> KardexController::getMovimientosProducto(int cod)
     system("pause");
     return salida;
 }
+vector<kardex> KardexController::getMovimientosProducto(int cod,bool isSalida)
+{
+    vector<kardex> salida;
+    vector<kardex> movimientos;
+    movimientos = getMovimientosProducto(cod);
+    for (kardex x : movimientos)
+    {
+        if (x.getIsSalida()==isSalida)
+            salida.push_back(x);
+    }
+
+}
+
 vector<kardex> KardexController::getMovimientosComprobante(bool isVenta, bool isMovimiento = false)
 {
     vector<kardex> salida;
-    string iniciales = isMovimiento ? "MT" : isVenta ? "VT" : "CP";
+    string iniciales = isMovimiento ? "MT" : isVenta ? "VT"
+                                                     : "CP";
     for (kardex x : vectorKardex)
     {
         if (x.getCodProceso().substr(0, 2) == iniciales)

@@ -472,6 +472,7 @@ void doCompra()
     int codProducto;
     int cantProducto;
     double montoProducto;
+    double montoTotal;
     string comprobante;
     string fecha;
     string observacion = "-";
@@ -480,6 +481,7 @@ void doCompra()
 
     vector<CompraD> carrito;
     vector<kardex> kardexCarrito;
+    Compra tempCompra;
     CompraD tempCompraD;
     kardex tempKardex;
 
@@ -664,7 +666,7 @@ void doCompra()
                 menuDatos({""}, inputs, 0, 0, "Observacion Compra #" + to_string(compraController.size() + 1));
                 observacion = inputs[0];
             }
-
+            montoTotal=0;
             for (CompraD x : carrito)
             {
                 tempKardex.setCantidad(x.getCantidad());
@@ -679,9 +681,17 @@ void doCompra()
                 tempKardex.setObservacion(observacion);
                 kardexController.add(tempKardex);
                 compraDController.add(x);
+                kardexController.saveFile();
+                compraDController.saveFile();
+                montoTotal+=(x.getPrecio()*x.getCantidad());
             }
-            kardexController.saveFile();
-            compraDController.saveFile();
+            tempCompra.setCodCompra(compraController.size());
+            tempCompra.setCodProveedor(proveedorController.getPosRUC(proveedorRUC));
+            tempCompra.setCodUsuario(progController.getSesionKey());
+            tempCompra.setMonto(montoTotal);
+            tempCompra.setEstado(true);
+            compraController.add(tempCompra);
+            compraController.saveFile();
             opt = 0;
             break;
         case 0:
@@ -704,6 +714,7 @@ void doVenta()
     int codProducto;
     int cantProducto;
     double montoProducto;
+    double montoTotal;
     string comprobante;
     string fecha;
     string observacion = "-";
@@ -712,6 +723,7 @@ void doVenta()
 
     vector<VentaD> carrito;
     vector<kardex> kardexCarrito;
+    Venta tempVenta;
     VentaD tempVentaD;
     kardex tempKardex;
 
@@ -914,9 +926,17 @@ void doVenta()
                 tempKardex.setObservacion(observacion);
                 kardexController.add(tempKardex);
                 ventaDController.add(x);
+                kardexController.saveFile();
+                ventaDController.saveFile();
+                montoTotal+=(x.getPrecio()*x.getCantidad());
             }
-            kardexController.saveFile();
-            ventaDController.saveFile();
+            tempVenta.setCodVenta(ventaController.size());
+            tempVenta.setCodCliente(clienteController.getPosDoc(clienteDNI));
+            tempVenta.setCodUsuario(progController.getSesionKey());
+            tempVenta.setMonto(montoTotal);
+            tempVenta.setEstado(true);
+            ventaController.add(tempVenta);
+            ventaController.saveFile();
             opt = 0;
             break;
         case 0:
@@ -1258,14 +1278,14 @@ void askInventario()
                 int j = 1;
                 Producto temp;
                 temp = productoController.get(cod);
-                vector<string> listado{ "Codigo de producto: " + to_string(temp.getCodProducto()),
-                                        "Marca: " + marcaController.get(temp.getCodMarca()).getNombreMarca(),
-                                        "Nombre: " + temp.getNombre(),
-                                        "Precio unitario: S/" + to_string(temp.getPrecioUnitario()),
-                                        "Unidades disponibles: " + to_string(temp.getStock())};
+                vector<string> listado{"Codigo de producto: " + to_string(temp.getCodProducto()),
+                                       "Marca: " + marcaController.get(temp.getCodMarca()).getNombreMarca(),
+                                       "Nombre: " + temp.getNombre(),
+                                       "Precio unitario: S/" + to_string(temp.getPrecioUnitario()),
+                                       "Unidades disponibles: " + to_string(temp.getStock())};
                 for (Componente x : temp.getVectorComponentes())
                 {
-                    listado.push_back("Componente[" + to_string(j) + "]: " +x.getNombre() + "\t" + x.getCantidad());
+                    listado.push_back("Componente[" + to_string(j) + "]: " + x.getNombre() + "\t" + x.getCantidad());
                     j++;
                 }
                 menuListado(listado, 0, aMayuscula(temp.getNombre()), true);

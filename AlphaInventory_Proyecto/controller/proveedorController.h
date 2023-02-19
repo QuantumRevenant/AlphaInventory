@@ -13,39 +13,40 @@ private:
 
 public:
     ProveedorController();
-    int     getCorrelativo();
-    void    add(Proveedor);
-    void    modify(Proveedor, int);
-    int     size();
+    int getCorrelativo();
+    void add(Proveedor);
+    void modify(Proveedor, int);
+    int size();
     Proveedor get(int);
-    void    saveFile();
-    void    copyFile();
+    int getPosRUC(long long int);
+    void saveFile();
+    void copyFile();
 };
 
 ProveedorController::ProveedorController()
 {
     copyFile();
 }
-int     ProveedorController::getCorrelativo()
+int ProveedorController::getCorrelativo()
 {
-	if(size()==0)		
-	{
-		return 1;	
-	}
-	else
-	{
-		return vectorProveedor[size() - 1].getCodProveedor() + 1;
-	}
+    if (size() == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return vectorProveedor[size() - 1].getCodProveedor() + 1;
+    }
 }
-void    ProveedorController::add(Proveedor obj)
+void ProveedorController::add(Proveedor obj)
 {
     vectorProveedor.push_back(obj);
 }
-void    ProveedorController::modify(Proveedor temp, int obj)
+void ProveedorController::modify(Proveedor temp, int obj)
 {
     vectorProveedor[obj] = temp;
 }
-int     ProveedorController::size()
+int ProveedorController::size()
 {
     return vectorProveedor.size();
 }
@@ -53,7 +54,16 @@ Proveedor ProveedorController::get(int pos)
 {
     return vectorProveedor[pos];
 }
-void    ProveedorController::saveFile()
+int ProveedorController::getPosRUC(long long int RUC)
+{
+    for (Proveedor x : vectorProveedor)
+    {
+        if(x.getDocumento()==RUC)
+            return x.getCodProveedor();
+    }
+    return -1;
+}
+void ProveedorController::saveFile()
 {
     try
     {
@@ -62,21 +72,21 @@ void    ProveedorController::saveFile()
         if (archivoProveedores.is_open())
         {
             Proveedor obj = vectorProveedor.back();
-                archivoProveedores << obj.getCodProveedor() << ","
-                                   << obj.getNombre() << ","
-                                   << obj.getTipoDocumento() << ","
-                                   << obj.getDocumento() << ",";
-                archivoProveedores << endl;
-            
+            archivoProveedores << obj.getCodProveedor() << ","
+                               << obj.getNombre() << ","
+                               << obj.getTipoDocumento() << ","
+                               << obj.getDocumento() << ",";
+            archivoProveedores << endl;
+
             archivoProveedores.close();
         }
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
-void    ProveedorController::copyFile()
+void ProveedorController::copyFile()
 {
     try
     {
@@ -107,7 +117,7 @@ void    ProveedorController::copyFile()
             archivoProveedores.close();
         }
     }
-    catch(exception e)
+    catch (exception e)
     {
         cout << "Ocurrio un error al leer el archivo";
     }

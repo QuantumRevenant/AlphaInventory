@@ -18,6 +18,7 @@ public:
     void    modify(Cliente, int);
     int     size();
     Cliente get(int);
+    int getPosDoc(long long int);
     void    saveFile();
     void    copyFile();
 };
@@ -52,6 +53,15 @@ int     ClienteController::size()
 Cliente ClienteController::get(int pos)
 {
     return vectorCliente[pos];
+}
+int ClienteController::getPosDoc(long long int Doc)
+{
+    for (Cliente x : vectorCliente)
+    {
+        if(x.getDocumento()==Doc)
+            return x.getCodCliente();
+    }
+    return -1;
 }
 void    ClienteController::saveFile()
 {
