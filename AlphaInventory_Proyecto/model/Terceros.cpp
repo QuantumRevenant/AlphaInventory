@@ -5,7 +5,7 @@
 #include "../model/FuncionesGenerales.h"
 
 Terceros::Terceros() {}
-Terceros::Terceros(string _nombre, string _tipoDocumento, string _documento)
+Terceros::Terceros(string _nombre, string _tipoDocumento, long long int _documento)
 {
     nombre = _nombre;
     tipoDocumento = _tipoDocumento;
@@ -20,7 +20,7 @@ string Terceros::getTipoDocumento()
 {
     return tipoDocumento;
 }
-string Terceros::getDocumento()
+long long int Terceros::getDocumento()
 {
     return documento;
 }
@@ -32,7 +32,7 @@ void Terceros::setTipoDocumento(string _tipoDocumento)
 {
     tipoDocumento = _tipoDocumento;
 }
-void Terceros::setDocumento(string _documento)
+void Terceros::setDocumento(long long int _documento)
 {
     documento = _documento;
 }

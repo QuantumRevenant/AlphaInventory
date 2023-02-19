@@ -570,6 +570,11 @@ void doCompra()
     comprobante = inputs[0];
     inputs.clear();
 
+    string nombreProducto;
+    vector<string> listaProductos;
+    for (int i = 0; i < productoController.size(); i++)
+        listaProductos.push_back(productoController.get(i).getNombre());
+
     do
     {
         opt = menu("_Carrito de Compra_ #" + to_string(compraController.size() + 1), {"Agregar producto", "Eliminar Producto", "Mirar Carrito de Compra", "Finalizar Compra"});
@@ -577,21 +582,13 @@ void doCompra()
         {
         case 1:
             // CODIGO PRODUCTO
-            do
-            {
-                inputs.clear();
-                menuDatos({"Producto"}, inputs, 0, 0, "Producto Compra #" + to_string(compraController.size() + 1)); // Producto
-                if (!esNumero(inputs[0]))
-                    menuError({"Introduzca un valor numerico"});
-                if (stoi(inputs[0]) >= productoController.getNewCodProducto())
-                    menuError({"Producto no registrado"});
-            } while (!esNumero(inputs[0]) || stoi(inputs[0]) >= productoController.getNewCodProducto() || aMinuscula(inputs[0]) == "salir");
-
-            if (aMinuscula(inputs[0]) == "salir")
+            nombreProducto = menuBusqueda(listaProductos, 0, "_Busqueda Producto_");
+            if (nombreProducto == "salir")
                 break;
 
-            codProducto = stoi(inputs[0]);
-            inputs.clear();
+            for (int i = 0; i < productoController.size(); i++)
+                if (productoController.get(i).getNombre() == nombreProducto)
+                    codProducto = productoController.get(i).getCodProducto();
 
             // CANTIDAD PRODUCTO
             do
@@ -743,21 +740,54 @@ void doVenta()
 
     inputs.clear();
     // DNI
+    string nombreCliente;
+    vector<string> listaClientes;
+    for (int i = 0; i < clienteController.size(); i++)
+        listaClientes.push_back(clienteController.get(i).getNombre());
     do
     {
-        inputs.clear();
-        menuDatos({"DNI"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
-        if (!esNumero(inputs[0]))
-            menuError({"Introduzca un valor numerico"});
-        if (inputs[0].size() != 8)
-            menuError({"El DNI tiene 8 Dígitos"});
-    } while (!esNumero(inputs[0]) || inputs[0].size() != 8 || aMinuscula(inputs[0]) == "salir");
+        opt = menu("_Seleccion de cliente_", {"Por Nombre", "Por DNI"});
+        switch (opt)
+        {
+        case 1:
+            nombreCliente = menuBusqueda(listaClientes, 0, "_Cliente_");
+            if (nombreCliente == "salir")
+                opt = -1;
+            else
+            {
+                for (int i = 0; i < clienteController.size(); i++)
+                    if (clienteController.get(i).getNombre() == nombreCliente)
+                    {
+                        clienteDNI = clienteController.get(i).getDocumento();
+                        break;
+                    }
+            }
+            break;
+        case 2:
+            do
+            {
+                inputs.clear();
+                menuDatos({"DNI"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
+                if (!esNumero(inputs[0]))
+                    menuError({"Introduzca un valor numerico"});
+                if (inputs[0].size() != 8)
+                    menuError({"El DNI tiene 8 Dígitos"});
+            } while (!esNumero(inputs[0]) || inputs[0].size() != 8 || aMinuscula(inputs[0]) == "salir");
 
-    if (aMinuscula(inputs[0]) == "salir")
+            if (aMinuscula(inputs[0]) == "salir")
+                break;
+
+            clienteDNI = stoll(inputs[0]);
+            inputs.clear();
+            break;
+        default:
+            break;
+        }
+    } while (opt != 1 && opt != 2 && opt != 0);
+    if (opt == 0)
         return;
 
-    clienteDNI = stoll(inputs[0]);
-    inputs.clear();
+
     // COMPROBANTE VENTA PRODUCTO
 
     cin.ignore();
@@ -775,7 +805,10 @@ void doVenta()
         return;
         break;
     }
-
+    string nombreProducto;
+    vector<string> listaProductos;
+    for (int i = 0; i < productoController.size(); i++)
+        listaProductos.push_back(productoController.get(i).getNombre());
     do
     {
         opt = menu("_Carrito de Venta_ #" + to_string(ventaController.size() + 1), {"Agregar producto", "Eliminar Producto", "Mirar Carrito de Compra", "Finalizar Compra"});
@@ -783,21 +816,13 @@ void doVenta()
         {
         case 1:
             // CODIGO PRODUCTO
-            do
-            {
-                inputs.clear();
-                menuDatos({"Producto"}, inputs, 0, 0, "Producto Venta #" + to_string(ventaController.size() + 1)); // Producto
-                if (!esNumero(inputs[0]))
-                    menuError({"Introduzca un valor numerico"});
-                if (stoi(inputs[0]) >= productoController.getNewCodProducto())
-                    menuError({"Producto no registrado"});
-            } while (!esNumero(inputs[0]) || stoi(inputs[0]) >= productoController.getNewCodProducto() || aMinuscula(inputs[0]) == "salir");
-
-            if (aMinuscula(inputs[0]) == "salir")
+            nombreProducto = menuBusqueda(listaProductos, 0, "_Busqueda Producto_");
+            if (nombreProducto == "salir")
                 break;
 
-            codProducto = stoi(inputs[0]);
-            inputs.clear();
+            for (int i = 0; i < productoController.size(); i++)
+                if (productoController.get(i).getNombre() == nombreProducto)
+                    codProducto = productoController.get(i).getCodProducto();
 
             // CANTIDAD PRODUCTO
             do

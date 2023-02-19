@@ -5,7 +5,7 @@
 #include "../model/FuncionesGenerales.h"
 
 Proveedor::Proveedor() {}
-Proveedor::Proveedor(int _codProveedor, string _nombre, string _documento): Terceros(_nombre, "RUC", _documento)
+Proveedor::Proveedor(int _codProveedor, string _nombre, long long int _documento): Terceros(_nombre, "RUC", _documento)
 {
     codProveedor = _codProveedor;
 }

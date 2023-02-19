@@ -17,6 +17,7 @@ public:
     ProductoController();
     void add(Producto);
     Producto get(int);
+    int size();
     void modify(Producto, int);
 
     int getNewCodProducto();
@@ -30,6 +31,7 @@ ProductoController::ProductoController() { getFile(); }
 
 void ProductoController::add(Producto obj) { vectorProducto.push_back(obj); }
 Producto ProductoController::get(int pos) { return vectorProducto[pos]; }
+int ProductoController::size() { return vectorProducto.size(); }
 void ProductoController::modify(Producto temp, int obj) { vectorProducto[obj] = temp; }
 
 int ProductoController::getNewCodProducto() { return vectorProducto.size(); }

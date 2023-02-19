@@ -103,7 +103,7 @@ void    ClienteController::copyFile()
                 obj.setCodCliente(stoi(temporal[0]));
                 obj.setNombre(temporal[1]);
                 obj.setTipoDocumento(temporal[2]);
-                obj.setDocumento(temporal[3]);
+                obj.setDocumento(stoll(temporal[3]));
                 add(obj);
             }
             archivoClientes.close();

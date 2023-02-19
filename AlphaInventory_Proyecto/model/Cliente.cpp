@@ -5,7 +5,7 @@
 #include "../model/FuncionesGenerales.h"
 
 Cliente::Cliente() {}
-Cliente::Cliente(int _codCliente, string _nombre, string _documento): Terceros(_nombre, "DNI", _documento)
+Cliente::Cliente(int _codCliente, string _nombre, long long int _documento): Terceros(_nombre, "DNI", _documento)
 {
     codCliente = _codCliente;
 }

@@ -199,18 +199,18 @@ class Terceros
 private:
     string nombre;
     string tipoDocumento;
-    string documento;
+    long long int documento;
 
 public:
     Terceros();
-    Terceros(string, string, string);
+    Terceros(string, string, long long int);
     ~Terceros();
     string getNombre();
     string getTipoDocumento();
-    string getDocumento();
+    long long int getDocumento();
     void setNombre(string);
     void setTipoDocumento(string);
-    void setDocumento(string);
+    void setDocumento(long long int);
 };
 
 class Cliente : public Terceros
@@ -220,7 +220,7 @@ private:
 
 public:
     Cliente();
-    Cliente(int, string, string);
+    Cliente(int, string, long long int);
     ~Cliente();
     void setCodCliente(int);
     int getCodCliente();
@@ -232,7 +232,7 @@ private:
 
 public:
     Proveedor();
-    Proveedor(int, string, string);
+    Proveedor(int, string, long long int);
     ~Proveedor();
     void setCodProveedor(int);
     int getCodProveedor();
