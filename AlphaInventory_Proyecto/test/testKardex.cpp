@@ -278,7 +278,7 @@ void doVenta()
     CompraD tempCompraD;
     kardex tempKardex;
 
-    menuListado({"Inicializando Compra..."}, 0, "Compra #" + to_string(compraController.size() + 1), false);
+    menuListado({"Inicializando Venta..."}, 0, "Venta #" + to_string(compraController.size() + 1), false);
     Sleep(1000);
 
     cout << "here" << endl;
@@ -465,6 +465,7 @@ void doVenta()
 
 void doMovimiento()
 {
+
 }
 
 int main(int argc, char *argv[])
