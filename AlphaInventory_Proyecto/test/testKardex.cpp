@@ -22,38 +22,38 @@ ProductoController productoController;
 
 // void doVenta()
 // {
-    // vector<string> inputs = {"0"};
-    // string fecha;
-    // int cantidad;
-    // if (menuConfirmar("Desea usar la fecha de hoy para registrar la venta"))
-    // {
-    //     cin.ignore();
-    //     fecha = currentDateTime().substr(0, currentDateTime().find(' '));
-    // }
-    // else
-    // {
-    //     cin.ignore();
-    //     do
-    //     {
-    //         cout << kardexController.validarFormatoFecha(inputs[0]);
-    //         system("pause");
-    //         inputs.clear();
-    //         menuDatos({"Fecha"}, inputs, 0, 0, "'Salir' para cancelar");
-    //     } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
-    //     if (aMinuscula(inputs[0]) == "salir")
-    //         return;
-    //     fecha = inputs[0];
-    // }
+// vector<string> inputs = {"0"};
+// string fecha;
+// int cantidad;
+// if (menuConfirmar("Desea usar la fecha de hoy para registrar la venta"))
+// {
+//     cin.ignore();
+//     fecha = currentDateTime().substr(0, currentDateTime().find(' '));
+// }
+// else
+// {
+//     cin.ignore();
+//     do
+//     {
+//         cout << kardexController.validarFormatoFecha(inputs[0]);
+//         system("pause");
+//         inputs.clear();
+//         menuDatos({"Fecha"}, inputs, 0, 0, "'Salir' para cancelar");
+//     } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
+//     if (aMinuscula(inputs[0]) == "salir")
+//         return;
+//     fecha = inputs[0];
+// }
 
-    // inputs.clear();
-    // menuDatos({"cantidad", "codProducto", "observacion"}, inputs);
-    // string codVenta = createCode("VT",ventaController.size(),5);
-    // int cantComprobantes = kardexController.getCantidadComprobante(true);
-    // string comprobante = createCode("BV",cantComprobantes,0);
+// inputs.clear();
+// menuDatos({"cantidad", "codProducto", "observacion"}, inputs);
+// string codVenta = createCode("VT",ventaController.size(),5);
+// int cantComprobantes = kardexController.getCantidadComprobante(true);
+// string comprobante = createCode("BV",cantComprobantes,0);
 
-    // kardex movimiento(fecha, stoi(inputs[0]), stoi(inputs[1]), codVenta, comprobante, true, "~~Venta " + to_string(cantComprobantes), inputs[2]);
-    // kardexController.add(movimiento);
-    // kardexController.saveFile();
+// kardex movimiento(fecha, stoi(inputs[0]), stoi(inputs[1]), codVenta, comprobante, true, "~~Venta " + to_string(cantComprobantes), inputs[2]);
+// kardexController.add(movimiento);
+// kardexController.saveFile();
 // }
 
 void doCompra()
@@ -324,14 +324,14 @@ void doVenta()
 
     cin.ignore();
     inputs.clear();
-    opt=menu("Comprobante Venta #" + to_string(ventaController.size() + 1), {"Boleta", "Factura"});
+    opt = menu("Comprobante Venta #" + to_string(ventaController.size() + 1), {"Boleta", "Factura"});
     switch (opt)
     {
     case 1:
-        comprobante=createCode("BV",kardexController.getCantidadComprobanteVenta(true));
+        comprobante = createCode("BV", kardexController.getCantidadComprobanteVenta(true));
         break;
     case 2:
-        comprobante=createCode("FV",kardexController.getCantidadComprobanteVenta(false));
+        comprobante = createCode("FV", kardexController.getCantidadComprobanteVenta(false));
         break;
     default:
         return;
@@ -465,14 +465,230 @@ void doVenta()
 
 void doMovimiento()
 {
+    int opt;
+    vector<string> inputs;
+    vector<string> listado;
 
+    long long int clienteDNI;
+    int codProducto;
+    int cantProducto;
+    double montoProducto;
+    string comprobante;
+    string codigoMovimiento;
+    string fecha;
+    string motivo;
+    string observacion = "-";
+
+    int cantComprobantes = kardexController.getCantidadComprobante(true);
+
+    vector<CompraD> carrito;
+    vector<kardex> kardexCarrito;
+    CompraD tempCompraD;
+    kardex tempKardex;
+
+    // FECHA
+    if (menuConfirmar("Desea usar la fecha de hoy para registrar el Movimiento"))
+    {
+        cin.ignore();
+        fecha = currentDateTime().substr(0, currentDateTime().find(' '));
+    }
+    else
+    {
+        cin.ignore();
+        do
+        {
+            cout << kardexController.validarFormatoFecha(inputs[0]);
+            system("pause");
+            inputs.clear();
+            menuDatos({"Fecha"}, inputs, 0, 0, "'Salir' para cancelar");
+        } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
+        if (aMinuscula(inputs[0]) == "salir")
+            return;
+        fecha = inputs[0];
+    }
+
+    inputs.clear();
+    // DOCUMENTOS
+    do
+    {
+        inputs.clear();
+        menuDatos({"Documento"}, inputs, 0, 0, "Datos del Documento Movimiento #" + to_string(kardexController.getVector().size() + 1)); // Clientes
+        if (!esNumero(inputs[0]))
+            menuError({"Introduzca un valor numerico"});
+    } while (!esNumero(inputs[0]) || aMinuscula(inputs[0]) == "salir");
+
+    if (aMinuscula(inputs[0]) == "salir")
+        return;
+
+    clienteDNI = stoll(inputs[0]);
+    inputs.clear();
+    // COMPROBANTE VENTA PRODUCTO
+
+    cin.ignore();
+    inputs.clear();
+    opt = menu("Comprobante Movimiento #" + to_string(kardexController.getVector().size() + 1), {"Manualmente", "Boleta de Venta Automatica", "Factura de Venta Automatica", "Ninguno"});
+    switch (opt)
+    {
+    case 1:
+        do
+        {
+            cin.ignore();
+            inputs.clear();
+            menuDatos({"Comprobante de Compra"}, inputs, 0, 0, "Datos del Comprobante Movimiento #" + to_string(kardexController.getVector().size() + 1)); // Producto
+            if (aMinuscula(inputs[0]) == "salir")
+                return;
+        } while (!menuConfirmar("Confirma que el comprobante de compra sea " + inputs[0]));
+        comprobante = inputs[0];
+    case 2:
+        comprobante = createCode("BV", kardexController.getCantidadComprobanteVenta(true));
+        break;
+    case 3:
+        comprobante = createCode("FV", kardexController.getCantidadComprobanteVenta(false));
+        break;
+    case 4:
+        comprobante = "-";
+    default:
+        return;
+        break;
+    }
+
+    // CODIGO MOVIMIENTO
+
+    cin.ignore();
+    inputs.clear();
+    opt = menu("Codigo Movimiento #" + to_string(kardexController.getVector().size() + 1), {"Manualmente", "Automatico", "Ninguno"});
+    switch (opt)
+    {
+    case 1:
+        do
+        {
+            cin.ignore();
+            inputs.clear();
+            menuDatos({"Codigo de Movimiento"}, inputs, 0, 0, "Codigo del Movimiento #" + to_string(kardexController.getVector().size() + 1)); // Producto
+            if (aMinuscula(inputs[0]) == "salir")
+                return;
+        } while (!menuConfirmar("Confirma que el comprobante de compra sea " + inputs[0]));
+    case 2:
+        codigoMovimiento = createCode("MT", kardexController.getCantidadComprobante(false, true), 5);
+        break;
+    case 3:
+        codigoMovimiento = "-";
+    default:
+        return;
+        break;
+    }
+
+    //  PRODUCTO
+    do
+    {
+        inputs.clear();
+        menuDatos({"Producto"}, inputs, 0, 0, "Producto Movimiento #" + to_string(kardexController.getVector().size() + 1)); // Producto
+        if (!esNumero(inputs[0]))
+            menuError({"Introduzca un valor numerico"});
+        if (stoi(inputs[0]) >= productoController.getNewCodProducto())
+            menuError({"Producto no registrado"});
+    } while (!esNumero(inputs[0]) || stoi(inputs[0]) >= productoController.getNewCodProducto() || aMinuscula(inputs[0]) == "salir");
+
+    if (aMinuscula(inputs[0]) == "salir")
+        return;
+
+    codProducto = stoi(inputs[0]);
+    inputs.clear();
+
+    bool isSalida = menuConfirmar("El movimiento es una reduccion en el inventario");
+
+    // CANTIDAD PRODUCTO
+    do
+    {
+        inputs.clear();
+        cin.ignore();
+        menuDatos({"Cantidad"}, inputs, 0, 0, "Producto Movimiento #" + to_string(kardexController.getVector().size() + 1)); // Producto
+        if (!esNumero(inputs[0]))
+            menuError({"Introduzca un valor numerico"});
+        if (inputs[0].size() < 0)
+            menuError({"Cantidad Invalida"});
+    } while (!esNumero(inputs[0]) || inputs[0].size() < 0 || aMinuscula(inputs[0]) == "salir");
+
+    if (aMinuscula(inputs[0]) == "salir")
+        return;
+
+    cantProducto = stoi(inputs[0]);
+    inputs.clear();
+
+    // PRECIO PRODUCTO
+
+    cin.ignore();
+    inputs.clear();
+    opt = menu("Agregar precio al Producto, Movimiento #" + to_string(kardexController.getVector().size() + 1), {"Manualmente", "Automatico", "Ninguno"});
+    switch (opt)
+    {
+    case 1:
+        do
+        {
+            inputs.clear();
+            menuDatos({"Costo Unitario"}, inputs, 0, 0, "Producto Movimiento #" + to_string(kardexController.getVector().size() + 1)); // Producto
+            if (!esNumero(inputs[0]))
+                menuError({"Introduzca un valor numerico"});
+            if (inputs[0].size() < 0)
+                menuError({"Cantidad Invalida"});
+        } while (!esNumero(inputs[0]) || inputs[0].size() < 0 || aMinuscula(inputs[0]) == "salir");
+
+        if (aMinuscula(inputs[0]) == "salir")
+            return;
+        montoProducto = stoi(inputs[0]);
+    case 2:
+        montoProducto=productoController.get(codProducto).getPrecioUnitario();
+        break;
+    case 3:
+        montoProducto=0;
+        break;
+    default:
+        return;
+        break;
+    }
+
+    inputs.clear();
+
+    tempCompraD.setCodCompra(compraController.size());
+    tempCompraD.setCodProducto(codProducto);
+    tempCompraD.setCantidad(cantProducto);
+    tempCompraD.setPrecio(montoProducto);
+
+    carrito.push_back(tempCompraD);
+
+    ///////////////////////////////////////////////////////////
+
+    cin.ignore();
+    menuDatos({""}, inputs, 0, 0, "Motivo Movimiento #" + to_string(kardexController.getVector().size() + 1));
+    motivo = inputs[0];
+
+    if (menuConfirmar("Desea agregar una observacion a este Movimiento"))
+    {
+        cin.ignore();
+        menuDatos({""}, inputs, 0, 0, "Observacion Movimiento #" + to_string(kardexController.getVector().size() + 1));
+        observacion = inputs[0];
+    }
+
+    for (CompraD x : carrito)
+    {
+        tempKardex.setCantidad(x.getCantidad());
+        tempKardex.setMontoUnitario(x.getPrecio());
+        tempKardex.setCodProducto(x.getCodProducto());
+        tempKardex.setCodProceso(codigoMovimiento);
+        tempKardex.setComprobante(comprobante);
+        tempKardex.setFechaDeEmision(fecha);
+        tempKardex.setIsSalida(isSalida);
+        tempKardex.setMontoUnitario(x.getPrecio());
+        tempKardex.setMotivo(motivo);
+        tempKardex.setObservacion(observacion);
+        kardexController.add(tempKardex);
+        kardexController.saveFile();
+    }
 }
 
 int main(int argc, char *argv[])
 {
-    cout<<kardexController.getCantidadProducto(0)<<endl;
-    system("pause");
-    doVenta();
+    doMovimiento();
     cout << "Entré";
     int opt;
     opt = menu("Menu", {"doVenta", "doCompra", "registrarMovimiento"});
