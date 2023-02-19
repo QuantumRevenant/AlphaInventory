@@ -18,7 +18,7 @@ public:
     void    modify(Cliente, int);
     int     size();
     Cliente get(int);
-    int getPosDoc(long long int);
+    int getPosDoc(long long int,string);
     void    saveFile();
     void    copyFile();
 };
@@ -54,11 +54,11 @@ Cliente ClienteController::get(int pos)
 {
     return vectorCliente[pos];
 }
-int ClienteController::getPosDoc(long long int Doc)
+int ClienteController::getPosDoc(long long int Doc,string typeDoc)
 {
     for (Cliente x : vectorCliente)
     {
-        if(x.getDocumento()==Doc)
+        if(x.getDocumento()==Doc&&x.getTipoDocumento()==typeDoc)
             return x.getCodCliente();
     }
     return -1;

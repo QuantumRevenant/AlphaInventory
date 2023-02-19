@@ -33,9 +33,10 @@ public:
     bool validarFormatoFecha(string);
     vector<kardex> getMovimientosProducto(int);
     vector<kardex> getMovimientosComprobante(bool, bool);
-
+    vector<kardex> getMovimientosRetiros();
     vector<kardex> getMovimientosProducto(int, bool);
 
+    int getEstadoCaja();
     int getCantidadComprobanteVenta(bool);
     int getCantidadComprobante(bool, bool);
     int getCantidadProducto(int);
@@ -188,17 +189,45 @@ vector<kardex> KardexController::getMovimientosProducto(int cod)
     system("pause");
     return salida;
 }
-vector<kardex> KardexController::getMovimientosProducto(int cod,bool isSalida)
+vector<kardex> KardexController::getMovimientosProducto(int cod, bool isSalida)
 {
     vector<kardex> salida;
     vector<kardex> movimientos;
     movimientos = getMovimientosProducto(cod);
     for (kardex x : movimientos)
     {
-        if (x.getIsSalida()==isSalida)
+        if (x.getIsSalida() == isSalida)
             salida.push_back(x);
     }
+}
 
+int KardexController::getEstadoCaja()
+{
+    int salida = 0;
+    vector<double> suma, resta;
+    for (kardex x : vectorKardex)
+    {
+        if(x.getCodProceso().substr(0, 2) == "VT")
+            suma.push_back(x.getMontoUnitario()*x.getCantidad());
+        else if(x.getCodProceso().substr(0, 2) == "RT")
+            resta.push_back(x.getMontoUnitario()*x.getCantidad());
+    }
+    for (double x : suma)
+        salida += x;
+    for (double x : resta)
+        salida -= x;
+    return salida;
+}
+vector<kardex> KardexController::getMovimientosRetiros()
+{
+    vector<kardex> salida;
+    string iniciales ="RT";
+    for (kardex x : vectorKardex)
+    {
+        if (x.getCodProceso().substr(0, 2) == iniciales)
+            salida.push_back(x);
+    }
+    return salida;
 }
 
 vector<kardex> KardexController::getMovimientosComprobante(bool isVenta, bool isMovimiento = false)
@@ -246,15 +275,9 @@ int KardexController::getCantidadProducto(int cod)
     }
 
     for (int x : aSumar)
-    {
-        cout << x << endl;
         salida += x;
-    }
     for (int x : aRestar)
-    {
-        cout << x << endl;
         salida -= x;
-    }
     cout << salida << endl;
     system("pause");
     return salida;

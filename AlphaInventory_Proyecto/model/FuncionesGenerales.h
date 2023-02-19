@@ -554,10 +554,10 @@ string menuBusqueda(vector<string> _lista, int separation = 0, string title = ""
     return "salir";
 }
 
-string createCode(string start,int correlativo, int cantidadMinimaCeros=0)
+string createCode(string start,int correlativo, int cantidadMinimaDigitos=0)
 {
     string salida=start;
-    for (int i = to_string(correlativo).size(); i < cantidadMinimaCeros; i++)
+    for (int i = to_string(correlativo).size(); i < cantidadMinimaDigitos; i++)
         salida.push_back('0');
     salida = salida + to_string(correlativo);
     return salida;

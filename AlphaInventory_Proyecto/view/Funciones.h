@@ -9,25 +9,23 @@
 
 using namespace std;
 
+programController progController;
+usuarioController userController;
 
-programController   progController;
-usuarioController   userController;
+ProductoController productoController;
+MarcaController marcaController;
 
-ProductoController  productoController;
-MarcaController     marcaController;
+CompraController compraController;
+CompraDController compraDController;
 
-CompraController    compraController;
-CompraDController   compraDController;
+VentaController ventaController;
+VentaDController ventaDController;
 
-VentaController     ventaController;
-VentaDController    ventaDController;
+CajaController cajaController;
+KardexController kardexController;
 
-CajaController      cajaController;
-KardexController    kardexController;
-
-ClienteController   clienteController;
+ClienteController clienteController;
 ProveedorController proveedorController;
-
 
 // Option Menus
 void menuLogIn();     // ✅
@@ -37,23 +35,25 @@ void menuInventory(); // ✅
 void menuRecords();   // ✅
 
 // Cuenta y usuario
-void doRegistrarse(bool);               // ✅
-bool doIniciarSesion(bool, string &);   // ✅
-void doCerrarSesion();                  // ✅
-void doModificarPerfil(int);            // ✅
-
-void doVenta();
+void doRegistrarse(bool);             // ✅
+bool doIniciarSesion(bool, string &); // ✅
+void doCerrarSesion();                // ✅
+void doModificarPerfil(int);          // ✅
 
 void doCompra();
+void doVenta();
+void doMovimiento();
+
 void askInventario();
 void changeDataInventario();
 void doAddProducto();
 void doAddMarca();
 
-
 void askEstadoCaja();
 void doConsultarRegistro(int);
 void doBuscarRegistro();
 
+long long int doRegistrarTercero(bool, long long int);
+void doRegistrarRetiroCaja();
 
 #endif

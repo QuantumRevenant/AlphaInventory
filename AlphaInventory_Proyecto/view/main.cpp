@@ -214,7 +214,7 @@ void doRegistrarse(bool start = false)
             menuError({"~[[INTRODUCE UN VALOR NUMERICO]]~"});
     } while (!esNumero(strInput) || (int)strInput.size() != docSize);
 
-    numDocumento = stoi(strInput);
+    numDocumento = stoll(strInput);
 
     int sizePass;
     do
@@ -358,7 +358,7 @@ void doModificarPerfil(int key)
             } while (!esNumero(temporal2) || (int)temporal2.size() != sizeTemporal);
 
             objUser.setDocumento(temporal);
-            objUser.setNumDocumento(stoi(temporal2));
+            objUser.setNumDocumento(stoll(temporal2));
             break;
         case 6:
             if (menuConfirmar("Desea guardar los cambios", "Deberas reiniciar la sesion"))
@@ -491,13 +491,9 @@ void doCompra()
     cout << "here" << endl;
     // FECHA
     if (menuConfirmar("Desea usar la fecha de hoy para registrar la compra"))
-    {
-        ;
         fecha = currentDateTime().substr(0, currentDateTime().find(' '));
-    }
     else
     {
-        ;
         do
         {
             cout << kardexController.validarFormatoFecha(inputs[0]);
@@ -551,6 +547,16 @@ void doCompra()
 
             proveedorRUC = stoll(inputs[0]);
             inputs.clear();
+
+            if (proveedorController.getPosRUC(proveedorRUC) == -1)
+            {
+                menuError({"RUC NO REGISTRADO"});
+                if (menuConfirmar("Desea registrar un nuevo Proveedor"))
+                    codProducto = codProducto;
+                // newProveedor
+                else
+                    return;
+            }
             break;
         default:
             break;
@@ -666,7 +672,7 @@ void doCompra()
                 menuDatos({""}, inputs, 0, 0, "Observacion Compra #" + to_string(compraController.size() + 1));
                 observacion = inputs[0];
             }
-            montoTotal=0;
+            montoTotal = 0;
             for (CompraD x : carrito)
             {
                 tempKardex.setCantidad(x.getCantidad());
@@ -683,7 +689,7 @@ void doCompra()
                 compraDController.add(x);
                 kardexController.saveFile();
                 compraDController.saveFile();
-                montoTotal+=(x.getPrecio()*x.getCantidad());
+                montoTotal += (x.getPrecio() * x.getCantidad());
             }
             tempCompra.setCodCompra(compraController.size());
             tempCompra.setCodProveedor(proveedorController.getPosRUC(proveedorRUC));
@@ -709,6 +715,8 @@ void doVenta()
     int opt;
     vector<string> inputs;
     vector<string> listado;
+    vector<string> options;
+    string tipoDocumento;
 
     long long int clienteDNI;
     int codProducto;
@@ -733,13 +741,9 @@ void doVenta()
     cout << "here" << endl;
     // FECHA
     if (menuConfirmar("Desea usar la fecha de hoy para registrar la Venta"))
-    {
-        ;
         fecha = currentDateTime().substr(0, currentDateTime().find(' '));
-    }
     else
     {
-        ;
         do
         {
             cout << kardexController.validarFormatoFecha(inputs[0]);
@@ -760,7 +764,7 @@ void doVenta()
         listaClientes.push_back(clienteController.get(i).getNombre());
     do
     {
-        opt = menu("_Seleccion de cliente_", {"Por Nombre", "Por DNI"});
+        opt = menu("_Seleccion de cliente_", {"Por Nombre", "Por Documento"});
         switch (opt)
         {
         case 1:
@@ -778,21 +782,53 @@ void doVenta()
             }
             break;
         case 2:
+            options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
+            opt = menu("REGISTRO - TIPO DE USUARIO", options);
+
+            switch (opt)
+            {
+            case 1:
+                tipoDocumento = "DNI";
+                break;
+            case 2:
+                tipoDocumento = "CE";
+                break;
+            case 3:
+                tipoDocumento = "PASAPORTE";
+                break;
+            case 4:
+                tipoDocumento = "RUC";
+                break;
+            case 0:
+                tipoDocumento = "Cancelar";
+                break;
+            }
+            if (tipoDocumento == "Cancelar")
+                return;
             do
             {
                 inputs.clear();
-                menuDatos({"DNI"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
+                menuDatos({"Documento"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
                 if (!esNumero(inputs[0]))
                     menuError({"Introduzca un valor numerico"});
-                if (inputs[0].size() != 8)
-                    menuError({"El DNI tiene 8 Dígitos"});
-            } while (!esNumero(inputs[0]) || inputs[0].size() != 8 || aMinuscula(inputs[0]) == "salir");
+                // if (inputs[0].size() != 8)
+                //     menuError({"El DNI tiene 8 Dígitos"});
+            } while (!esNumero(inputs[0]) /*|| inputs[0].size() != 8*/ || aMinuscula(inputs[0]) == "salir");
 
             if (aMinuscula(inputs[0]) == "salir")
                 break;
 
             clienteDNI = stoll(inputs[0]);
             inputs.clear();
+            if (clienteController.getPosDoc(clienteDNI,tipoDocumento) == -1)
+            {
+                menuError({"DOCUMENTO NO REGISTRADO"});
+                if (menuConfirmar("Desea registrar un nuevo Cliente"))
+                    codProducto = codProducto;
+                // newCliente
+                else
+                    return;
+            }
             break;
         default:
             break;
@@ -928,10 +964,10 @@ void doVenta()
                 ventaDController.add(x);
                 kardexController.saveFile();
                 ventaDController.saveFile();
-                montoTotal+=(x.getPrecio()*x.getCantidad());
+                montoTotal += (x.getPrecio() * x.getCantidad());
             }
             tempVenta.setCodVenta(ventaController.size());
-            tempVenta.setCodCliente(clienteController.getPosDoc(clienteDNI));
+            tempVenta.setCodCliente(clienteController.getPosDoc(clienteDNI,tipoDocumento));
             tempVenta.setCodUsuario(progController.getSesionKey());
             tempVenta.setMonto(montoTotal);
             tempVenta.setEstado(true);
@@ -1172,10 +1208,51 @@ void doMovimiento()
     }
 }
 
+void doRegistrarRetiroCaja()
+{
+    double monto;
+    string observacion;
+    vector<string> inputs;
+    if (!progController.getActiveSesion() || !progController.getIsSupervisor())
+    {
+        menuError({"~-NECESITAS TENER UNA SESIÓN DE SUPERVISOR O ADMINISTRADOR INICIADA-~"});
+        return;
+    }
+    do
+    {
+        inputs.clear();
+        menuDatos({"Monto de Retiro"}, inputs, 0, 0, "Retiro de Efectivo"); // Producto
+        if (!esNumero(inputs[0]))
+            menuError({"Introduzca un valor numerico"});
+    } while (!esNumero(inputs[0]) || aMinuscula(inputs[0]) == "salir");
+
+    if (aMinuscula(inputs[0]) == "salir")
+        return;
+
+    monto = stoi(inputs[0]);
+
+    inputs.clear();
+    if (menuConfirmar("Desea agregar una observacion a este Movimiento"))
+    {
+        cin.ignore();
+        menuDatos({""}, inputs, 0, 0, "Observacion - Retiro de Efectivo");
+        observacion = inputs[0];
+    }
+
+    inputs.clear();
+
+    kardex obj(currentDateTime().substr(0, currentDateTime().find(' ')), 1, -1, monto, createCode("RT", kardexController.getMovimientosRetiros().size(), 5),
+               createCode("RT", kardexController.getMovimientosRetiros().size(), 5), true,
+               "RETIRO DE EFECTIVO ( S/." + to_string(monto) + " ) POR " + userController.get(progController.getSesionKey()).getNombre() +
+                   " " + userController.get(progController.getSesionKey()).getApellidos(),
+               observacion);
+}
+
 void askEstadoCaja()
 {
-    menuListado({"S/" + to_string(cajaController.getSaldo())}, 0, "_SALDO ACTUAL_", true);
+    menuListado({"S/" + to_string(kardexController.getEstadoCaja())}, 0, "_SALDO ACTUAL_", true);
 }
+
 void doConsultarRegistro(int cod)
 {
     int opt;
@@ -1232,6 +1309,7 @@ void doConsultarRegistro(int cod)
         } while (opt != 0);
     }
 }
+
 void doBuscarRegistro()
 {
     int opt;
@@ -1297,6 +1375,7 @@ void askInventario()
         menuError({"No hay productos registrados, volviendo al menu inventario"});
     }
 }
+
 void changeDataInventario()
 {
     int opt;
@@ -1512,6 +1591,7 @@ void doAddProducto()
     } while (menuConfirmar("Desea agregar un nuevo producto"));
     productoController.saveFile();
 }
+
 void doAddMarca()
 {
     int codigo;
@@ -1535,4 +1615,140 @@ void doAddMarca()
         marcaController.add(marca);
     } while (menuConfirmar("Desea agregar una nueva marca"));
     marcaController.saveFile();
+}
+
+long long int doRegistrarTercero(bool isCliente, long long int documento = -1)
+{
+    string tipoDocumento, strInput, nombreTercero;
+    int docSize, opt;
+    long long int numeroDocumento;
+    vector<string> options, inputs;
+    Cliente objCliente;
+    Proveedor objProveedor;
+    bool duplicado;
+
+    if (documento != -1)
+        numeroDocumento == documento;
+
+    if (isCliente)
+    {
+        options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
+        opt = menu("REGISTRO - TIPO DE USUARIO", options);
+
+        switch (opt)
+        {
+        case 1:
+            tipoDocumento = "DNI";
+            docSize = 8;
+            break;
+        case 2:
+            tipoDocumento = "CE";
+            docSize = 12;
+            break;
+        case 3:
+            tipoDocumento = "PASAPORTE";
+            docSize = 12;
+            break;
+        case 4:
+            tipoDocumento = "RUC";
+            docSize = 11;
+            break;
+        case 0:
+            tipoDocumento = "Cancelar";
+            break;
+        }
+        if (tipoDocumento == "Cancelar")
+            return -1;
+    }
+    else
+    {
+        tipoDocumento = "RUC";
+        docSize = 11;
+    }
+
+    // INTRODUCIR NUMERO DOCUMENTO
+    strInput = "0";
+    do
+    {
+        do
+        {
+            inputs.clear();
+            if (documento < 0)
+            {
+                menuDatos({"Numero de documento"}, inputs, 0, 0, "_" + tipoDocumento + "_ -('Salir' para salir)");
+                strInput = inputs[0].substr(0, inputs[0].find(' '));
+            }
+            else
+            {
+                strInput = to_string(documento);
+            }
+
+            if (aMinuscula(strInput) == "salir")
+                return -1;
+
+            if ((int)strInput.size() != docSize)
+            {
+                options = {"~-Los documentos tipo " + tipoDocumento + " deben contener " + to_string(docSize) + " digitos-~", "~VUELVA A INGRESAR SU NUMERO DE DOCUMENTO~"};
+                menuError(options, 1);
+                documento = -1;
+            }
+            if (!esNumero(strInput))
+                menuError({"~[[INTRODUCE UN VALOR NUMERICO]]~"});
+        } while (!esNumero(strInput) || (int)strInput.size() != docSize);
+
+        numeroDocumento = stoll(strInput);
+        if (isCliente)
+        {
+            if (clienteController.getPosDoc(numeroDocumento,tipoDocumento) != -1)
+            {
+                duplicado = true;
+            }
+            else
+                duplicado = false;
+        }
+        else
+        {
+            if (proveedorController.getPosRUC(numeroDocumento) != -1)
+                duplicado = true;
+            else
+                duplicado = false;
+        }
+        if (duplicado)
+        {
+            menuError({"Ya Registrado, 'salir' para salir"});
+            documento = -1;
+        }
+    } while (duplicado);
+
+    // NOMBRE
+    do
+    {
+        inputs.clear();
+        menuDatos({"Nombre"}, inputs, 0, 0, ""); // Producto
+        if (aMinuscula(inputs[0]) == "salir")
+            return -1;
+    } while (!menuConfirmar("Confirma que el nombre es " + inputs[0]));
+
+    nombreTercero = inputs[0];
+    inputs.clear();
+
+    if (isCliente)
+    {
+        objCliente.setCodCliente(clienteController.size());
+        objCliente.setTipoDocumento(tipoDocumento);
+        objCliente.setDocumento(numeroDocumento);
+        objCliente.setNombre(nombreTercero);
+        clienteController.add(objCliente);
+        clienteController.saveFile();
+    }
+    else
+    {
+        objProveedor.setCodProveedor(proveedorController.size());
+        objProveedor.setTipoDocumento(tipoDocumento);
+        objProveedor.setDocumento(numeroDocumento);
+        objProveedor.setNombre(nombreTercero);
+        proveedorController.add(objProveedor);
+        proveedorController.saveFile();
+    }
+    return numeroDocumento;
 }
