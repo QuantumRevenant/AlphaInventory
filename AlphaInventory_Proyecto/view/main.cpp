@@ -510,21 +510,53 @@ void doCompra()
 
     inputs.clear();
     // RUC
+    string nombreProveedor;
+    vector<string> listaProveedores;
+    for (int i = 0; i < proveedorController.size(); i++)
+        listaProveedores.push_back(proveedorController.get(i).getNombre());
     do
     {
-        inputs.clear();
-        menuDatos({"RUC"}, inputs, 0, 0, "Datos del Proveedor Compra #" + to_string(compraController.size() + 1)); // Proveedores
-        if (!esNumero(inputs[0]))
-            menuError({"Introduzca un valor numerico"});
-        if (inputs[0].size() != 11)
-            menuError({"El RUC tiene 11 Dígitos"});
-    } while (!esNumero(inputs[0]) || inputs[0].size() != 11 || aMinuscula(inputs[0]) == "salir");
+        opt = menu("_Seleccion de proveedor_", {"Por Nombre", "Por RUC"});
+        switch (opt)
+        {
+        case 1:
+            nombreProveedor = menuBusqueda(listaProveedores, 0, "_Proveedor_");
+            if (nombreProveedor == "salir")
+                opt = -1;
+            else
+            {
+                for (int i = 0; i < proveedorController.size(); i++)
+                    if (proveedorController.get(i).getNombre() == nombreProveedor)
+                    {
+                        proveedorRUC = proveedorController.get(i).getDocumento();
+                        break;
+                    }
+            }
+            break;
+        case 2:
+            do
+            {
+                inputs.clear();
+                menuDatos({"RUC"}, inputs, 0, 0, "Datos del Proveedor Compra #" + to_string(compraController.size() + 1)); // Proveedores
+                if (!esNumero(inputs[0]))
+                    menuError({"Introduzca un valor numerico"});
+                if (inputs[0].size() != 11)
+                    menuError({"El RUC tiene 11 Dígitos"});
+            } while (!esNumero(inputs[0]) || inputs[0].size() != 11 || aMinuscula(inputs[0]) == "salir");
 
-    if (aMinuscula(inputs[0]) == "salir")
+            if (aMinuscula(inputs[0]) == "salir")
+                break;
+
+            proveedorRUC = stoll(inputs[0]);
+            inputs.clear();
+            break;
+        default:
+            break;
+        }
+    } while (opt != 1 && opt != 2 && opt != 0);
+    if (opt == 0)
         return;
 
-    proveedorRUC = stoll(inputs[0]);
-    inputs.clear();
     // COMPROBANTE COMPRA PRODUCTO
     do
     {
