@@ -446,4 +446,13 @@ int menu(string title, vector<string> options)
     return salida;
 }
 
+string createCode(string start,int correlativo, int cantidadMinimaCeros=0)
+{
+    string salida=start;
+    for (int i = to_string(correlativo).size(); i < cantidadMinimaCeros; i++)
+        salida.push_back('0');
+    salida = salida + to_string(correlativo);
+    return salida;
+}
+
 #endif

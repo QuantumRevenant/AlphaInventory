@@ -1,3 +1,6 @@
+#ifndef KARDEX_CPP
+#define KARDEX_CPP
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -43,3 +46,5 @@ void kardex::setComprobante(string _comprobante) { comprobante = _comprobante; }
 void kardex::setIsSalida(bool _isSalida) { isSalida = _isSalida; }
 void kardex::setMotivo(string _motivo) { motivo = _motivo; }
 void kardex::setObservacion(string _observacion) { observacion = _observacion; }
+
+#endif
