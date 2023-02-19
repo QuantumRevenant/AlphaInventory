@@ -115,6 +115,7 @@ void menuInventory()
         {
         case 1:
             doCompra();
+            menuInventory();
             break;
         case 2:
             askInventario();

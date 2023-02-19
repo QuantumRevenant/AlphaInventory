@@ -391,7 +391,7 @@ bool menuConfirmar(string message, string message2 = " ")
     centrarTexto("¿" + message + "? " + message2 + ". (Confirmar: S/s)", 0, true, true, 0, -3);
     e += 2;
     centrarTexto(">_ ", 0, true, true, -5, 0);
-    cin >> opt;
+    getline(cin,opt);
     if (aMinuscula(opt) == "s" || aMinuscula(opt) == "y" || aMinuscula(opt) == "si" || aMinuscula(opt) == "yes")
         return true;
     else
