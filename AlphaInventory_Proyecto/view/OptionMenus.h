@@ -79,7 +79,7 @@ void menuUser()
     doActualizarInventario();
     system("cls");
     int opt;
-    vector<string> options = {"Modificar Perfil"/*, "Registros"*/, "Registrar Usuario", "Estado de Caja", "Cerrar Sesión"};
+    vector<string> options = {"Modificar Perfil" /*, "Registros"*/, "Registrar Usuario", "Estado de Caja", "Cerrar Sesión"};
     opt = menu("MENU USUARIO", options);
 
     switch (opt)
@@ -153,7 +153,7 @@ void menuRecords()
     vector<string> options = {"Estado de Caja", "Registros Personales", "Buscar Registros"}; // Carritos de compra, etc
     do
     {
-        opt = menu("MENU REGISTROS", options); 
+        opt = menu("MENU REGISTROS", options);
         switch (opt)
         {
         case 1:
@@ -180,17 +180,17 @@ void menuOthers()
     vector<string> options = {"Registrar Movimiento", "Registrar Cliente", "Registrar Proveedor", "Retiro de Caja"}; // Carritos de compra, etc
     do
     {
-        opt = menu("MENU REGISTROS", options); 
+        opt = menu("MENU REGISTROS", options);
         switch (opt)
         {
         case 1:
             doMovimiento();
             break;
         case 2:
-            doRegistrarTercero(true,-1);
+            doRegistrarTercero(true, -1);
             break;
         case 3:
-            doRegistrarTercero(false,-1);
+            doRegistrarTercero(false, -1);
             break;
         case 4:
             doRegistrarRetiroCaja();

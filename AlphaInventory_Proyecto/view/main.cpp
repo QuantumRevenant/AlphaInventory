@@ -557,7 +557,7 @@ void doCompra()
                     menuError({"RUC NO REGISTRADO"});
                     if (menuConfirmar("Desea registrar un nuevo Proveedor"))
                     {
-                        if (doRegistrarTercero(false, proveedorRUC)==-1)
+                        if (doRegistrarTercero(false, proveedorRUC) == -1)
                             return;
                         usuarioRegistrado = false;
                         menuListado({"Vuelve a buscar el nombre del usuario"});
@@ -645,7 +645,7 @@ void doCompra()
             tempCompraD.setCodProducto(codProducto);
             tempCompraD.setCantidad(cantProducto);
             tempCompraD.setPrecio(montoProducto);
-            tempCompraD.setMonto(montoProducto*cantProducto);
+            tempCompraD.setMonto(montoProducto * cantProducto);
             carrito.push_back(tempCompraD);
             break;
         case 2:
@@ -842,7 +842,7 @@ void doVenta()
                     menuError({aMayuscula(tipoDocumento) + " NO REGISTRADO"});
                     if (menuConfirmar("Desea registrar un nuevo Cliente"))
                     {
-                        if (doRegistrarTercero(true, clienteDNI)==-1)
+                        if (doRegistrarTercero(true, clienteDNI) == -1)
                             return;
                         usuarioRegistrado = false;
                         menuListado({"Vuelve a buscar el nombre del usuario"});
@@ -1579,7 +1579,7 @@ void doAddProducto()
         i = 1;
         inputs.clear();
         ;
-        menuDatos({"Nombre del Producto"}, inputs, 0, 0, "_PRODUCTO [" + to_string(codigo+1) + "]_");
+        menuDatos({"Nombre del Producto"}, inputs, 0, 0, "_PRODUCTO [" + to_string(codigo + 1) + "]_");
         string nombre = inputs[0];
         do
         {
@@ -1631,7 +1631,7 @@ void doAddMarca()
         codigo = marcaController.getNewCodMarca();
         inputs.clear();
         ;
-        menuDatos({"Nombre de la marca"}, inputs, 0, 0, "_MARCA [" + to_string(codigo+1) + "]_");
+        menuDatos({"Nombre de la marca"}, inputs, 0, 0, "_MARCA [" + to_string(codigo + 1) + "]_");
         Marca marca(codigo, inputs[0]);
         marcaController.add(marca);
     } while (menuConfirmar("Desea agregar una nueva marca"));
@@ -1775,11 +1775,11 @@ long long int doRegistrarTercero(bool isCliente, long long int documento = -1)
 
 void doActualizarInventario()
 {
-    for(int i=0;i<productoController.size();i++)
+    for (int i = 0; i < productoController.size(); i++)
     {
-        Producto objProducto=productoController.get(i);
+        Producto objProducto = productoController.get(i);
         objProducto.setStock(kardexController.getCantidadProducto(i));
-        productoController.modify(objProducto,i);
+        productoController.modify(objProducto, i);
     }
     productoController.saveFile();
 }
