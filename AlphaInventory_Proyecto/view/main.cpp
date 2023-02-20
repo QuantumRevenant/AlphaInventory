@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
     if (userController.existeAdministrador())
     {
-        progController.openSesion(0, true, true);
+        // progController.openSesion(0, true, true);
         if (!progController.getActiveSesion())
             menuLogIn();
         else
