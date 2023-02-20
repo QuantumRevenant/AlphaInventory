@@ -34,5 +34,5 @@
 # Vscode
 .vscode/
 
-# Database
-*.csv
+# # Database
+# *.csv
