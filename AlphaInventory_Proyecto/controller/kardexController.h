@@ -182,11 +182,9 @@ vector<kardex> KardexController::getMovimientosProducto(int cod)
     vector<kardex> salida;
     for (kardex x : vectorKardex)
     {
-        cout << x.getCantidad() << endl;
         if (x.getCodProducto() == cod)
             salida.push_back(x);
     }
-    system("pause");
     return salida;
 }
 vector<kardex> KardexController::getMovimientosProducto(int cod, bool isSalida)

@@ -1579,7 +1579,7 @@ void doAddProducto()
         i = 1;
         inputs.clear();
         ;
-        menuDatos({"Nombre del Producto"}, inputs, 0, 0, "_PRODUCTO [" + to_string(codigo) + "]_");
+        menuDatos({"Nombre del Producto"}, inputs, 0, 0, "_PRODUCTO [" + to_string(codigo+1) + "]_");
         string nombre = inputs[0];
         do
         {
@@ -1631,7 +1631,7 @@ void doAddMarca()
         codigo = marcaController.getNewCodMarca();
         inputs.clear();
         ;
-        menuDatos({"Nombre de la marca"}, inputs, 0, 0, "_MARCA [" + to_string(codigo) + "]_");
+        menuDatos({"Nombre de la marca"}, inputs, 0, 0, "_MARCA [" + to_string(codigo+1) + "]_");
         Marca marca(codigo, inputs[0]);
         marcaController.add(marca);
     } while (menuConfirmar("Desea agregar una nueva marca"));
