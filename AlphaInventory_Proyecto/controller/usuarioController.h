@@ -35,7 +35,10 @@ public:
     void archRecuperarDatos();
 };
 
-usuarioController::usuarioController() { archRecuperarDatos(); }
+usuarioController::usuarioController()
+{
+    archRecuperarDatos();
+}
 usuarioController::~usuarioController() {}
 
 void usuarioController::add(Usuario obj) { vectorUsuario.push_back(obj); }
@@ -136,16 +139,27 @@ void usuarioController::archGrabarDatos()
 {
     try
     {
-        fstream archivoUsuarios;
+        ofstream archivoUsuarios;
         archivoUsuarios.open("../data/usuarios.bin", ios::out|ios::binary);
         if (archivoUsuarios.is_open())
         {
+            vector<string> vectorLineas;
             for (Usuario obj : vectorUsuario)
             {
-                archivoUsuarios << obj.getTipoDocumento() << "," << obj.getNumDocumento() << ","
-                                << obj.getUsername() << "," << obj.getContrasena() << ","
-                                << obj.getNombre() << "," << obj.getApellidos() << ","
-                                << obj.getTipoUsuario() << "," << obj.getCodUsuario() << "," << endl;
+                string linea = obj.getTipoDocumento() + "," +
+                               to_string(obj.getNumDocumento()) + "," +
+                               obj.getUsername() + "," +
+                               obj.getContrasena() + "," +
+                               obj.getNombre() + "," +
+                               obj.getApellidos() + "," +
+                               obj.getTipoUsuario() + "," +
+                               to_string(obj.getCodUsuario()) + ",";
+                vectorLineas.push_back(linea);
+            }
+            for (const auto& str : vectorLineas) {
+                int tamanoStr = str.size();
+                archivoUsuarios.write(reinterpret_cast<const char*>(&tamanoStr), sizeof(tamanoStr));
+                archivoUsuarios.write(str.c_str(), tamanoStr);
             }
         }
         archivoUsuarios.close();
@@ -155,45 +169,58 @@ void usuarioController::archGrabarDatos()
         cout << "Ocurrio un error al momento de grabar en el archivo";
     }
 }
-
 void usuarioController::archRecuperarDatos()
 {
     vectorUsuario.clear();
-    int i;
-    size_t posi; // Cantidad maxima
-    string linea;
-    vector<string> temporal; // Cantidad de columnas
-    fstream archivoUsuarios;
-    archivoUsuarios.open("../data/usuarios.bin", ios::in|ios::binary);
-    if (archivoUsuarios.is_open())
+    try
     {
-        while (!archivoUsuarios.eof() && getline(archivoUsuarios, linea))
+        int i;
+        size_t posi;
+        string linea;
+        vector<string> temporal;
+        ifstream archivoUsuarios;
+        archivoUsuarios.open("../data/usuarios.bin", ios::in|ios::binary);
+        if (archivoUsuarios.is_open())
         {
-            temporal.clear();
-            i = 0;
-            while ((posi = linea.find(",")) != string::npos)
-            {                                        /*string::npos es -1, termina cuando llega a este punto*/
-                temporal.push_back(linea.substr(0, posi)); /*posi = Es la cantidad de caracteres antes del ;*/
-                linea.erase(0, posi + 1);            // borra la palabra de la primera posici�n encontrada   y con el +1 incluye hasta el ; y luego borra ese elemento, para que en la siguiente iteracion iniciar con la siguiente palabra y de ese modo seguir el proceso ,
-                i++;
+            vector<string> vectorDeStrings;
+            int tamanoStr;
+            while (archivoUsuarios.read(reinterpret_cast<char*>(&tamanoStr), sizeof(tamanoStr))) {
+                vector<char> buffer(tamanoStr);
+                archivoUsuarios.read(buffer.data(), tamanoStr);
+                vectorDeStrings.emplace_back(buffer.begin(), buffer.end());
             }
-            // Asignando los valores al vector
-            Usuario usuario;
-            usuario.setDocumento(temporal[0]);
-            usuario.setNumDocumento(stoi(temporal[1]));
-            usuario.setUsername(temporal[2]);
-            usuario.setContrasena(temporal[3]);
-            cout<<temporal[3]<<"   ";
-            usuario.setNombre(temporal[4]);
-            usuario.setApellidos(temporal[5]);
-            usuario.setTipoUsuario(temporal[6]);
-            usuario.setCodUsuario(stoi(temporal[7]));
-            cout << "Usuario " << temporal[7] << " cargado..." << endl;
-            Sleep(1);
-            add(usuario);
+            for (string  x : vectorDeStrings)
+            {
+                temporal.clear();
+                i = 0;
+                while ((posi = x.find(",")) != string::npos)
+                {
+                    temporal.push_back(x.substr(0, posi));
+                    x.erase(0, posi + 1);
+                    i++;
+                }
+                Usuario usuario;
+                usuario.setDocumento(temporal[0]);
+                usuario.setNumDocumento(stoi(temporal[1]));
+                usuario.setUsername(temporal[2]);
+                usuario.setContrasena(temporal[3]);
+                cout<<temporal[3]<<"   ";
+                usuario.setNombre(temporal[4]);
+                usuario.setApellidos(temporal[5]);
+                usuario.setTipoUsuario(temporal[6]);
+                usuario.setCodUsuario(stoi(temporal[7]));
+                cout << "Usuario " << temporal[7] << " cargado..." << endl;
+                Sleep(1);
+                add(usuario);
+            }
         }
+        archivoUsuarios.close();
     }
-    archivoUsuarios.close();
+    catch(exception e)
+    {
+        cout << "Ocurrio un error al momento de copiar en el archivo";
+    }
 }
+
 
 #endif
