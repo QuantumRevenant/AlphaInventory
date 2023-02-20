@@ -33,6 +33,7 @@ void menuMain();      // ✅
 void menuUser();      // ✅
 void menuInventory(); // ✅
 void menuRecords();   // ✅
+void menuOthers();
 
 // Cuenta y usuario
 void doRegistrarse(bool);             // ✅

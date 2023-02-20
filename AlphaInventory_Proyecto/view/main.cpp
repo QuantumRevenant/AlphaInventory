@@ -469,6 +469,7 @@ void doCompra()
     vector<string> listado;
 
     long long int proveedorRUC;
+    bool usuarioRegistrado;
     int codProducto;
     int cantProducto;
     double montoProducto;
@@ -496,13 +497,11 @@ void doCompra()
     {
         do
         {
-            cout << kardexController.validarFormatoFecha(inputs[0]);
-            system("pause");
             inputs.clear();
             menuDatos({"Fecha"}, inputs, 0, 0, "'Salir' para cancelar");
+            if (aMinuscula(inputs[0]) == "salir")
+                return;
         } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
-        if (aMinuscula(inputs[0]) == "salir")
-            return;
         fecha = inputs[0];
     }
 
@@ -534,29 +533,36 @@ void doCompra()
         case 2:
             do
             {
+                usuarioRegistrado = true;
+                do
+                {
+                    inputs.clear();
+                    menuDatos({"RUC"}, inputs, 0, 0, "Datos del Proveedor Compra #" + to_string(compraController.size() + 1)); // Proveedores
+                    if (!esNumero(inputs[0]))
+                        menuError({"Introduzca un valor numerico"});
+                    if (inputs[0].size() != 11)
+                        menuError({"El RUC tiene 11 Dígitos"});
+                } while (!esNumero(inputs[0]) || inputs[0].size() != 11 || aMinuscula(inputs[0]) == "salir");
+
+                if (aMinuscula(inputs[0]) == "salir")
+                    break;
+
+                proveedorRUC = stoll(inputs[0]);
                 inputs.clear();
-                menuDatos({"RUC"}, inputs, 0, 0, "Datos del Proveedor Compra #" + to_string(compraController.size() + 1)); // Proveedores
-                if (!esNumero(inputs[0]))
-                    menuError({"Introduzca un valor numerico"});
-                if (inputs[0].size() != 11)
-                    menuError({"El RUC tiene 11 Dígitos"});
-            } while (!esNumero(inputs[0]) || inputs[0].size() != 11 || aMinuscula(inputs[0]) == "salir");
 
-            if (aMinuscula(inputs[0]) == "salir")
-                break;
-
-            proveedorRUC = stoll(inputs[0]);
-            inputs.clear();
-
-            if (proveedorController.getPosRUC(proveedorRUC) == -1)
-            {
-                menuError({"RUC NO REGISTRADO"});
-                if (menuConfirmar("Desea registrar un nuevo Proveedor"))
-                    codProducto = codProducto;
-                // newProveedor
-                else
-                    return;
-            }
+                if (proveedorController.getPosRUC(proveedorRUC) == -1)
+                {
+                    menuError({"RUC NO REGISTRADO"});
+                    if (menuConfirmar("Desea registrar un nuevo Proveedor"))
+                    {
+                        if (doRegistrarTercero(false, proveedorRUC))
+                            return;
+                        usuarioRegistrado = false;
+                    }
+                    else
+                        return;
+                }
+            } while (!usuarioRegistrado);
             break;
         default:
             break;
@@ -694,6 +700,7 @@ void doCompra()
             tempCompra.setCodCompra(compraController.size());
             tempCompra.setCodProveedor(proveedorController.getPosRUC(proveedorRUC));
             tempCompra.setCodUsuario(progController.getSesionKey());
+            tempCompra.setFecha(fecha);
             tempCompra.setMonto(montoTotal);
             tempCompra.setEstado(true);
             compraController.add(tempCompra);
@@ -717,6 +724,7 @@ void doVenta()
     vector<string> listado;
     vector<string> options;
     string tipoDocumento;
+    bool usuarioRegistrado;
 
     long long int clienteDNI;
     int codProducto;
@@ -746,13 +754,11 @@ void doVenta()
     {
         do
         {
-            cout << kardexController.validarFormatoFecha(inputs[0]);
-            system("pause");
             inputs.clear();
             menuDatos({"Fecha"}, inputs, 0, 0, "'Salir' para cancelar");
-        } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
         if (aMinuscula(inputs[0]) == "salir")
             return;
+        } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
         fecha = inputs[0];
     }
 
@@ -776,59 +782,70 @@ void doVenta()
                 for (int i = 0; i < clienteController.size(); i++)
                     if (clienteController.get(i).getNombre() == nombreCliente)
                     {
+                        cout << clienteController.get(i).getDocumento() << endl;
                         clienteDNI = clienteController.get(i).getDocumento();
+                        tipoDocumento = clienteController.get(i).getTipoDocumento();
                         break;
                     }
             }
             break;
         case 2:
-            options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
-            opt = menu("REGISTRO - TIPO DE USUARIO", options);
-
-            switch (opt)
-            {
-            case 1:
-                tipoDocumento = "DNI";
-                break;
-            case 2:
-                tipoDocumento = "CE";
-                break;
-            case 3:
-                tipoDocumento = "PASAPORTE";
-                break;
-            case 4:
-                tipoDocumento = "RUC";
-                break;
-            case 0:
-                tipoDocumento = "Cancelar";
-                break;
-            }
-            if (tipoDocumento == "Cancelar")
-                return;
             do
             {
-                inputs.clear();
-                menuDatos({"Documento"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
-                if (!esNumero(inputs[0]))
-                    menuError({"Introduzca un valor numerico"});
-                // if (inputs[0].size() != 8)
-                //     menuError({"El DNI tiene 8 Dígitos"});
-            } while (!esNumero(inputs[0]) /*|| inputs[0].size() != 8*/ || aMinuscula(inputs[0]) == "salir");
+                usuarioRegistrado = true;
+                options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
+                opt = menu("REGISTRO - TIPO DE USUARIO", options);
 
-            if (aMinuscula(inputs[0]) == "salir")
-                break;
-
-            clienteDNI = stoll(inputs[0]);
-            inputs.clear();
-            if (clienteController.getPosDoc(clienteDNI,tipoDocumento) == -1)
-            {
-                menuError({"DOCUMENTO NO REGISTRADO"});
-                if (menuConfirmar("Desea registrar un nuevo Cliente"))
-                    codProducto = codProducto;
-                // newCliente
-                else
+                switch (opt)
+                {
+                case 1:
+                    tipoDocumento = "DNI";
+                    break;
+                case 2:
+                    tipoDocumento = "CE";
+                    break;
+                case 3:
+                    tipoDocumento = "PASAPORTE";
+                    break;
+                case 4:
+                    tipoDocumento = "RUC";
+                    break;
+                case 0:
+                    tipoDocumento = "Cancelar";
+                    break;
+                }
+                if (tipoDocumento == "Cancelar")
                     return;
-            }
+                do
+                {
+                    inputs.clear();
+                    menuDatos({"Documento"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
+                    if (!esNumero(inputs[0]))
+                        menuError({"Introduzca un valor numerico"});
+                    // if (inputs[0].size() != 8)
+                    //     menuError({"El DNI tiene 8 Dígitos"});
+                } while (!esNumero(inputs[0]) /*|| inputs[0].size() != 8*/ || aMinuscula(inputs[0]) == "salir");
+
+                if (aMinuscula(inputs[0]) == "salir")
+                    break;
+
+                clienteDNI = stoll(inputs[0]);
+
+                inputs.clear();
+
+                if (clienteController.getPosDoc(clienteDNI, tipoDocumento) == -1)
+                {
+                    menuError({"RUC NO REGISTRADO"});
+                    if (menuConfirmar("Desea registrar un nuevo Proveedor"))
+                    {
+                        if (doRegistrarTercero(false, clienteDNI))
+                            return;
+                        usuarioRegistrado = false;
+                    }
+                    else
+                        return;
+                }
+            } while (!usuarioRegistrado);
             break;
         default:
             break;
@@ -839,28 +856,24 @@ void doVenta()
 
     // COMPROBANTE VENTA PRODUCTO
 
-    ;
     inputs.clear();
-    opt = menu("Comprobante Venta #" + to_string(ventaController.size() + 1), {"Boleta", "Factura"});
-    switch (opt)
+
+    if (tipoDocumento == "RUC")
     {
-    case 1:
-        comprobante = createCode("BV", kardexController.getCantidadComprobanteVenta(true));
-        break;
-    case 2:
         comprobante = createCode("FV", kardexController.getCantidadComprobanteVenta(false));
-        break;
-    default:
-        return;
-        break;
     }
+    else
+    {
+        comprobante = createCode("BV", kardexController.getCantidadComprobanteVenta(true));
+    }
+
     string nombreProducto;
     vector<string> listaProductos;
     for (int i = 0; i < productoController.size(); i++)
         listaProductos.push_back(productoController.get(i).getNombre());
     do
     {
-        opt = menu("_Carrito de Venta_ #" + to_string(ventaController.size() + 1), {"Agregar producto", "Eliminar Producto", "Mirar Carrito de Compra", "Finalizar Compra"});
+        opt = menu("_Carrito de " + clienteController.get(clienteController.getPosDoc(clienteDNI, tipoDocumento)).getNombre() + " de Venta_ #" + to_string(ventaController.size() + 1), {"Agregar producto", "Eliminar Producto", "Mirar Carrito de Compra", "Finalizar Compra"});
         switch (opt)
         {
         case 1:
@@ -911,6 +924,7 @@ void doVenta()
             tempVentaD.setCodProducto(codProducto);
             tempVentaD.setCantidad(cantProducto);
             tempVentaD.setPrecio(productoController.get(codProducto).getPrecioUnitario());
+            tempVenta.setMonto(productoController.get(codProducto).getPrecioUnitario() * cantProducto);
             carrito.push_back(tempVentaD);
             break;
         case 2:
@@ -943,7 +957,6 @@ void doVenta()
             menuListado(listado, 0, "Venta #" + to_string(ventaController.size() + 1));
             if (menuConfirmar("Desea agregar una observacion a esta Venta"))
             {
-                ;
                 menuDatos({""}, inputs, 0, 0, "Observacion Venta #" + to_string(ventaController.size() + 1));
                 observacion = inputs[0];
             }
@@ -967,8 +980,9 @@ void doVenta()
                 montoTotal += (x.getPrecio() * x.getCantidad());
             }
             tempVenta.setCodVenta(ventaController.size());
-            tempVenta.setCodCliente(clienteController.getPosDoc(clienteDNI,tipoDocumento));
+            tempVenta.setCodCliente(clienteController.getPosDoc(clienteDNI, tipoDocumento));
             tempVenta.setCodUsuario(progController.getSesionKey());
+            tempVenta.setFecha(fecha);
             tempVenta.setMonto(montoTotal);
             tempVenta.setEstado(true);
             ventaController.add(tempVenta);
@@ -1246,6 +1260,8 @@ void doRegistrarRetiroCaja()
                "RETIRO DE EFECTIVO ( S/." + to_string(monto) + " ) POR " + userController.get(progController.getSesionKey()).getNombre() +
                    " " + userController.get(progController.getSesionKey()).getApellidos(),
                observacion);
+    kardexController.add(obj);
+    kardexController.saveFile();
 }
 
 void askEstadoCaja()
@@ -1699,7 +1715,7 @@ long long int doRegistrarTercero(bool isCliente, long long int documento = -1)
         numeroDocumento = stoll(strInput);
         if (isCliente)
         {
-            if (clienteController.getPosDoc(numeroDocumento,tipoDocumento) != -1)
+            if (clienteController.getPosDoc(numeroDocumento, tipoDocumento) != -1)
             {
                 duplicado = true;
             }

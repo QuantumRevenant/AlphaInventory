@@ -50,12 +50,13 @@ void menuMain()
 {
     system("cls");
     int opt;
-    vector<string> options = {"Registrar venta", "\"" + userController.getUsuario(progController.getSesionKey()).getUsername() + "\"", "Inventario", "Registro de ventas"};
+    vector<string> options = {"Registrar venta", "\"" + userController.getUsuario(progController.getSesionKey()).getUsername() + "\"", "Inventario", "Otros"};
     opt = menu("MENU PRINCIPAL", options);
     switch (opt)
     {
     case 1:
         doVenta();
+        menuMain();
         break;
     case 2:
         menuUser();
@@ -64,7 +65,7 @@ void menuMain()
         menuInventory();
         break;
     case 4:
-        menuRecords();
+        menuOthers();
         break;
     case 0:
         esquinarTexto("-<>-Hasta pronto-<>-", 1);
@@ -85,7 +86,7 @@ void menuUser()
         menuUser();
         break;
     case 2:
-        menuRecords();
+        /*menuRecords();*/
         break;
     case 3:
         doRegistrarse(false);
@@ -93,6 +94,7 @@ void menuUser()
         break;
     case 4:
         askEstadoCaja();
+        menuUser();
         break;
     case 5:
         doCerrarSesion();
@@ -157,6 +159,35 @@ void menuRecords()
             break;
         case 3:
             doBuscarRegistro();
+            break;
+        case 0:
+            menuMain();
+            break;
+        }
+    } while (opt != 0);
+}
+
+void menuOthers()
+{
+    system("cls");
+    int opt;
+    vector<string> options = {"Registrar Movimiento", "Registrar Cliente", "Registrar Proveedor", "Retiro de Caja"}; // Carritos de compra, etc
+    do
+    {
+        opt = menu("MENU REGISTROS", options); 
+        switch (opt)
+        {
+        case 1:
+            doMovimiento();
+            break;
+        case 2:
+            doRegistrarTercero(true,-1);
+            break;
+        case 3:
+            doRegistrarTercero(false,-1);
+            break;
+        case 4:
+            doRegistrarRetiroCaja();
             break;
         case 0:
             menuMain();
