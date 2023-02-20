@@ -165,7 +165,7 @@ bool confirmar(string message, string message2 = " ", int hoffset = 0)
     string opt;
     cout << endl
          << endl
-         << doTab(hoffset, "") << "Â¿Seguro que desea " << message << "?" << message2 << "(Confirmar: S/s)" << endl;
+         << doTab(hoffset, "") << "¿Seguro que desea " << message << "?" << message2 << "(Confirmar: S/s)" << endl;
     cout << doTab(hoffset, "") << ">_ ";
     cin >> opt;
     if (aMinuscula(opt) == "s")
@@ -388,7 +388,7 @@ bool menuConfirmar(string message, string message2 = " ")
     int sizeY = 3;
     int e = 0;
     string opt;
-    centrarTexto("Â¿" + message + "? " + message2 + ". (Confirmar: S/s)", 0, true, true, 0, -3);
+    centrarTexto("¿" + message + "? " + message2 + ". (Confirmar: S/s)", 0, true, true, 0, -3);
     e += 2;
     centrarTexto(">_ ", 0, true, true, -5, 0);
     getline(cin,opt);

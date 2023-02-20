@@ -1,21 +1,18 @@
 #include <iostream>
 #include <Windows.h>
 #include <locale.h>
+#include <string>
+#include "../controller/controllers.h"
+#include "../model/FuncionesGenerales.h"
+#include "../model/models.h"
+
+using namespace std;
+
+KardexController kardexController;
 
 using namespace std;
 
 int main()
 {
-
-    // // Para Linux - Usa locale.h
-    // setlocale(LC_ALL, "Spanish");
-
-    // Para Windows - Usa Windows.h
-    SetConsoleCP(1252);
-    SetConsoleOutputCP(1252);
-
-
-    printf("á ó Ü ¿");
-    system("pause");
-    return 0;
+    cout<<kardexController.getCantidadProducto(0);
 }

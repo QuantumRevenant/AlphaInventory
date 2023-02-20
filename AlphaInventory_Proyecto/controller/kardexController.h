@@ -262,7 +262,7 @@ int KardexController::getCantidadComprobante(bool isVenta, bool isMovimiento = f
 }
 int KardexController::getCantidadProducto(int cod)
 {
-    int salida;
+    int salida=0;
     vector<int> aSumar, aRestar;
     vector<kardex> movimientos;
     movimientos = getMovimientosProducto(cod);
@@ -278,8 +278,6 @@ int KardexController::getCantidadProducto(int cod)
         salida += x;
     for (int x : aRestar)
         salida -= x;
-    cout << salida << endl;
-    system("pause");
     return salida;
 }
 

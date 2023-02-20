@@ -17,6 +17,7 @@ using namespace std;
 
 void menuLogIn()
 {
+    doActualizarInventario();
     system("cls");
     int opt;
     string type;
@@ -40,7 +41,7 @@ void menuLogIn()
         {
             cout << ".";
             cout.flush();
-            sleep(1);
+            Sleep(1);
         }
         Sleep(1000);
         break;
@@ -48,6 +49,7 @@ void menuLogIn()
 }
 void menuMain()
 {
+    doActualizarInventario();
     system("cls");
     int opt;
     vector<string> options = {"Registrar venta", "\"" + userController.getUsuario(progController.getSesionKey()).getUsername() + "\"", "Inventario", "Otros"};
@@ -74,9 +76,10 @@ void menuMain()
 }
 void menuUser()
 {
+    doActualizarInventario();
     system("cls");
     int opt;
-    vector<string> options = {"Modificar Perfil", "Registros", "Registrar Usuario", "Estado de Caja", "Cerrar SesiÃ³n"};
+    vector<string> options = {"Modificar Perfil"/*, "Registros"*/, "Registrar Usuario", "Estado de Caja", "Cerrar Sesión"};
     opt = menu("MENU USUARIO", options);
 
     switch (opt)
@@ -85,18 +88,18 @@ void menuUser()
         doModificarPerfil(progController.getSesionKey());
         menuUser();
         break;
+    /*case 2:
+        menuRecords();
+        break;*/
     case 2:
-        /*menuRecords();*/
-        break;
-    case 3:
         doRegistrarse(false);
         menuUser();
         break;
-    case 4:
+    case 3:
         askEstadoCaja();
         menuUser();
         break;
-    case 5:
+    case 4:
         doCerrarSesion();
         break;
     case 0:
@@ -107,6 +110,7 @@ void menuUser()
 
 void menuInventory()
 {
+    doActualizarInventario();
     system("cls");
     int opt;
     vector<string> options = {"Registrar Compra", "Consultar Inventario", "Modificar Datos de producto", "Anadir Nuevo Producto", "Anadir Nueva Marca"};
@@ -143,6 +147,7 @@ void menuInventory()
 
 void menuRecords()
 {
+    doActualizarInventario();
     system("cls");
     int opt;
     vector<string> options = {"Estado de Caja", "Registros Personales", "Buscar Registros"}; // Carritos de compra, etc
@@ -169,6 +174,7 @@ void menuRecords()
 
 void menuOthers()
 {
+    doActualizarInventario();
     system("cls");
     int opt;
     vector<string> options = {"Registrar Movimiento", "Registrar Cliente", "Registrar Proveedor", "Retiro de Caja"}; // Carritos de compra, etc

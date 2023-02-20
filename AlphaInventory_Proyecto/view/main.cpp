@@ -12,7 +12,7 @@
 using namespace std;
 
 /*
-1) INICIO DE SESIÃ“N
+1) INICIO DE SESIÓN
     *>REGISTRARSE
     >INICIAR SESION
 2) MENU PRINCIPAL
@@ -27,7 +27,7 @@ using namespace std;
     >ESTADO DE CAJA
     >CERRAR SESION
 4) INVENTARIO
-    >AÃ‘ADIR
+    >AÑADIR
     >CONSULTAR
     >MODIFICAR
 5) REGISTROS
@@ -38,6 +38,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    SetConsoleCP(1252);
+    SetConsoleOutputCP(1252);
     srand(time(NULL));
     if (userController.existeAdministrador())
     {
@@ -82,7 +84,7 @@ void doRegistrarse(bool start = false)
         case 1:
             if (!progController.getActiveSesion() || !progController.getIsSupervisor())
             {
-                menuListado({"~-NECESITAS INICIAR SESIÃ“N COMO SUPERVISOR O ADMINISTRADOR-~"}, 0, "", false);
+                menuListado({"~-NECESITAS INICIAR SESIÓN COMO SUPERVISOR O ADMINISTRADOR-~"}, 0, "", false);
                 Sleep(1000);
 
                 loged = doIniciarSesion(false, type);
@@ -103,7 +105,7 @@ void doRegistrarse(bool start = false)
         case 2:
             if (!progController.getActiveSesion() || !progController.getIsAdmin())
             {
-                menuListado({"~-NECESITAS INICIAR SESIÃ“N COMO ADMINISTRADOR-~"}, 0, "", false);
+                menuListado({"~-NECESITAS INICIAR SESIÓN COMO ADMINISTRADOR-~"}, 0, "", false);
                 Sleep(1000);
 
                 loged = doIniciarSesion(false, type);
@@ -122,7 +124,7 @@ void doRegistrarse(bool start = false)
                 tipoUsuario = "Supervisor";
             break;
         case 3:
-            menuListado({"~-NECESITAS INICIAR SESIÃ“N / VOLVER A INICIAR COMO ADMINISTRADOR-~"}, 0, "", false);
+            menuListado({"~-NECESITAS INICIAR SESIÓN / VOLVER A INICIAR COMO ADMINISTRADOR-~"}, 0, "", false);
             Sleep(1000);
 
             loged = doIniciarSesion(false, type);
@@ -391,7 +393,7 @@ bool doIniciarSesion(bool opt, string &type)
     {
         vector<string> options = {"USERNAME", "CONTRASENA"};
         vector<string> inputs;
-        menuDatos(options, inputs, 1, 1, "##INICIO DE SESIÃ“N## - ('Salir' para salir) ");
+        menuDatos(options, inputs, 1, 1, "##INICIO DE SESIÓN## - ('Salir' para salir) ");
         if (aMinuscula(inputs[0]) == "salir" || aMinuscula(inputs[1]) == "salir")
             break;
         username = inputs[0];
@@ -401,7 +403,7 @@ bool doIniciarSesion(bool opt, string &type)
         {
             system("cls");
             dibujarCuadro();
-            centrarTexto("Iniciando SesiÃ³n", 0, true, true, -3);
+            centrarTexto("Iniciando Sesión", 0, true, true, -3);
             for (int i = 0; i < 3; i++)
             {
                 cout << ".";
@@ -411,14 +413,14 @@ bool doIniciarSesion(bool opt, string &type)
         }
         else
         {
-            menuError({"Username y/o contraseÃ±a incorrectos."}, 0, "0f", "", true);
+            menuError({"Username y/o contraseña incorrectos."}, 0, "0f", "", true);
             contador++;
         }
     } while (!resultado && contador < 3);
 
     if (contador >= 3)
     {
-        menuError({"LÃ­mite de intentos alcanzado, volviendo al menÃº principal..."}, 0, "0f", "", true);
+        menuError({"Límite de intentos alcanzado, volviendo al menú principal..."}, 0, "0f", "", true);
         return false;
     }
 
@@ -541,7 +543,7 @@ void doCompra()
                     if (!esNumero(inputs[0]))
                         menuError({"Introduzca un valor numerico"});
                     if (inputs[0].size() != 11)
-                        menuError({"El RUC tiene 11 DÃ­gitos"});
+                        menuError({"El RUC tiene 11 Dígitos"});
                 } while (!esNumero(inputs[0]) || inputs[0].size() != 11 || aMinuscula(inputs[0]) == "salir");
 
                 if (aMinuscula(inputs[0]) == "salir")
@@ -555,9 +557,10 @@ void doCompra()
                     menuError({"RUC NO REGISTRADO"});
                     if (menuConfirmar("Desea registrar un nuevo Proveedor"))
                     {
-                        if (doRegistrarTercero(false, proveedorRUC))
+                        if (doRegistrarTercero(false, proveedorRUC)==-1)
                             return;
                         usuarioRegistrado = false;
+                        menuListado({"Vuelve a buscar el nombre del usuario"});
                     }
                     else
                         return;
@@ -642,6 +645,7 @@ void doCompra()
             tempCompraD.setCodProducto(codProducto);
             tempCompraD.setCantidad(cantProducto);
             tempCompraD.setPrecio(montoProducto);
+            tempCompraD.setMonto(montoProducto*cantProducto);
             carrito.push_back(tempCompraD);
             break;
         case 2:
@@ -756,8 +760,8 @@ void doVenta()
         {
             inputs.clear();
             menuDatos({"Fecha"}, inputs, 0, 0, "'Salir' para cancelar");
-        if (aMinuscula(inputs[0]) == "salir")
-            return;
+            if (aMinuscula(inputs[0]) == "salir")
+                return;
         } while (!kardexController.validarFormatoFecha(inputs[0]) || aMinuscula(inputs[0]) == "salir");
         fecha = inputs[0];
     }
@@ -819,11 +823,11 @@ void doVenta()
                 do
                 {
                     inputs.clear();
-                    menuDatos({"Documento"}, inputs, 0, 0, "Datos del Proveedor Venta #" + to_string(ventaController.size() + 1)); // Clientes
+                    menuDatos({"Documento"}, inputs, 0, 0, "Datos del Cliente Venta #" + to_string(ventaController.size() + 1)); // Clientes
                     if (!esNumero(inputs[0]))
                         menuError({"Introduzca un valor numerico"});
                     // if (inputs[0].size() != 8)
-                    //     menuError({"El DNI tiene 8 DÃ­gitos"});
+                    //     menuError({"El DNI tiene 8 Dígitos"});
                 } while (!esNumero(inputs[0]) /*|| inputs[0].size() != 8*/ || aMinuscula(inputs[0]) == "salir");
 
                 if (aMinuscula(inputs[0]) == "salir")
@@ -835,12 +839,13 @@ void doVenta()
 
                 if (clienteController.getPosDoc(clienteDNI, tipoDocumento) == -1)
                 {
-                    menuError({"RUC NO REGISTRADO"});
-                    if (menuConfirmar("Desea registrar un nuevo Proveedor"))
+                    menuError({aMayuscula(tipoDocumento) + " NO REGISTRADO"});
+                    if (menuConfirmar("Desea registrar un nuevo Cliente"))
                     {
-                        if (doRegistrarTercero(false, clienteDNI))
+                        if (doRegistrarTercero(true, clienteDNI)==-1)
                             return;
                         usuarioRegistrado = false;
+                        menuListado({"Vuelve a buscar el nombre del usuario"});
                     }
                     else
                         return;
@@ -924,7 +929,7 @@ void doVenta()
             tempVentaD.setCodProducto(codProducto);
             tempVentaD.setCantidad(cantProducto);
             tempVentaD.setPrecio(productoController.get(codProducto).getPrecioUnitario());
-            tempVenta.setMonto(productoController.get(codProducto).getPrecioUnitario() * cantProducto);
+            tempVentaD.setMonto(productoController.get(codProducto).getPrecioUnitario() * cantProducto);
             carrito.push_back(tempVentaD);
             break;
         case 2:
@@ -1229,7 +1234,7 @@ void doRegistrarRetiroCaja()
     vector<string> inputs;
     if (!progController.getActiveSesion() || !progController.getIsSupervisor())
     {
-        menuError({"~-NECESITAS TENER UNA SESIÃ“N DE SUPERVISOR O ADMINISTRADOR INICIADA-~"});
+        menuError({"~-NECESITAS TENER UNA SESIÓN DE SUPERVISOR O ADMINISTRADOR INICIADA-~"});
         return;
     }
     do
@@ -1402,7 +1407,7 @@ void changeDataInventario()
     vector<Componente> componentes;
     if (!progController.getActiveSesion() || !progController.getIsSupervisor())
     {
-        menuError({"Necesitas iniciar sesiÃ³n como Supervisor"});
+        menuError({"Necesitas iniciar sesión como Supervisor"});
         if (!doIniciarSesion(false, temporal))
             return;
         else if (temporal != "Supervisor" && temporal != "Admin")
@@ -1430,7 +1435,7 @@ void changeDataInventario()
                         break;
                     if (!esNumero(inputs[0]))
                     {
-                        menuError({"Introduce un valor numÃ©rico"});
+                        menuError({"Introduce un valor numérico"});
                         inputs[0] = "-1";
                     }
                     else if (stoi(inputs[0]) < 0 || stoi(inputs[0]) >= productoController.getNewCodProducto())
@@ -1492,11 +1497,11 @@ void changeDataInventario()
             case 2:
                 do
                 {
-                    menuDatos({"Nuevo cÃ³digo de marca"}, inputs);
+                    menuDatos({"Nuevo código de marca"}, inputs);
                     temporal = inputs[0];
                     if (!esNumero(temporal))
                     {
-                        menuError({"Introduce un valor numÃ©rico"});
+                        menuError({"Introduce un valor numérico"});
                         temporal = "-1";
                     }
                     else if (stoi(temporal) < 0 || stoi(temporal) >= marcaController.getNewCodMarca())
@@ -1514,7 +1519,7 @@ void changeDataInventario()
                     temporal = inputs[0];
                     if (!esNumero(temporal))
                     {
-                        menuError({"Introduce un valor numÃ©rico"});
+                        menuError({"Introduce un valor numérico"});
                         temporal = "-1";
                     }
                 } while (stod(temporal) < 0 || temporal == "");
@@ -1559,7 +1564,7 @@ void doAddProducto()
     vector<string> optionsM;
     if (!progController.getActiveSesion() || !progController.getIsSupervisor())
     {
-        menuError({"Necesitas iniciar sesiÃ³n como Supervisor"});
+        menuError({"Necesitas iniciar sesión como Supervisor"});
         if (!doIniciarSesion(false, temporal))
             return;
         else if (temporal != "Supervisor" && temporal != "Admin")
@@ -1597,7 +1602,7 @@ void doAddProducto()
                     inputs.clear();
                     menuDatos({"Precio S/"}, inputs);
                     if (!esNumero(inputs[0]))
-                        menuError({"Introduce un valor numÃ©rico"});
+                        menuError({"Introduce un valor numérico"});
                 } while (!esNumero(inputs[0]));
                 double precio = stod(inputs[0]);
                 Producto producto(productoController.getNewCodProducto(), codMarca, nombre, precio, 0, componentes);
@@ -1615,7 +1620,7 @@ void doAddMarca()
     string temporal;
     if (!progController.getActiveSesion() || !progController.getIsSupervisor())
     {
-        menuError({"Necesitas iniciar sesiÃ³n como Supervisor"});
+        menuError({"Necesitas iniciar sesión como Supervisor"});
         if (!doIniciarSesion(false, temporal))
             return;
         else if (temporal != "Supervisor" && temporal != "Admin")
@@ -1646,52 +1651,51 @@ long long int doRegistrarTercero(bool isCliente, long long int documento = -1)
     if (documento != -1)
         numeroDocumento == documento;
 
-    if (isCliente)
-    {
-        options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
-        opt = menu("REGISTRO - TIPO DE USUARIO", options);
-
-        switch (opt)
-        {
-        case 1:
-            tipoDocumento = "DNI";
-            docSize = 8;
-            break;
-        case 2:
-            tipoDocumento = "CE";
-            docSize = 12;
-            break;
-        case 3:
-            tipoDocumento = "PASAPORTE";
-            docSize = 12;
-            break;
-        case 4:
-            tipoDocumento = "RUC";
-            docSize = 11;
-            break;
-        case 0:
-            tipoDocumento = "Cancelar";
-            break;
-        }
-        if (tipoDocumento == "Cancelar")
-            return -1;
-    }
-    else
-    {
-        tipoDocumento = "RUC";
-        docSize = 11;
-    }
-
     // INTRODUCIR NUMERO DOCUMENTO
     strInput = "0";
     do
     {
         do
         {
+            if (isCliente)
+            {
+                options = {"DNI", "CARNET EXTRANJERIA (CE)", "PASAPORTE", "RUC"}; // Carritos de compra, etc
+                opt = menu("REGISTRO - TIPO DE USUARIO", options);
+
+                switch (opt)
+                {
+                case 1:
+                    tipoDocumento = "DNI";
+                    docSize = 8;
+                    break;
+                case 2:
+                    tipoDocumento = "CE";
+                    docSize = 12;
+                    break;
+                case 3:
+                    tipoDocumento = "PASAPORTE";
+                    docSize = 12;
+                    break;
+                case 4:
+                    tipoDocumento = "RUC";
+                    docSize = 11;
+                    break;
+                case 0:
+                    tipoDocumento = "Cancelar";
+                    break;
+                }
+                if (tipoDocumento == "Cancelar")
+                    return -1;
+            }
+            else
+            {
+                tipoDocumento = "RUC";
+                docSize = 11;
+            }
             inputs.clear();
             if (documento < 0)
             {
-                menuDatos({"Numero de documento"}, inputs, 0, 0, "_" + tipoDocumento + "_ -('Salir' para salir)");
+                menuDatos({"Numero de documento"}, inputs, 0, 0, "_DOCUMENTO_ -('Salir' para salir)");
                 strInput = inputs[0].substr(0, inputs[0].find(' '));
             }
             else
@@ -1767,4 +1771,15 @@ long long int doRegistrarTercero(bool isCliente, long long int documento = -1)
         proveedorController.saveFile();
     }
     return numeroDocumento;
+}
+
+void doActualizarInventario()
+{
+    for(int i=0;i<productoController.size();i++)
+    {
+        Producto objProducto=productoController.get(i);
+        objProducto.setStock(kardexController.getCantidadProducto(i));
+        productoController.modify(objProducto,i);
+    }
+    productoController.saveFile();
 }

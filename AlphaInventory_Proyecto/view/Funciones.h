@@ -53,6 +53,7 @@ void doAddMarca();
 void askEstadoCaja();
 void doConsultarRegistro(int);
 void doBuscarRegistro();
+void doActualizarInventario();
 
 long long int doRegistrarTercero(bool, long long int);
 void doRegistrarRetiroCaja();
