@@ -11,31 +11,6 @@
 
 using namespace std;
 
-/*
-1) INICIO DE SESIÓN
-    *>REGISTRARSE
-    >INICIAR SESION
-2) MENU PRINCIPAL
-    >REGISTRAR VENTA
-    >/[USUARIO]/
-    >INVENTARIO (MODIFICAR Y CONSULTAR)
-    >REGISTROS (PERSONALES{DIA, GENERAL} O OTRO USUARIO{SUPERVISOR PARA REVISAR DE VENDEDORES Y ADM PARA REVISAR DE SUPERVISORES} Y VENTAS)
-3) USUARIO
-    >MODIFICAR
-    >REGISTROS
-    *>REGISTRARSE
-    >ESTADO DE CAJA
-    >CERRAR SESION
-4) INVENTARIO
-    >AÑADIR
-    >CONSULTAR
-    >MODIFICAR
-5) REGISTROS
-    >ESTADO DE CAJA
-    >VENTAS PERSONALES
-    >CONSULTAR OTROS
-*/
-
 int main(int argc, char *argv[])
 {
     SetConsoleCP(1252);
@@ -1358,6 +1333,7 @@ void doBuscarRegistro()
 
 void askInventario()
 {
+    int opt;
     int cod;
     string producto;
     vector<string> listaProductos;
@@ -1374,21 +1350,36 @@ void askInventario()
                 for (int i = 0; i < productoController.size(); i++)
                     if (productoController.get(i).getNombre() == producto)
                         cod = productoController.get(i).getCodProducto();
-                int j = 1;
-                Producto temp;
-                temp = productoController.get(cod);
-                vector<string> listado{"Codigo de producto: " + to_string(temp.getCodProducto()),
-                                       "Marca: " + marcaController.get(temp.getCodMarca()).getNombreMarca(),
-                                       "Nombre: " + temp.getNombre(),
-                                       "Precio unitario: S/" + to_string(temp.getPrecioUnitario()),
-                                       "Unidades disponibles: " + to_string(temp.getStock())};
-                for (Componente x : temp.getVectorComponentes())
+
+                opt = menu("Selecciona que deseas hacer", {"Consultar datos del producto", "Consultar kárdex del producto"});
+
+                switch (opt)
                 {
-                    listado.push_back("Componente[" + to_string(j) + "]: " + x.getNombre() + "\t" + x.getCantidad());
-                    j++;
+                case 1:
+                    int j = 1;
+                    Producto temp;
+                    temp = productoController.get(cod);
+                    vector<string> listado{"Codigo de producto: " + to_string(temp.getCodProducto()),
+                                           "Marca: " + marcaController.get(temp.getCodMarca()).getNombreMarca(),
+                                           "Nombre: " + temp.getNombre(),
+                                           "Precio unitario: S/" + to_string(temp.getPrecioUnitario()),
+                                           "Unidades disponibles: " + to_string(temp.getStock())};
+                    for (Componente x : temp.getVectorComponentes())
+                    {
+                        listado.push_back("Componente[" + to_string(j) + "]: " + x.getNombre() + "\t" + x.getCantidad());
+                        j++;
+                    }
+                    menuListado(listado, 0, aMayuscula(temp.getNombre()), true);
+
+                    break;
+                case 2:
+                    /* code */
+                    break;
+                default:
+                    break;
                 }
-                menuListado(listado, 0, aMayuscula(temp.getNombre()), true);
             }
+
         } while (producto != "salir");
     }
     else
