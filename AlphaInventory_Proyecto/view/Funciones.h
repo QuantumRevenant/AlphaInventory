@@ -58,4 +58,5 @@ void doActualizarInventario();
 long long int doRegistrarTercero(bool, long long int);
 void doRegistrarRetiroCaja();
 
+void showKardex(int cod);
 #endif
